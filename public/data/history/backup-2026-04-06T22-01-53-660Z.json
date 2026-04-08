@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "lastModified": "2026-04-06T08:26:40.437Z",
+    "version": 18
+  },
+  "galerie": null,
+  "kursplan": null,
+  "oeffnungszeiten": null,
+  "aktionen": null,
+  "bewertungen": null,
+  "team": null,
+  "hero": {
+    "badge": "Fitnessstudio Hattingen",
+    "headline": "Dein Gym in Hattingen",
+    "subheadline": "Sauna, Live-Kurse, Getränkeflat und persönliche Betreuung — alles inklusive ab 35 €/Monat.",
+    "ctaPrimary": {
+      "text": "Probetraining buchen",
+      "href": "/probetraining"
+    },
+    "ctaSecondary": {
+      "text": "Preise ansehen",
+      "href": "/mitgliedschaft"
+    },
+    "kennzahlen": [
+      {
+        "wert": "Mo–Fr",
+        "label": "bis 23 Uhr"
+      },
+      {
+        "wert": "Getränkeflat",
+        "label": "inklusive"
+      },
+      {
+        "wert": "∞",
+        "label": "Sauna inkl."
+      }
+    ],
+    "vertrauenssignal": "Über 500 zufriedene Mitglieder in Hattingen",
+    "hintergrundBild": "/images/studio-dsc-01.jpg"
+  },
+  "banner": {
+    "aktiv": false,
+    "text": "1234",
+    "typ": "aktion",
+    "link": null,
+    "startDatum": "",
+    "endDatum": "",
+    "position": "below-header",
+    "dismissable": true
+  },
+  "trustbar": {
+    "rating": 4.9,
+    "totalReviews": 167,
+    "liveKurse": 17,
+    "lastGoogleSync": null
+  }
+}

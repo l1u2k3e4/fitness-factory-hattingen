@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "lastModified": "2026-04-05T23:34:20.259Z",
+    "version": 14
+  },
+  "galerie": {
+    "bilder": [
+      {
+        "src": "/images/studio-dsc-01.jpg",
+        "alt": "Fitnessgeräte im Fitness Factory Hattingen",
+        "kategorie": "Studio"
+      },
+      {
+        "src": "/images/studio-dsc-02.jpg",
+        "alt": "Trainingbereich",
+        "kategorie": "Studio"
+      },
+      {
+        "src": "/images/studio-dsc-03.jpg",
+        "alt": "Trainingsbereich",
+        "kategorie": "Studio"
+      },
+      {
+        "src": "/images/studio-galerie-01.jpg",
+        "alt": "Sauna",
+        "kategorie": "Sauna"
+      },
+      {
+        "src": "/images/studio-galerie-02.jpg",
+        "alt": "Liegebereich",
+        "kategorie": "Sauna"
+      },
+      {
+        "src": "/images/studio-dsc-04.jpg",
+        "alt": "Trainingbereich",
+        "kategorie": "Training"
+      }
+    ]
+  },
+  "kursplan": null,
+  "oeffnungszeiten": null,
+  "aktionen": null,
+  "bewertungen": null,
+  "team": null,
+  "hero": {
+    "badge": "Fitnessstudio Hattingen",
+    "headline": "Dein Gym in Hattingen",
+    "subheadline": "Sauna, Live-Kurse, Getränkeflat und persönliche Betreuung — alles inklusive ab 35 €/Monat.",
+    "ctaPrimary": {
+      "text": "Probetraining buchen",
+      "href": "/probetraining"
+    },
+    "ctaSecondary": {
+      "text": "Preise ansehen",
+      "href": "/mitgliedschaft"
+    },
+    "kennzahlen": [
+      {
+        "wert": "35€",
+        "label": "ab Monat"
+      },
+      {
+        "wert": "17+",
+        "label": "Live-Kurse"
+      },
+      {
+        "wert": "∞",
+        "label": "Sauna inkl."
+      }
+    ],
+    "vertrauenssignal": "Über 500 zufriedene Mitglieder in Hattingen",
+    "hintergrundBild": "/images/banner-hero-01.jpg"
+  },
+  "banner": {
+    "aktiv": true,
+    "text": "1234",
+    "typ": "aktion",
+    "link": null,
+    "startDatum": "",
+    "endDatum": "",
+    "position": "below-header",
+    "dismissable": true
+  },
+  "trustbar": {
+    "rating": 4.9,
+    "totalReviews": 167,
+    "liveKurse": 16,
+    "lastGoogleSync": null
+  }
+}

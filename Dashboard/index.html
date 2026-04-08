@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Factory — Content Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ========================================================================
+   CSS Variables & Reset
+   ======================================================================== */
+:root {
+  --brand-red: #C8102E;
+  --brand-red-hover: #A50D24;
+  --brand-red-light: #FEF2F2;
+  --brand-dark: #1A1A1A;
+  --brand-white: #FFFFFF;
+  --bg-primary: #F8FAFC;
+  --bg-sidebar: #000000;
+  --bg-card: #FFFFFF;
+  --border: #E2E8F0;
+  --border-hover: #CBD5E1;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+  --sidebar-w: 260px;
+  --header-h: 64px;
+  --radius-card: 12px;
+  --radius-btn: 8px;
+  --radius-input: 8px;
+  --shadow-card: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,.08);
+  --transition: .2s ease;
+}
+
+html.dark {
+  --bg-primary: #0F172A;
+  --bg-card: #1E293B;
+  --border: #334155;
+  --border-hover: #475569;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --shadow-card: 0 1px 3px rgba(0,0,0,.3);
+  --shadow-card-hover: 0 4px 12px rgba(0,0,0,.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ========================================================================
+   PIN Overlay
+   ======================================================================== */
+#pin-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg-sidebar);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 24px;
+}
+#pin-overlay.hidden { display: none; }
+#pin-overlay h1 { color: #fff; font-size: 24px; font-weight: 700; }
+#pin-overlay p { color: var(--text-muted); font-size: 14px; }
+#pin-overlay .pin-inputs { display: flex; gap: 12px; }
+#pin-overlay .pin-inputs input {
+  width: 56px; height: 64px; text-align: center; font-size: 24px;
+  font-family: 'JetBrains Mono', monospace; font-weight: 500;
+  border: 2px solid #334155; background: #1E293B; color: #fff;
+  border-radius: var(--radius-input); outline: none; transition: border var(--transition);
+}
+#pin-overlay .pin-inputs input:focus { border-color: var(--brand-red); }
+#pin-overlay .pin-error { color: var(--error); font-size: 13px; min-height: 20px; }
+#pin-overlay .pin-logo {
+  width: 48px; height: 48px; border-radius: 12px;
+  object-fit: cover;
+}
+
+/* ========================================================================
+   Layout
+   ======================================================================== */
+#app { display: flex; height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-w); min-width: var(--sidebar-w);
+  background: var(--bg-sidebar); color: #CBD5E1;
+  display: flex; flex-direction: column; overflow-y: auto;
+  border-right: 1px solid #1E293B;
+}
+.sidebar-header {
+  padding: 20px; display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid #1E293B;
+}
+.sidebar-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  object-fit: cover; flex-shrink: 0;
+}
+.sidebar-header h2 { font-size: 14px; font-weight: 700; color: #F1F5F9; line-height: 1.2; }
+.sidebar-header span { font-size: 11px; color: #64748B; }
+
+.sidebar-nav { padding: 12px; flex: 1; }
+.sidebar-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+  color: #475569; padding: 8px 12px 4px; font-weight: 600;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: var(--radius-btn); cursor: pointer; font-size: 13px;
+  font-weight: 500; color: #94A3B8; transition: all var(--transition);
+  margin-bottom: 2px; position: relative;
+}
+.sidebar-item:hover { background: #1E293B; color: #E2E8F0; }
+.sidebar-item.active { background: var(--brand-red); color: #fff; }
+.sidebar-item .shortcut {
+  margin-left: auto; font-size: 10px; font-family: 'JetBrains Mono', monospace;
+  opacity: .4; padding: 2px 6px; background: rgba(255,255,255,.06); border-radius: 4px;
+}
+.sidebar-item.active .shortcut { opacity: .7; background: rgba(255,255,255,.15); }
+
+.sidebar-footer {
+  padding: 12px; border-top: 1px solid #1E293B;
+}
+.sidebar-status {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  font-size: 12px; color: #64748B;
+}
+.sidebar-status .dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.sidebar-status .dot.online { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.sidebar-status .dot.offline { background: var(--error); box-shadow: 0 0 6px var(--error); }
+
+.dark-toggle {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: var(--radius-btn); cursor: pointer; font-size: 13px;
+  font-weight: 500; color: #94A3B8; transition: all var(--transition);
+}
+.dark-toggle:hover { background: #1E293B; color: #E2E8F0; }
+
+/* Main content area */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* Module header */
+.module-header {
+  height: var(--header-h); min-height: var(--header-h);
+  background: var(--bg-card); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; gap: 16px;
+}
+.module-header-left { display: flex; align-items: center; gap: 12px; }
+.module-header-left h1 { font-size: 18px; font-weight: 700; }
+.module-header-left .breadcrumb { font-size: 12px; color: var(--text-muted); }
+
+.module-header-right { display: flex; align-items: center; gap: 12px; }
+.save-indicator {
+  display: flex; align-items: center; gap: 6px; font-size: 12px;
+  color: var(--text-muted); font-weight: 500;
+}
+.save-indicator .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.save-indicator .dot.saved { background: var(--success); }
+.save-indicator .dot.unsaved { background: var(--warning); animation: pulse 1.5s infinite; }
+.save-indicator .dot.error { background: var(--error); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+/* Content wrapper */
+.content-area {
+  flex: 1; overflow-y: auto; padding: 32px;
+}
+.content-inner { max-width: 1200px; margin: 0 auto; }
+
+/* Module panels */
+.module-panel { display: none; animation: fadeIn .25s ease; }
+.module-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ========================================================================
+   Shared UI Components
+   ======================================================================== */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  border-radius: var(--radius-btn); font-size: 13px; font-weight: 600;
+  border: none; cursor: pointer; transition: all var(--transition);
+  font-family: inherit; line-height: 1;
+}
+.btn-primary { background: var(--brand-red); color: #fff; }
+.btn-primary:hover { background: var(--brand-red-hover); }
+.btn-secondary { background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--border-hover); background: var(--bg-card); }
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { background: var(--bg-primary); color: var(--text-primary); }
+.btn-danger { background: var(--error); color: #fff; }
+.btn-danger:hover { background: #DC2626; }
+.btn-sm { padding: 6px 10px; font-size: 12px; }
+.btn-icon { padding: 8px; }
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-card); padding: 24px;
+  box-shadow: var(--shadow-card); transition: box-shadow var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-card-hover); }
+
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 10px 12px; font-size: 14px; font-family: inherit;
+  border: 1px solid var(--border); border-radius: var(--radius-input);
+  background: var(--bg-card); color: var(--text-primary);
+  transition: border var(--transition); outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--brand-red);
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+.toggle-wrap {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+}
+.toggle {
+  position: relative; width: 44px; height: 24px;
+  background: var(--border); border-radius: 12px;
+  transition: background var(--transition); cursor: pointer;
+}
+.toggle.active { background: var(--brand-red); }
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; background: #fff; border-radius: 50%;
+  transition: transform var(--transition);
+}
+.toggle.active::after { transform: translateX(20px); }
+.toggle-label { font-size: 13px; font-weight: 500; }
+
+.badge {
+  display: inline-flex; padding: 3px 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 600; letter-spacing: .3px;
+}
+.badge-success { background: #D1FAE5; color: #065F46; }
+.badge-info { background: #DBEAFE; color: #1E40AF; }
+.badge-warning { background: #FEF3C7; color: #92400E; }
+.badge-error { background: #FEE2E2; color: #991B1B; }
+.badge-gray { background: #F1F5F9; color: #475569; }
+html.dark .badge-success { background: #064E3B; color: #6EE7B7; }
+html.dark .badge-info { background: #1E3A5F; color: #93C5FD; }
+html.dark .badge-warning { background: #78350F; color: #FCD34D; }
+html.dark .badge-error { background: #7F1D1D; color: #FCA5A5; }
+html.dark .badge-gray { background: #334155; color: #94A3B8; }
+
+.section-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.empty-state {
+  text-align: center; padding: 48px 24px; color: var(--text-muted);
+}
+.empty-state i { margin-bottom: 12px; opacity: .4; }
+.empty-state p { font-size: 14px; }
+
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed var(--border); border-radius: var(--radius-card);
+  padding: 32px; text-align: center; cursor: pointer;
+  transition: all var(--transition); background: var(--bg-primary);
+}
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--brand-red); background: var(--brand-red-light);
+}
+html.dark .upload-zone:hover, html.dark .upload-zone.dragover {
+  background: rgba(200,16,46,.08);
+}
+.upload-zone p { font-size: 14px; color: var(--text-secondary); margin-top: 8px; }
+.upload-zone .upload-hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Image grid */
+.image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.image-card {
+  position: relative; border-radius: var(--radius-card); overflow: hidden;
+  border: 1px solid var(--border); background: var(--bg-card); transition: all var(--transition);
+}
+.image-card:hover { box-shadow: var(--shadow-card-hover); }
+.image-card img {
+  width: 100%; height: 140px; object-fit: cover; display: block;
+}
+.image-card .image-info { padding: 10px; }
+.image-card .image-info input {
+  width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg-primary); color: var(--text-primary);
+  font-family: inherit; outline: none;
+}
+.image-card .image-info input:focus { border-color: var(--brand-red); }
+.image-card .image-info select {
+  width: 100%; padding: 5px 8px; font-size: 12px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg-primary); color: var(--text-primary);
+  font-family: inherit; margin-top: 6px; outline: none;
+}
+.image-card .image-delete {
+  position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
+  background: rgba(0,0,0,.6); color: #fff; border: none; border-radius: 6px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity var(--transition);
+}
+.image-card:hover .image-delete { opacity: 1; }
+
+/* Kursplan tabs */
+.day-tabs {
+  display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+.day-tab {
+  padding: 10px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+  color: var(--text-secondary); border: none; background: none;
+  border-bottom: 2px solid transparent; transition: all var(--transition);
+  font-family: inherit;
+}
+.day-tab:hover { color: var(--text-primary); }
+.day-tab.active { color: var(--brand-red); border-bottom-color: var(--brand-red); }
+
+.kurs-card {
+  display: grid; grid-template-columns: 1fr 120px 100px 120px auto;
+  gap: 12px; align-items: center; padding: 12px; border-radius: var(--radius-btn);
+  border: 1px solid var(--border); margin-bottom: 8px; background: var(--bg-card);
+}
+.kurs-card input, .kurs-card select {
+  padding: 8px 10px; font-size: 13px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--bg-primary); color: var(--text-primary);
+  font-family: inherit; outline: none;
+}
+.kurs-card input:focus, .kurs-card select:focus { border-color: var(--brand-red); }
+.kurs-card .kurs-delete {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  border: none; background: none; color: var(--text-muted); cursor: pointer;
+  border-radius: 6px; transition: all var(--transition);
+}
+.kurs-card .kurs-delete:hover { background: var(--brand-red-light); color: var(--error); }
+
+/* Stars */
+.stars { display: flex; gap: 2px; }
+.star {
+  width: 24px; height: 24px; cursor: pointer; color: var(--border);
+  transition: color .15s;
+}
+.star.active { color: var(--warning); }
+.star:hover { color: var(--warning); }
+
+/* Review card */
+.review-card {
+  border: 1px solid var(--border); border-radius: var(--radius-card);
+  padding: 16px; margin-bottom: 12px; background: var(--bg-card);
+}
+.review-card.hidden-review { opacity: .5; }
+
+/* Hero preview */
+.hero-preview {
+  border-radius: var(--radius-card); overflow: hidden;
+  background: var(--brand-dark); color: #fff; padding: 32px;
+  position: relative; min-height: 200px; margin-bottom: 24px;
+  background-size: cover; background-position: center;
+}
+.hero-preview::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,.7), rgba(0,0,0,.3));
+}
+.hero-preview * { position: relative; }
+.hero-preview .preview-badge {
+  display: inline-block; padding: 4px 12px; font-size: 11px;
+  border: 1px solid rgba(255,255,255,.3); border-radius: 20px;
+  margin-bottom: 12px; color: rgba(255,255,255,.8);
+}
+.hero-preview h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+.hero-preview p { font-size: 14px; opacity: .8; max-width: 400px; }
+
+/* Banner preview */
+.banner-preview {
+  border-radius: var(--radius-card); padding: 14px 20px;
+  font-size: 14px; font-weight: 500; text-align: center;
+  margin-bottom: 24px;
+}
+.banner-preview.type-info { background: #DBEAFE; color: #1E40AF; }
+.banner-preview.type-aktion { background: #FEE2E2; color: #991B1B; }
+.banner-preview.type-hinweis { background: #FEF3C7; color: #92400E; }
+.banner-preview.type-erfolg { background: #D1FAE5; color: #065F46; }
+
+/* Tag input */
+.tag-input-wrap {
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 8px;
+  border: 1px solid var(--border); border-radius: var(--radius-input);
+  background: var(--bg-card); min-height: 42px; align-items: center;
+  cursor: text;
+}
+.tag-input-wrap:focus-within { border-color: var(--brand-red); }
+.tag {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px;
+  background: var(--brand-red-light); color: var(--brand-red); border-radius: 6px;
+  font-size: 12px; font-weight: 500;
+}
+html.dark .tag { background: rgba(200,16,46,.15); }
+.tag .tag-remove {
+  cursor: pointer; width: 14px; height: 14px; display: flex;
+  align-items: center; justify-content: center; opacity: .6;
+}
+.tag .tag-remove:hover { opacity: 1; }
+.tag-input-wrap input {
+  border: none; outline: none; font-size: 13px; font-family: inherit;
+  background: transparent; color: var(--text-primary); flex: 1; min-width: 80px;
+}
+
+/* Team card */
+.team-card {
+  display: grid; grid-template-columns: 120px 1fr; gap: 20px;
+  border: 1px solid var(--border); border-radius: var(--radius-card);
+  padding: 20px; margin-bottom: 16px; background: var(--bg-card);
+}
+.team-photo {
+  width: 120px; height: 140px; border-radius: var(--radius-btn);
+  object-fit: cover; cursor: pointer; border: 2px dashed var(--border);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-primary); overflow: hidden; position: relative;
+}
+.team-photo img { width: 100%; height: 100%; object-fit: cover; }
+.team-photo .photo-placeholder {
+  text-align: center; color: var(--text-muted); font-size: 12px;
+}
+
+/* Char counter */
+.char-counter {
+  font-size: 11px; color: var(--text-muted); text-align: right; margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.char-counter.near-limit { color: var(--warning); }
+.char-counter.at-limit { color: var(--error); }
+
+/* Toast container */
+#toast-container {
+  position: fixed; top: 16px; right: 16px; z-index: 10000;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  padding: 12px 20px; border-radius: var(--radius-btn);
+  font-size: 13px; font-weight: 500; color: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  animation: slideIn .3s ease; display: flex; align-items: center; gap: 8px;
+  min-width: 260px;
+}
+.toast.toast-success { background: var(--success); }
+.toast.toast-error { background: var(--error); }
+.toast.toast-info { background: var(--info); }
+.toast.toast-warning { background: var(--warning); }
+.toast.removing { animation: slideOut .3s ease forwards; }
+
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes slideOut { to { transform: translateX(100%); opacity: 0; } }
+
+/* Confirm dialog */
+.confirm-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9000;
+  display: flex; align-items: center; justify-content: center;
+}
+.confirm-dialog {
+  background: var(--bg-card); border-radius: var(--radius-card); padding: 24px;
+  max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.confirm-dialog h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.confirm-dialog p { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+.confirm-dialog .confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* History panel */
+.history-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-btn);
+  margin-bottom: 8px; background: var(--bg-card);
+}
+.history-item .history-time {
+  font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);
+}
+
+/* Settings */
+.settings-section {
+  border: 1px solid var(--border); border-radius: var(--radius-card);
+  padding: 20px; margin-bottom: 16px; background: var(--bg-card);
+}
+.settings-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+
+/* Aktion card */
+.aktion-card {
+  border: 1px solid var(--border); border-radius: var(--radius-card);
+  padding: 20px; margin-bottom: 16px; background: var(--bg-card);
+}
+.aktion-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar { width: 220px; min-width: 220px; }
+  .content-area { padding: 20px; }
+  .kurs-card { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .module-header { padding: 0 16px; }
+  .content-area { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- PIN Overlay -->
+<div id="pin-overlay">
+  <img class="pin-logo" src="/public/images/logo-ff-jpg-cropped.jpg" alt="Fitness Factory">
+  <h1>Content Dashboard</h1>
+  <p>PIN eingeben, um fortzufahren</p>
+  <div class="pin-inputs">
+    <input type="password" maxlength="1" inputmode="numeric" data-pin="0" autofocus>
+    <input type="password" maxlength="1" inputmode="numeric" data-pin="1">
+    <input type="password" maxlength="1" inputmode="numeric" data-pin="2">
+    <input type="password" maxlength="1" inputmode="numeric" data-pin="3">
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- App -->
+<div id="app" style="display:none">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img class="sidebar-logo" src="/public/images/logo-ff-jpg-cropped.jpg" alt="Fitness Factory">
+      <div>
+        <h2>Content Dashboard</h2>
+        <span>Fitness Factory</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-label">Module</div>
+      <div class="sidebar-item active" data-module="galerie" onclick="switchModule('galerie')">
+        <i data-lucide="image" style="width:18px;height:18px"></i> Galerie
+        <span class="shortcut">1</span>
+      </div>
+      <div class="sidebar-item" data-module="kursplan" onclick="switchModule('kursplan')">
+        <i data-lucide="calendar" style="width:18px;height:18px"></i> Kursplan
+        <span class="shortcut">2</span>
+      </div>
+      <div class="sidebar-item" data-module="oeffnungszeiten" onclick="switchModule('oeffnungszeiten')">
+        <i data-lucide="clock" style="width:18px;height:18px"></i> Öffnungszeiten
+        <span class="shortcut">3</span>
+      </div>
+      <div class="sidebar-item" data-module="aktionen" onclick="switchModule('aktionen')">
+        <i data-lucide="tag" style="width:18px;height:18px"></i> Aktionen
+        <span class="shortcut">4</span>
+      </div>
+      <div class="sidebar-item" data-module="bewertungen" onclick="switchModule('bewertungen')">
+        <i data-lucide="star" style="width:18px;height:18px"></i> Bewertungen
+        <span class="shortcut">5</span>
+      </div>
+      <div class="sidebar-item" data-module="team" onclick="switchModule('team')">
+        <i data-lucide="users" style="width:18px;height:18px"></i> Team
+        <span class="shortcut">6</span>
+      </div>
+      <div class="sidebar-item" data-module="hero" onclick="switchModule('hero')">
+        <i data-lucide="layout" style="width:18px;height:18px"></i> Hero-Banner
+        <span class="shortcut">7</span>
+      </div>
+      <div class="sidebar-item" data-module="banner" onclick="switchModule('banner')">
+        <i data-lucide="bell" style="width:18px;height:18px"></i> Banner
+        <span class="shortcut">8</span>
+      </div>
+      <div class="sidebar-item" data-module="trustbar" onclick="switchModule('trustbar')">
+        <i data-lucide="badge-check" style="width:18px;height:18px"></i> Trust Bar
+        <span class="shortcut">9</span>
+      </div>
+
+      <div class="sidebar-label" style="margin-top:16px">Insights</div>
+      <div class="sidebar-item" data-module="analytics" onclick="switchModule('analytics')">
+        <i data-lucide="bar-chart-3" style="width:18px;height:18px"></i> Analytics
+        <span class="shortcut">0</span>
+      </div>
+
+      <div class="sidebar-label" style="margin-top:16px">System</div>
+      <div class="sidebar-item" data-module="history" onclick="switchModule('history')">
+        <i data-lucide="history" style="width:18px;height:18px"></i> Verlauf
+      </div>
+      <div class="sidebar-item" data-module="settings" onclick="switchModule('settings')">
+        <i data-lucide="settings" style="width:18px;height:18px"></i> Einstellungen
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="dark-toggle" onclick="toggleDarkMode()">
+        <i data-lucide="moon" style="width:18px;height:18px" id="dark-icon"></i>
+        <span id="dark-label">Dark Mode</span>
+      </div>
+      <div class="sidebar-status">
+        <div class="dot" id="server-dot"></div>
+        <span id="server-status-text">Prüfe Server...</span>
+      </div>
+      <div class="sidebar-status">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px" id="version-text">v—</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <header class="module-header">
+      <div class="module-header-left">
+        <h1 id="module-title">Galerie</h1>
+        <span class="breadcrumb" id="module-breadcrumb">Dashboard / Galerie</span>
+      </div>
+      <div class="module-header-right">
+        <div class="save-indicator" id="save-indicator">
+          <div class="dot saved"></div>
+          <span>Gespeichert</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="undoLastChange()" title="Rückgängig (Ctrl+Z)">
+          <i data-lucide="undo-2" style="width:14px;height:14px"></i> Undo
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="saveCurrentModule()" title="Speichern (Ctrl+S)">
+          <i data-lucide="save" style="width:14px;height:14px"></i> Speichern
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="content-inner">
+
+        <!-- Modul 1: Galerie -->
+        <div class="module-panel active" id="panel-galerie">
+          <div class="upload-zone" id="galerie-upload">
+            <i data-lucide="upload-cloud" style="width:36px;height:36px;color:var(--text-muted)"></i>
+            <p>Bilder hierher ziehen oder klicken</p>
+            <span class="upload-hint">JPG, PNG, WebP — max. 10 MB</span>
+            <input type="file" accept="image/jpeg,image/png,image/webp" multiple style="display:none" id="galerie-file-input">
+          </div>
+          <div style="margin-top:20px">
+            <div class="section-title">
+              <i data-lucide="grid-3x3" style="width:18px;height:18px"></i>
+              Bilder <span id="galerie-count" class="badge badge-gray" style="margin-left:4px">0</span>
+            </div>
+            <div class="image-grid" id="galerie-grid"></div>
+          </div>
+        </div>
+
+        <!-- Modul 2: Kursplan -->
+        <div class="module-panel" id="panel-kursplan">
+          <div class="day-tabs" id="kursplan-tabs"></div>
+          <div id="kursplan-content"></div>
+          <div class="form-group" style="margin-top:20px">
+            <label class="form-label">Hinweistext</label>
+            <input type="text" class="form-input" id="kursplan-hinweis" placeholder="z.B. Kurszeiten können sich ändern" oninput="markUnsaved()">
+          </div>
+        </div>
+
+        <!-- Modul 3: Öffnungszeiten -->
+        <div class="module-panel" id="panel-oeffnungszeiten">
+          <div class="card" style="margin-bottom:20px">
+            <div class="section-title"><i data-lucide="clock" style="width:18px;height:18px"></i> Reguläre Öffnungszeiten</div>
+            <div id="oeffnung-regulaer"></div>
+          </div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="section-title" style="justify-content:space-between">
+              <span style="display:flex;align-items:center;gap:8px"><i data-lucide="calendar-x" style="width:18px;height:18px"></i> Sonder-Öffnungszeiten</span>
+              <button class="btn btn-secondary btn-sm" onclick="addSonderzeit()"><i data-lucide="plus" style="width:14px;height:14px"></i> Hinzufügen</button>
+            </div>
+            <div id="oeffnung-sonder"></div>
+          </div>
+          <div class="card">
+            <div class="section-title"><i data-lucide="megaphone" style="width:18px;height:18px"></i> Banner-Hinweis</div>
+            <div class="toggle-wrap" style="margin-bottom:12px" onclick="toggleOeffnungBanner()">
+              <div class="toggle" id="oeffnung-banner-toggle"></div>
+              <span class="toggle-label">Banner aktiv</span>
+            </div>
+            <textarea class="form-textarea" id="oeffnung-banner-text" placeholder="z.B. Zwischen Weihnachten und Neujahr gelten veränderte Öffnungszeiten" oninput="markUnsaved()" rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- Modul 4: Aktionen -->
+        <div class="module-panel" id="panel-aktionen">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div class="section-title" style="margin-bottom:0"><i data-lucide="tag" style="width:18px;height:18px"></i> Aktionen & Angebote</div>
+            <button class="btn btn-primary btn-sm" onclick="addAktion()"><i data-lucide="plus" style="width:14px;height:14px"></i> Neue Aktion</button>
+          </div>
+          <div id="aktionen-list"></div>
+        </div>
+
+        <!-- Modul 5: Bewertungen -->
+        <div class="module-panel" id="panel-bewertungen">
+          <div class="card" style="margin-bottom:20px">
+            <div class="section-title"><i data-lucide="bar-chart-3" style="width:18px;height:18px"></i> Gesamt-Statistik</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Durchschnitt</label>
+                <input type="number" class="form-input" id="bew-rating" step="0.1" min="1" max="5" oninput="markUnsaved()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Anzahl Bewertungen</label>
+                <input type="number" class="form-input" id="bew-total" min="0" oninput="markUnsaved()">
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:0"><i data-lucide="message-square" style="width:18px;height:18px"></i> Bewertungen</div>
+            <button class="btn btn-primary btn-sm" onclick="addBewertung()"><i data-lucide="plus" style="width:14px;height:14px"></i> Hinzufügen</button>
+          </div>
+          <div id="bewertungen-list"></div>
+        </div>
+
+        <!-- Modul 6: Team -->
+        <div class="module-panel" id="panel-team">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div class="section-title" style="margin-bottom:0"><i data-lucide="users" style="width:18px;height:18px"></i> Team-Mitglieder</div>
+            <button class="btn btn-primary btn-sm" onclick="addTrainer()"><i data-lucide="plus" style="width:14px;height:14px"></i> Trainer hinzufügen</button>
+          </div>
+          <div id="team-list"></div>
+        </div>
+
+        <!-- Modul 7: Hero -->
+        <div class="module-panel" id="panel-hero">
+          <div class="hero-preview" id="hero-preview">
+            <div class="preview-badge" id="hero-prev-badge">Fitnessstudio Hattingen</div>
+            <h2 id="hero-prev-headline">Dein Gym in Hattingen</h2>
+            <p id="hero-prev-sub">Sauna, Live-Kurse, Getränkeflat...</p>
+          </div>
+          <div class="card">
+            <div class="form-group">
+              <label class="form-label">Badge-Text</label>
+              <input type="text" class="form-input" id="hero-badge" oninput="markUnsaved();updateHeroPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Headline</label>
+              <input type="text" class="form-input" id="hero-headline" style="font-size:18px;font-weight:700" oninput="markUnsaved();updateHeroPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subheadline</label>
+              <textarea class="form-textarea" id="hero-subheadline" rows="2" oninput="markUnsaved();updateHeroPreview()"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Primärer CTA — Text</label>
+                <input type="text" class="form-input" id="hero-cta1-text" oninput="markUnsaved()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Primärer CTA — Link</label>
+                <input type="text" class="form-input" id="hero-cta1-href" oninput="markUnsaved()">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Sekundärer CTA — Text</label>
+                <input type="text" class="form-input" id="hero-cta2-text" oninput="markUnsaved()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Sekundärer CTA — Link</label>
+                <input type="text" class="form-input" id="hero-cta2-href" oninput="markUnsaved()">
+              </div>
+            </div>
+            <div class="section-title" style="margin-top:8px"><i data-lucide="hash" style="width:16px;height:16px"></i> Kennzahlen</div>
+            <div class="form-row-3" id="hero-kennzahlen"></div>
+            <div class="form-group" style="margin-top:16px">
+              <label class="form-label">Vertrauenssignal</label>
+              <input type="text" class="form-input" id="hero-trust" oninput="markUnsaved()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hintergrundbild</label>
+              <div style="display:flex;gap:12px;align-items:center">
+                <input type="text" class="form-input" id="hero-bg-path" oninput="markUnsaved();updateHeroPreview()" style="flex:1">
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer;white-space:nowrap">
+                  <i data-lucide="upload" style="width:14px;height:14px"></i> Upload
+                  <input type="file" accept="image/*" style="display:none" onchange="uploadHeroBg(this)">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modul 8: Banner -->
+        <div class="module-panel" id="panel-banner">
+          <div class="banner-preview type-info" id="banner-preview">
+            <span id="banner-prev-text">Banner-Vorschau</span>
+          </div>
+          <div class="card">
+            <div class="toggle-wrap" style="margin-bottom:16px" onclick="toggleBannerActive()">
+              <div class="toggle" id="banner-aktiv-toggle"></div>
+              <span class="toggle-label">Banner aktiv</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Text</label>
+              <textarea class="form-textarea" id="banner-text" maxlength="120" rows="2" oninput="markUnsaved();updateBannerPreview();updateCharCounter(this,'banner-chars',120)"></textarea>
+              <div class="char-counter" id="banner-chars">0 / 120</div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Typ</label>
+                <select class="form-select" id="banner-typ" onchange="markUnsaved();updateBannerPreview()">
+                  <option value="info">Info (Blau)</option>
+                  <option value="aktion">Aktion (Rot)</option>
+                  <option value="hinweis">Hinweis (Gelb)</option>
+                  <option value="erfolg">Erfolg (Grün)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Position</label>
+                <select class="form-select" id="banner-position" onchange="markUnsaved()">
+                  <option value="above-header">Über Header</option>
+                  <option value="below-header">Unter Header</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Link-Text (optional)</label>
+                <input type="text" class="form-input" id="banner-link-text" oninput="markUnsaved()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Link-URL (optional)</label>
+                <input type="text" class="form-input" id="banner-link-href" oninput="markUnsaved()">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Startdatum</label>
+                <input type="date" class="form-input" id="banner-start" oninput="markUnsaved()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Enddatum</label>
+                <input type="date" class="form-input" id="banner-end" oninput="markUnsaved()">
+              </div>
+            </div>
+            <div class="toggle-wrap" onclick="toggleBannerDismissable()">
+              <div class="toggle active" id="banner-dismissable-toggle"></div>
+              <span class="toggle-label">Kann vom Nutzer geschlossen werden</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modul: Trust Bar -->
+        <div class="module-panel" id="panel-trustbar">
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px">
+            Diese Werte werden in der Trust Bar unter dem Hero-Banner auf der Website angezeigt.
+          </p>
+          <div class="card" style="margin-bottom:20px">
+            <div class="section-title"><i data-lucide="star" style="width:18px;height:18px"></i> Google Bewertungen</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Bewertungs-Score (0–5)</label>
+                <input type="number" class="form-input" id="trustbar-rating" step="0.1" min="0" max="5" value="4.9" oninput="markUnsaved()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Anzahl Bewertungen</label>
+                <input type="number" class="form-input" id="trustbar-reviews" min="0" value="167" oninput="markUnsaved()">
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:12px">
+              <button class="btn btn-secondary btn-sm" onclick="syncGoogleReviews()">
+                <i data-lucide="refresh-cw" style="width:14px;height:14px"></i> Mit Google synchronisieren
+              </button>
+              <span id="trustbar-sync-status" style="font-size:12px;color:var(--text-muted)"></span>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:20px">
+            <div class="section-title"><i data-lucide="calendar" style="width:18px;height:18px"></i> Kennzahlen</div>
+            <div class="form-group">
+              <label class="form-label">Anzahl Live-Kurse pro Woche</label>
+              <input type="number" class="form-input" id="trustbar-kurse" min="0" value="16" oninput="markUnsaved()">
+            </div>
+          </div>
+          <div class="card" style="background:var(--brand-red-light);border-color:var(--brand-red)22">
+            <div class="section-title" style="color:var(--brand-red)"><i data-lucide="info" style="width:16px;height:16px"></i> Vorschau</div>
+            <div id="trustbar-preview" style="display:flex;gap:24px;font-size:14px;margin-top:8px"></div>
+          </div>
+        </div>
+
+        <!-- Analytics panel -->
+        <div class="module-panel" id="panel-analytics">
+          <!-- KPI Cards -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:24px">
+            <div class="card" style="text-align:center;padding:20px">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">Heute</div>
+              <div id="analytics-today" style="font-size:32px;font-weight:800;color:var(--text-primary)">—</div>
+              <div style="font-size:12px;color:var(--text-secondary)">Seitenaufrufe</div>
+            </div>
+            <div class="card" style="text-align:center;padding:20px">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">Diese Woche</div>
+              <div id="analytics-week" style="font-size:32px;font-weight:800;color:var(--text-primary)">—</div>
+              <div style="font-size:12px;color:var(--text-secondary)">Seitenaufrufe</div>
+            </div>
+            <div class="card" style="text-align:center;padding:20px">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">Dieser Monat</div>
+              <div id="analytics-month" style="font-size:32px;font-weight:800;color:var(--text-primary)">—</div>
+              <div style="font-size:12px;color:var(--text-secondary)">Seitenaufrufe</div>
+            </div>
+            <div class="card" style="text-align:center;padding:20px">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">Jetzt live</div>
+              <div id="analytics-live" style="font-size:32px;font-weight:800;color:var(--success)">—</div>
+              <div style="font-size:12px;color:var(--text-secondary)">Aktive Besucher</div>
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <!-- Top-Seiten -->
+            <div class="card" style="padding:20px">
+              <div class="section-title" style="margin-bottom:12px"><i data-lucide="file-text" style="width:16px;height:16px"></i> Top-Seiten</div>
+              <div id="analytics-pages" style="font-size:13px"></div>
+            </div>
+            <!-- Gerätetypen -->
+            <div class="card" style="padding:20px">
+              <div class="section-title" style="margin-bottom:12px"><i data-lucide="smartphone" style="width:16px;height:16px"></i> Gerätetypen</div>
+              <div id="analytics-devices" style="font-size:13px"></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+            <!-- Referrer -->
+            <div class="card" style="padding:20px">
+              <div class="section-title" style="margin-bottom:12px"><i data-lucide="globe" style="width:16px;height:16px"></i> Quellen</div>
+              <div id="analytics-referrers" style="font-size:13px"></div>
+            </div>
+            <!-- CTA-Klicks -->
+            <div class="card" style="padding:20px">
+              <div class="section-title" style="margin-bottom:12px"><i data-lucide="mouse-pointer-click" style="width:16px;height:16px"></i> CTA-Klicks</div>
+              <div id="analytics-cta" style="font-size:13px"></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+            <!-- Timeline -->
+            <div class="card" style="padding:20px">
+              <div class="section-title" style="margin-bottom:12px"><i data-lucide="trending-up" style="width:16px;height:16px"></i> Besucher (30 Tage)</div>
+              <div id="analytics-timeline" style="height:160px;display:flex;align-items:flex-end;gap:2px"></div>
+            </div>
+            <!-- Peak Hours -->
+            <div class="card" style="padding:20px">
+              <div class="section-title" style="margin-bottom:12px"><i data-lucide="clock" style="width:16px;height:16px"></i> Peak Hours</div>
+              <div id="analytics-hours" style="font-size:12px"></div>
+              <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">
+                Bounce Rate: <strong id="analytics-bounce">—</strong>%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History panel -->
+        <div class="module-panel" id="panel-history">
+          <div class="section-title"><i data-lucide="history" style="width:18px;height:18px"></i> Backup-Verlauf</div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Die letzten 20 Speicherstände. Klicke auf "Wiederherstellen", um einen früheren Stand zu laden.</p>
+          <div id="history-list"></div>
+        </div>
+
+        <!-- Settings panel -->
+        <div class="module-panel" id="panel-settings">
+          <div class="section-title"><i data-lucide="settings" style="width:18px;height:18px"></i> Einstellungen</div>
+          <div class="settings-section">
+            <h3>PIN ändern</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Neuer PIN (4 Ziffern)</label>
+                <input type="password" class="form-input" id="settings-new-pin" maxlength="4" inputmode="numeric" placeholder="****">
+              </div>
+              <div class="form-group" style="display:flex;align-items:flex-end">
+                <button class="btn btn-primary btn-sm" onclick="changePin()">PIN ändern</button>
+              </div>
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3>Daten exportieren / importieren</h3>
+            <div style="display:flex;gap:12px;margin-top:8px">
+              <button class="btn btn-secondary" onclick="exportData()"><i data-lucide="download" style="width:14px;height:14px"></i> JSON exportieren</button>
+              <label class="btn btn-secondary" style="cursor:pointer">
+                <i data-lucide="upload" style="width:14px;height:14px"></i> JSON importieren
+                <input type="file" accept=".json" style="display:none" onchange="importData(this)">
+              </label>
+            </div>
+          </div>
+          <div class="settings-section">
+            <h3>Dark Mode</h3>
+            <div class="toggle-wrap" onclick="toggleDarkMode()">
+              <div class="toggle" id="settings-dark-toggle"></div>
+              <span class="toggle-label">Dunkles Design aktivieren</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* =========================================================================
+   State & Config
+   ========================================================================= */
+const API = '';
+const MODULES = ['galerie','kursplan','oeffnungszeiten','aktionen','bewertungen','team','hero','banner','trustbar'];
+const MODULE_NAMES = {
+  galerie: 'Galerie', kursplan: 'Kursplan', oeffnungszeiten: 'Öffnungszeiten',
+  aktionen: 'Aktionen & Angebote', bewertungen: 'Bewertungen', team: 'Team',
+  hero: 'Hero-Banner', banner: 'Benachrichtigungs-Banner', trustbar: 'Trust Bar',
+  analytics: 'Analytics', history: 'Verlauf', settings: 'Einstellungen'
+};
+
+let state = {};
+let undoStack = [];
+let currentModule = 'galerie';
+let unsaved = false;
+let serverOnline = false;
+
+/* Default data */
+const DEFAULTS = {
+  galerie: { bilder: [
+    { src: '/images/studio-dsc-01.jpg', alt: 'Fitnessgeräte im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-dsc-02.jpg', alt: 'Kursraum für Yoga und Spinning', kategorie: 'Kurse' },
+    { src: '/images/studio-dsc-03.jpg', alt: 'Trainingsbereich im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-dsc-04.jpg', alt: 'Kraftbereich im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-dsc-05.jpg', alt: 'Cardiobereich im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-dsc-06.jpg', alt: 'Gerätepark im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-dsc-07.jpg', alt: 'Trainingsbereich im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-dsc-08.jpg', alt: 'Studiobereich im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/images/studio-galerie-01.jpg', alt: 'Ausstattung im Fitness Factory Hattingen', kategorie: 'Studio' },
+    { src: '/Galerie/Sauna/Sauna_Außenbereich_01.jpeg', alt: 'Sauna Außenbereich im Fitness Factory Hattingen', kategorie: 'Sauna' },
+    { src: '/Galerie/Sauna/Sauna_Innenbereich_01.jpeg', alt: 'Sauna Innenbereich im Fitness Factory Hattingen', kategorie: 'Sauna' },
+    { src: '/Galerie/Sauna/Sauna_Innenbereich_02.jpeg', alt: 'Sauna im Fitness Factory Hattingen', kategorie: 'Sauna' },
+    { src: '/Galerie/Lounge/Theke-Lounge.jpeg', alt: 'Lounge und Theke im Fitness Factory Hattingen', kategorie: 'Lounge' },
+    { src: '/Galerie/Kursraum/Kurs_Video.mp4', alt: 'Kursraum im Fitness Factory Hattingen — Live-Kurse', kategorie: 'Kurs', type: 'video' }
+  ]},
+  kursplan: { kurse: [
+    { tag: 'Montag', tagKurz: 'Mo', items: [
+      { name: 'Vinyasa-Yoga', uhrzeit: '09:00', dauer: '60 Min', level: 'Alle Level' },
+      { name: 'Spinning', uhrzeit: '17:30', dauer: '45 Min', level: 'Alle Level' },
+      { name: 'Wirbelsäulen-Gymnastik', uhrzeit: '19:00', dauer: '45 Min', level: 'Alle Level' }
+    ]},
+    { tag: 'Dienstag', tagKurz: 'Di', items: [
+      { name: 'Bauch-Express', uhrzeit: '10:00', dauer: '30 Min', level: 'Alle Level' },
+      { name: 'Spinning', uhrzeit: '18:00', dauer: '45 Min', level: 'Alle Level' }
+    ]},
+    { tag: 'Mittwoch', tagKurz: 'Mi', items: [
+      { name: 'Tabata', uhrzeit: '10:00', dauer: '45 Min', level: 'Fortgeschritten' },
+      { name: 'Yoga', uhrzeit: '18:30', dauer: '60 Min', level: 'Alle Level' }
+    ]},
+    { tag: 'Donnerstag', tagKurz: 'Do', items: [
+      { name: 'Tae-Bo', uhrzeit: '10:00', dauer: '45 Min', level: 'Alle Level' },
+      { name: 'Spinning', uhrzeit: '18:00', dauer: '45 Min', level: 'Alle Level' }
+    ]},
+    { tag: 'Freitag', tagKurz: 'Fr', items: [
+      { name: 'Rücken-Fit', uhrzeit: '10:00', dauer: '45 Min', level: 'Alle Level' },
+      { name: 'Zumba', uhrzeit: '17:00', dauer: '60 Min', level: 'Alle Level' }
+    ]},
+    { tag: 'Samstag', tagKurz: 'Sa', items: [] },
+    { tag: 'Sonntag', tagKurz: 'So', items: [
+      { name: 'Spinning', uhrzeit: '10:00', dauer: '45 Min', level: 'Alle Level' },
+      { name: 'Full Body Intervall', uhrzeit: '11:00', dauer: '45 Min', level: 'Alle Level' },
+      { name: 'Pilates', uhrzeit: '14:00', dauer: '60 Min', level: 'Alle Level' }
+    ]}
+  ], hinweis: 'Kurszeiten können sich gelegentlich ändern.' },
+  oeffnungszeiten: {
+    regulaer: [
+      { tag: 'Montag – Freitag', von: '08:00', bis: '23:00' },
+      { tag: 'Samstag – Sonntag', von: '10:00', bis: '17:30' }
+    ],
+    sonder: [],
+    banner: { aktiv: false, text: '' }
+  },
+  aktionen: [
+    { id: 'fremdgeh-aktion', titel: 'Fremdgeh-Aktion', beschreibung: '3 Monate gratis trainieren bei Wechsel von einem anderen Studio.', startDatum: '2026-01-01', endDatum: '2026-12-31', aktiv: true, bild: '/images/aktion-fremdgeh.jpg', ctaText: 'Jetzt wechseln', ctaLink: '/fremdgeh-aktion' }
+  ],
+  bewertungen: {
+    overallRating: 4.9, totalReviews: 167,
+    items: [
+      { name: 'Florian Kurth', sterne: 5, text: 'Das Studio macht einen sehr coolen Eindruck. Alle Mitarbeiter und auch der Inhaber sind extrem freundlich.', datum: 'vor 2 Monaten', sichtbar: true },
+      { name: 'Dominik Sociera', sterne: 5, text: 'Ich war zum Probetraining dort und bin begeistert. Super Atmosphäre und moderne Geräte.', datum: 'vor 3 Monaten', sichtbar: true },
+      { name: 'Luca Vielmetter', sterne: 5, text: 'Richtig starkes Gym mit familiärer Atmosphäre. Man fühlt sich direkt willkommen.', datum: 'vor 1 Monat', sichtbar: true }
+    ]
+  },
+  team: { mitglieder: [
+    { name: 'Alex', rolle: 'Inhaber & Cheftrainer', qualifikationen: ['Personal Trainer', 'Ernährungsberater'], beschreibung: 'Alex hat die Fitness Factory mit einer klaren Vision gegründet: Ein Studio, in dem sich jeder willkommen fühlt.', foto: '/Trainer/Alex_02.jpeg' },
+    { name: 'Carla', rolle: 'Spinning-Trainerin', qualifikationen: ['Indoor Cycling Trainer', 'Personal Trainer'], beschreibung: 'Carla bringt Energie in jede Spinning-Stunde und motiviert alle Teilnehmer zu Höchstleistungen.', foto: '/Trainer/Carla.jpeg' }
+  ]},
+  hero: {
+    badge: 'Fitnessstudio Hattingen', headline: 'Dein Gym in Hattingen',
+    subheadline: 'Sauna, Live-Kurse, Getränkeflat und persönliche Betreuung — alles inklusive ab 35 €/Monat.',
+    ctaPrimary: { text: 'Probetraining buchen', href: '/probetraining' },
+    ctaSecondary: { text: 'Preise ansehen', href: '/mitgliedschaft' },
+    kennzahlen: [{ wert: '35€', label: 'ab Monat' }, { wert: '16', label: 'Live-Kurse' }, { wert: '∞', label: 'Sauna inkl.' }],
+    vertrauenssignal: 'Über 500 zufriedene Mitglieder in Hattingen',
+    hintergrundBild: '/images/banner-hero-01.jpg'
+  },
+  banner: { aktiv: false, text: '', typ: 'info', link: null, startDatum: '', endDatum: '', position: 'above-header', dismissable: true },
+  trustbar: { rating: 4.9, totalReviews: 167, liveKurse: 16 }
+};
+
+/* =========================================================================
+   Utilities
+   ========================================================================= */
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success: 'check-circle', error: 'alert-circle', info: 'info', warning: 'alert-triangle' };
+  el.innerHTML = `<i data-lucide="${icons[type] || 'info'}" style="width:16px;height:16px"></i> ${msg}`;
+  document.getElementById('toast-container').appendChild(el);
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+  setTimeout(() => { el.classList.add('removing'); setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+function confirm(title, msg) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-overlay';
+    overlay.innerHTML = `<div class="confirm-dialog">
+      <h3>${title}</h3><p>${msg}</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary btn-sm" onclick="this.closest('.confirm-overlay').remove()">Abbrechen</button>
+        <button class="btn btn-danger btn-sm" id="confirm-yes">Bestätigen</button>
+      </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#confirm-yes').onclick = () => { overlay.remove(); resolve(true); };
+    overlay.querySelector('.btn-secondary').onclick = () => { overlay.remove(); resolve(false); };
+  });
+}
+
+function updateCharCounter(el, counterId, max) {
+  const counter = document.getElementById(counterId);
+  const len = el.value.length;
+  counter.textContent = `${len} / ${max}`;
+  counter.className = 'char-counter' + (len >= max ? ' at-limit' : len >= max * 0.8 ? ' near-limit' : '');
+}
+
+/* =========================================================================
+   PIN Auth
+   ========================================================================= */
+function getStoredPin() { return localStorage.getItem('ff-dashboard-pin') || '1234'; }
+
+function initPin() {
+  const saved = localStorage.getItem('ff-dashboard-auth');
+  if (saved) {
+    const { ts } = JSON.parse(saved);
+    if (Date.now() - ts < 30 * 24 * 60 * 60 * 1000) {
+      document.getElementById('pin-overlay').classList.add('hidden');
+      document.getElementById('app').style.display = 'flex';
+      return;
+    }
+  }
+  const inputs = document.querySelectorAll('[data-pin]');
+  inputs.forEach((inp, i) => {
+    inp.addEventListener('input', () => {
+      if (inp.value && i < 3) inputs[i + 1].focus();
+      const pin = Array.from(inputs).map(x => x.value).join('');
+      if (pin.length === 4) {
+        if (pin === getStoredPin()) {
+          localStorage.setItem('ff-dashboard-auth', JSON.stringify({ ts: Date.now() }));
+          document.getElementById('pin-overlay').classList.add('hidden');
+          document.getElementById('app').style.display = 'flex';
+          initApp();
+        } else {
+          document.getElementById('pin-error').textContent = 'Falscher PIN';
+          inputs.forEach(x => { x.value = ''; x.style.borderColor = 'var(--error)'; });
+          inputs[0].focus();
+          setTimeout(() => inputs.forEach(x => x.style.borderColor = ''), 1500);
+        }
+      }
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i - 1].focus();
+    });
+  });
+}
+
+/* =========================================================================
+   API
+   ========================================================================= */
+async function apiGet(endpoint) {
+  const res = await fetch(API + endpoint);
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+async function apiPut(endpoint, data) {
+  const res = await fetch(API + endpoint, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error(`API ${res.status}`);
+  return res.json();
+}
+
+async function apiUpload(file, type = 'gallery') {
+  const fd = new FormData();
+  fd.append('image', file);
+  const res = await fetch(`${API}/api/upload?type=${type}`, { method: 'POST', body: fd });
+  if (!res.ok) throw new Error('Upload fehlgeschlagen');
+  return res.json();
+}
+
+async function loadContent() {
+  try {
+    const data = await apiGet('/api/content');
+    for (const key of MODULES) {
+      state[key] = data[key] ? deepClone(data[key]) : deepClone(DEFAULTS[key]);
+    }
+    state._meta = data._meta;
+  } catch (e) {
+    for (const key of MODULES) state[key] = deepClone(DEFAULTS[key]);
+    toast('Server nicht erreichbar — Defaults geladen', 'warning');
+  }
+}
+
+async function saveCurrentModule() {
+  try {
+    const data = getModuleData(currentModule);
+    if (!data) return;
+    pushUndo();
+    await apiPut(`/api/content/${currentModule}`, data);
+    state[currentModule] = deepClone(data);
+    markSaved();
+    toast(`${MODULE_NAMES[currentModule]} gespeichert`, 'success');
+    await checkServer();
+  } catch (e) {
+    setSaveState('error');
+    toast('Fehler beim Speichern: ' + e.message, 'error');
+  }
+}
+
+/* =========================================================================
+   Save State
+   ========================================================================= */
+function markUnsaved() {
+  unsaved = true;
+  setSaveState('unsaved');
+}
+
+function markSaved() {
+  unsaved = false;
+  setSaveState('saved');
+}
+
+function setSaveState(s) {
+  const ind = document.getElementById('save-indicator');
+  const dot = ind.querySelector('.dot');
+  const text = ind.querySelector('span');
+  dot.className = 'dot ' + s;
+  const labels = { saved: 'Gespeichert', unsaved: 'Ungespeichert', error: 'Fehler' };
+  text.textContent = labels[s] || s;
+}
+
+/* =========================================================================
+   Undo
+   ========================================================================= */
+function pushUndo() {
+  undoStack.push({ module: currentModule, data: deepClone(getModuleData(currentModule)) });
+  if (undoStack.length > 30) undoStack.shift();
+}
+
+function undoLastChange() {
+  if (!undoStack.length) { toast('Nichts zum Rückgängigmachen', 'info'); return; }
+  const last = undoStack.pop();
+  setModuleData(last.module, last.data);
+  if (last.module === currentModule) renderModule(currentModule);
+  toast('Rückgängig gemacht', 'info');
+  markUnsaved();
+}
+
+/* =========================================================================
+   Module Switch
+   ========================================================================= */
+function switchModule(mod) {
+  currentModule = mod;
+  document.querySelectorAll('.sidebar-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.module === mod);
+  });
+  document.querySelectorAll('.module-panel').forEach(el => {
+    el.classList.toggle('active', el.id === `panel-${mod}`);
+  });
+  document.getElementById('module-title').textContent = MODULE_NAMES[mod] || mod;
+  document.getElementById('module-breadcrumb').textContent = `Dashboard / ${MODULE_NAMES[mod] || mod}`;
+  renderModule(mod);
+  markSaved();
+}
+
+/* =========================================================================
+   Module Data Getters/Setters
+   ========================================================================= */
+function getModuleData(mod) {
+  switch (mod) {
+    case 'galerie': return collectGalerie();
+    case 'kursplan': return collectKursplan();
+    case 'oeffnungszeiten': return collectOeffnungszeiten();
+    case 'aktionen': return collectAktionen();
+    case 'bewertungen': return collectBewertungen();
+    case 'team': return collectTeam();
+    case 'hero': return collectHero();
+    case 'banner': return collectBanner();
+    case 'trustbar': return collectTrustbar();
+    default: return null;
+  }
+}
+
+function setModuleData(mod, data) {
+  state[mod] = deepClone(data);
+}
+
+/* =========================================================================
+   Render Dispatcher
+   ========================================================================= */
+function renderModule(mod) {
+  switch (mod) {
+    case 'galerie': renderGalerie(); break;
+    case 'kursplan': renderKursplan(); break;
+    case 'oeffnungszeiten': renderOeffnungszeiten(); break;
+    case 'aktionen': renderAktionen(); break;
+    case 'bewertungen': renderBewertungen(); break;
+    case 'team': renderTeam(); break;
+    case 'hero': renderHero(); break;
+    case 'banner': renderBanner(); break;
+    case 'trustbar': renderTrustbar(); break;
+    case 'analytics': renderAnalytics(); break;
+    case 'history': renderHistory(); break;
+    case 'settings': renderSettings(); break;
+  }
+}
+
+/* =========================================================================
+   Modul 1: Galerie
+   ========================================================================= */
+function renderGalerie() {
+  const data = state.galerie || DEFAULTS.galerie;
+  const grid = document.getElementById('galerie-grid');
+  const bilder = data.bilder || [];
+  document.getElementById('galerie-count').textContent = bilder.length;
+
+  grid.innerHTML = bilder.map((b, i) => {
+    const isVideo = b.type === 'video' || /\.(mp4|webm|mov)$/i.test(b.src);
+    const mediaHtml = isVideo
+      ? `<video src="/public${b.src}" muted loop playsinline style="width:100%;height:100%;object-fit:cover" onmouseenter="this.play()" onmouseleave="this.pause()"></video>`
+      : `<img src="/public${b.src}" alt="${escHtml(b.alt)}" onerror="this.style.background='var(--bg-primary)';this.alt='Bild nicht gefunden'">`;
+    return `
+    <div class="image-card" draggable="true" data-idx="${i}">
+      ${mediaHtml}
+      ${isVideo ? '<div style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);color:#fff;font-size:10px;padding:2px 6px;border-radius:4px">VIDEO</div>' : ''}
+      <button class="image-delete" onclick="deleteGalerieBild(${i})" title="Löschen">
+        <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+      </button>
+      <div class="image-info">
+        <input type="text" value="${escHtml(b.alt)}" placeholder="Alt-Text" onchange="state.galerie.bilder[${i}].alt=this.value;markUnsaved()">
+        <select onchange="state.galerie.bilder[${i}].kategorie=this.value;markUnsaved()">
+          ${['Studio','Kurse','Training','Ausstattung','Sauna','Lounge','Kurs'].map(k => `<option${b.kategorie===k?' selected':''}>${k}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  `}).join('');
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+  initGalerieDragDrop();
+}
+
+function initGalerieDragDrop() {
+  const grid = document.getElementById('galerie-grid');
+  let dragIdx = null;
+  grid.querySelectorAll('.image-card').forEach(card => {
+    card.addEventListener('dragstart', e => { dragIdx = +card.dataset.idx; card.style.opacity = '.4'; });
+    card.addEventListener('dragend', () => { card.style.opacity = '1'; });
+    card.addEventListener('dragover', e => e.preventDefault());
+    card.addEventListener('drop', e => {
+      e.preventDefault();
+      const dropIdx = +card.dataset.idx;
+      if (dragIdx !== null && dragIdx !== dropIdx) {
+        const arr = state.galerie.bilder;
+        const item = arr.splice(dragIdx, 1)[0];
+        arr.splice(dropIdx, 0, item);
+        renderGalerie();
+        markUnsaved();
+      }
+    });
+  });
+}
+
+async function deleteGalerieBild(idx) {
+  const ok = await confirm('Bild entfernen', 'Soll das Bild aus der Galerie entfernt werden?');
+  if (!ok) return;
+  pushUndo();
+  state.galerie.bilder.splice(idx, 1);
+  renderGalerie();
+  markUnsaved();
+}
+
+function initGalerieUpload() {
+  const zone = document.getElementById('galerie-upload');
+  const input = document.getElementById('galerie-file-input');
+  zone.addEventListener('click', () => input.click());
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragover'); handleGalerieFiles(e.dataTransfer.files); });
+  input.addEventListener('change', () => { handleGalerieFiles(input.files); input.value = ''; });
+}
+
+async function handleGalerieFiles(files) {
+  for (const file of files) {
+    try {
+      const result = await apiUpload(file, 'gallery');
+      if (!state.galerie) state.galerie = { bilder: [] };
+      if (!state.galerie.bilder) state.galerie.bilder = [];
+      state.galerie.bilder.push({ src: result.path, alt: file.name.replace(/\.[^.]+$/, ''), kategorie: 'Studio' });
+      toast(`${file.name} hochgeladen`, 'success');
+    } catch (e) { toast(`Upload fehlgeschlagen: ${file.name}`, 'error'); }
+  }
+  renderGalerie();
+  markUnsaved();
+}
+
+function collectGalerie() { return state.galerie || DEFAULTS.galerie; }
+
+/* =========================================================================
+   Modul 2: Kursplan
+   ========================================================================= */
+let activeDay = 0;
+
+function renderKursplan() {
+  const data = state.kursplan || DEFAULTS.kursplan;
+  const tabs = document.getElementById('kursplan-tabs');
+  tabs.innerHTML = data.kurse.map((d, i) => `
+    <button class="day-tab${i === activeDay ? ' active' : ''}" onclick="activeDay=${i};renderKursplan()">${d.tag}</button>
+  `).join('');
+
+  const day = data.kurse[activeDay];
+  const content = document.getElementById('kursplan-content');
+  content.innerHTML = (day.items || []).map((k, i) => `
+    <div class="kurs-card">
+      <input type="text" value="${escHtml(k.name)}" placeholder="Kursname" list="kurs-suggestions" onchange="state.kursplan.kurse[${activeDay}].items[${i}].name=this.value;markUnsaved()">
+      <input type="time" value="${k.uhrzeit}" onchange="state.kursplan.kurse[${activeDay}].items[${i}].uhrzeit=this.value;markUnsaved()">
+      <select onchange="state.kursplan.kurse[${activeDay}].items[${i}].dauer=this.value;markUnsaved()">
+        ${['30 Min','45 Min','60 Min','90 Min'].map(d => `<option${k.dauer===d?' selected':''}>${d}</option>`).join('')}
+      </select>
+      <select onchange="state.kursplan.kurse[${activeDay}].items[${i}].level=this.value;markUnsaved()">
+        ${['Alle Level','Anfänger','Fortgeschritten'].map(l => `<option${k.level===l?' selected':''}>${l}</option>`).join('')}
+      </select>
+      <button class="kurs-delete" onclick="deleteKurs(${i})" title="Löschen"><i data-lucide="x" style="width:16px;height:16px"></i></button>
+    </div>
+  `).join('') + `
+    <datalist id="kurs-suggestions">
+      ${['Yoga','Vinyasa-Yoga','Spinning','Tabata','Zumba','Tae-Bo','Pilates','Rücken-Fit','Bauch-Express','Full Body Intervall','Wirbelsäulen-Gymnastik'].map(n => `<option value="${n}">`).join('')}
+    </datalist>
+    <button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="addKurs()"><i data-lucide="plus" style="width:14px;height:14px"></i> Kurs hinzufügen</button>
+  `;
+  document.getElementById('kursplan-hinweis').value = data.hinweis || '';
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+}
+
+function addKurs() {
+  pushUndo();
+  state.kursplan.kurse[activeDay].items.push({ name: '', uhrzeit: '10:00', dauer: '45 Min', level: 'Alle Level' });
+  renderKursplan();
+  markUnsaved();
+}
+
+function deleteKurs(idx) {
+  pushUndo();
+  state.kursplan.kurse[activeDay].items.splice(idx, 1);
+  renderKursplan();
+  markUnsaved();
+}
+
+function collectKursplan() {
+  const data = state.kursplan || DEFAULTS.kursplan;
+  data.hinweis = document.getElementById('kursplan-hinweis')?.value || '';
+  return data;
+}
+
+/* =========================================================================
+   Modul 3: Öffnungszeiten
+   ========================================================================= */
+function renderOeffnungszeiten() {
+  const data = state.oeffnungszeiten || DEFAULTS.oeffnungszeiten;
+  const reg = document.getElementById('oeffnung-regulaer');
+  reg.innerHTML = data.regulaer.map((r, i) => `
+    <div class="form-row" style="margin-bottom:8px;align-items:center">
+      <div style="font-size:14px;font-weight:500">${escHtml(r.tag)}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="time" class="form-input" style="width:auto" value="${r.von}" onchange="state.oeffnungszeiten.regulaer[${i}].von=this.value;markUnsaved()">
+        <span style="color:var(--text-muted)">–</span>
+        <input type="time" class="form-input" style="width:auto" value="${r.bis}" onchange="state.oeffnungszeiten.regulaer[${i}].bis=this.value;markUnsaved()">
+      </div>
+    </div>
+  `).join('');
+
+  const sonder = document.getElementById('oeffnung-sonder');
+  sonder.innerHTML = (data.sonder || []).map((s, i) => `
+    <div style="display:grid;grid-template-columns:140px 1fr 100px 100px auto;gap:8px;align-items:center;margin-bottom:8px;padding:8px;border:1px solid var(--border);border-radius:8px">
+      <input type="date" class="form-input" value="${s.datum}" onchange="state.oeffnungszeiten.sonder[${i}].datum=this.value;markUnsaved()">
+      <input type="text" class="form-input" value="${escHtml(s.anlass)}" placeholder="Anlass" onchange="state.oeffnungszeiten.sonder[${i}].anlass=this.value;markUnsaved()">
+      ${s.geschlossen ? `<span class="badge badge-error" style="text-align:center">Geschlossen</span><span></span>` :
+        `<input type="time" class="form-input" value="${s.von||''}" onchange="state.oeffnungszeiten.sonder[${i}].von=this.value;markUnsaved()">
+         <input type="time" class="form-input" value="${s.bis||''}" onchange="state.oeffnungszeiten.sonder[${i}].bis=this.value;markUnsaved()">`}
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="toggleSonderGeschlossen(${i})" title="${s.geschlossen?'Öffnen':'Schließen'}">
+          <i data-lucide="${s.geschlossen?'door-open':'door-closed'}" style="width:14px;height:14px"></i>
+        </button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="deleteSonder(${i})" title="Entfernen">
+          <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+        </button>
+      </div>
+    </div>
+  `).join('') || '<p style="color:var(--text-muted);font-size:13px">Keine Sonder-Öffnungszeiten eingetragen.</p>';
+
+  const banner = data.banner || { aktiv: false, text: '' };
+  document.getElementById('oeffnung-banner-toggle').className = 'toggle' + (banner.aktiv ? ' active' : '');
+  document.getElementById('oeffnung-banner-text').value = banner.text || '';
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+}
+
+function addSonderzeit() {
+  pushUndo();
+  if (!state.oeffnungszeiten.sonder) state.oeffnungszeiten.sonder = [];
+  state.oeffnungszeiten.sonder.push({ datum: '', anlass: '', von: '10:00', bis: '17:30', geschlossen: false });
+  renderOeffnungszeiten();
+  markUnsaved();
+}
+
+function deleteSonder(idx) {
+  pushUndo();
+  state.oeffnungszeiten.sonder.splice(idx, 1);
+  renderOeffnungszeiten();
+  markUnsaved();
+}
+
+function toggleSonderGeschlossen(idx) {
+  pushUndo();
+  state.oeffnungszeiten.sonder[idx].geschlossen = !state.oeffnungszeiten.sonder[idx].geschlossen;
+  renderOeffnungszeiten();
+  markUnsaved();
+}
+
+function toggleOeffnungBanner() {
+  if (!state.oeffnungszeiten.banner) state.oeffnungszeiten.banner = { aktiv: false, text: '' };
+  state.oeffnungszeiten.banner.aktiv = !state.oeffnungszeiten.banner.aktiv;
+  document.getElementById('oeffnung-banner-toggle').classList.toggle('active');
+  markUnsaved();
+}
+
+function collectOeffnungszeiten() {
+  const data = state.oeffnungszeiten;
+  if (data.banner) data.banner.text = document.getElementById('oeffnung-banner-text')?.value || '';
+  return data;
+}
+
+/* =========================================================================
+   Modul 4: Aktionen
+   ========================================================================= */
+function renderAktionen() {
+  const data = state.aktionen || DEFAULTS.aktionen;
+  const list = document.getElementById('aktionen-list');
+
+  list.innerHTML = (Array.isArray(data) ? data : []).map((a, i) => {
+    const status = getAktionStatus(a);
+    return `
+    <div class="aktion-card">
+      <div class="aktion-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-weight:700;font-size:15px">${escHtml(a.titel || 'Neue Aktion')}</span>
+          <span class="badge badge-${status.cls}">${status.label}</span>
+        </div>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="deleteAktion(${i})" title="Löschen">
+          <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+        </button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Titel</label>
+          <input type="text" class="form-input" value="${escHtml(a.titel)}" onchange="state.aktionen[${i}].titel=this.value;markUnsaved()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bild-Pfad</label>
+          <input type="text" class="form-input" value="${escHtml(a.bild||'')}" onchange="state.aktionen[${i}].bild=this.value;markUnsaved()">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Beschreibung</label>
+        <textarea class="form-textarea" rows="2" maxlength="200" oninput="state.aktionen[${i}].beschreibung=this.value;markUnsaved();updateCharCounter(this,'aktion-chars-${i}',200)">${escHtml(a.beschreibung)}</textarea>
+        <div class="char-counter" id="aktion-chars-${i}">${(a.beschreibung||'').length} / 200</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Startdatum</label>
+          <input type="date" class="form-input" value="${a.startDatum||''}" onchange="state.aktionen[${i}].startDatum=this.value;markUnsaved()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Enddatum</label>
+          <input type="date" class="form-input" value="${a.endDatum||''}" onchange="state.aktionen[${i}].endDatum=this.value;markUnsaved()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">CTA-Text</label>
+          <input type="text" class="form-input" value="${escHtml(a.ctaText||'')}" onchange="state.aktionen[${i}].ctaText=this.value;markUnsaved()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">CTA-Link</label>
+          <input type="text" class="form-input" value="${escHtml(a.ctaLink||'')}" onchange="state.aktionen[${i}].ctaLink=this.value;markUnsaved()">
+        </div>
+      </div>
+      <div class="toggle-wrap" onclick="toggleAktionActive(${i})">
+        <div class="toggle${a.aktiv?' active':''}" id="aktion-toggle-${i}"></div>
+        <span class="toggle-label">Aktiv</span>
+      </div>
+    </div>`;
+  }).join('');
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+}
+
+function getAktionStatus(a) {
+  if (!a.aktiv) return { label: 'Inaktiv', cls: 'gray' };
+  const now = new Date().toISOString().slice(0, 10);
+  if (a.startDatum && a.startDatum > now) return { label: 'Geplant', cls: 'info' };
+  if (a.endDatum && a.endDatum < now) return { label: 'Abgelaufen', cls: 'gray' };
+  return { label: 'Aktiv', cls: 'success' };
+}
+
+function addAktion() {
+  pushUndo();
+  if (!Array.isArray(state.aktionen)) state.aktionen = [];
+  state.aktionen.push({ id: 'aktion-' + Date.now(), titel: '', beschreibung: '', startDatum: '', endDatum: '', aktiv: false, bild: '', ctaText: '', ctaLink: '' });
+  renderAktionen();
+  markUnsaved();
+}
+
+async function deleteAktion(idx) {
+  const ok = await confirm('Aktion löschen', 'Soll diese Aktion wirklich gelöscht werden?');
+  if (!ok) return;
+  pushUndo();
+  state.aktionen.splice(idx, 1);
+  renderAktionen();
+  markUnsaved();
+}
+
+function toggleAktionActive(idx) {
+  state.aktionen[idx].aktiv = !state.aktionen[idx].aktiv;
+  document.getElementById(`aktion-toggle-${idx}`).classList.toggle('active');
+  markUnsaved();
+}
+
+function collectAktionen() { return state.aktionen || []; }
+
+/* =========================================================================
+   Modul 5: Bewertungen
+   ========================================================================= */
+function renderBewertungen() {
+  const data = state.bewertungen || DEFAULTS.bewertungen;
+  document.getElementById('bew-rating').value = data.overallRating || 4.9;
+  document.getElementById('bew-total').value = data.totalReviews || 0;
+
+  const list = document.getElementById('bewertungen-list');
+  list.innerHTML = (data.items || []).map((r, i) => `
+    <div class="review-card${r.sichtbar ? '' : ' hidden-review'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div class="form-row" style="gap:8px;grid-template-columns:1fr 1fr auto">
+            <input type="text" class="form-input" value="${escHtml(r.name)}" placeholder="Name" onchange="state.bewertungen.items[${i}].name=this.value;markUnsaved()">
+            <input type="text" class="form-input" value="${escHtml(r.datum)}" placeholder="z.B. vor 2 Monaten" onchange="state.bewertungen.items[${i}].datum=this.value;markUnsaved()">
+            <div class="stars" id="stars-${i}">${renderStars(r.sterne, i)}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;margin-left:12px;flex-shrink:0">
+          <div class="toggle-wrap" onclick="toggleReviewVisible(${i})" style="gap:6px">
+            <div class="toggle${r.sichtbar?' active':''}" id="review-vis-${i}" style="width:36px;height:20px"></div>
+          </div>
+          <button class="btn btn-ghost btn-sm btn-icon" onclick="deleteReview(${i})"><i data-lucide="trash-2" style="width:14px;height:14px"></i></button>
+        </div>
+      </div>
+      <textarea class="form-textarea" rows="2" onchange="state.bewertungen.items[${i}].text=this.value;markUnsaved()">${escHtml(r.text)}</textarea>
+    </div>
+  `).join('');
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+}
+
+function renderStars(count, reviewIdx) {
+  return [1,2,3,4,5].map(n => `<span class="star${n <= count ? ' active' : ''}" onclick="setStars(${reviewIdx},${n})">★</span>`).join('');
+}
+
+function setStars(reviewIdx, count) {
+  state.bewertungen.items[reviewIdx].sterne = count;
+  document.getElementById(`stars-${reviewIdx}`).innerHTML = renderStars(count, reviewIdx);
+  markUnsaved();
+}
+
+function toggleReviewVisible(idx) {
+  state.bewertungen.items[idx].sichtbar = !state.bewertungen.items[idx].sichtbar;
+  renderBewertungen();
+  markUnsaved();
+}
+
+function addBewertung() {
+  pushUndo();
+  state.bewertungen.items.push({ name: '', sterne: 5, text: '', datum: '', sichtbar: true });
+  renderBewertungen();
+  markUnsaved();
+}
+
+async function deleteReview(idx) {
+  const ok = await confirm('Bewertung löschen', 'Soll diese Bewertung entfernt werden?');
+  if (!ok) return;
+  pushUndo();
+  state.bewertungen.items.splice(idx, 1);
+  renderBewertungen();
+  markUnsaved();
+}
+
+function collectBewertungen() {
+  const data = state.bewertungen;
+  data.overallRating = parseFloat(document.getElementById('bew-rating')?.value) || 4.9;
+  data.totalReviews = parseInt(document.getElementById('bew-total')?.value) || 0;
+  return data;
+}
+
+/* =========================================================================
+   Modul 6: Team
+   ========================================================================= */
+function renderTeam() {
+  const data = state.team || DEFAULTS.team;
+  const list = document.getElementById('team-list');
+
+  list.innerHTML = (data.mitglieder || []).map((t, i) => `
+    <div class="team-card">
+      <div class="team-photo" onclick="document.getElementById('team-photo-input-${i}').click()">
+        ${t.foto ? `<img src="/public${t.foto}" alt="${escHtml(t.name)}" onerror="this.style.display='none'">` :
+          `<div class="photo-placeholder"><i data-lucide="camera" style="width:24px;height:24px"></i><br>Foto</div>`}
+        <input type="file" id="team-photo-input-${i}" accept="image/*" style="display:none" onchange="uploadTeamPhoto(${i},this)">
+      </div>
+      <div>
+        <div class="form-row" style="margin-bottom:8px">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" value="${escHtml(t.name)}" onchange="state.team.mitglieder[${i}].name=this.value;markUnsaved()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Rolle</label>
+            <input type="text" class="form-input" value="${escHtml(t.rolle)}" onchange="state.team.mitglieder[${i}].rolle=this.value;markUnsaved()">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Qualifikationen</label>
+          <div class="tag-input-wrap" id="team-tags-${i}" onclick="this.querySelector('input').focus()">
+            ${(t.qualifikationen || []).map((q, qi) => `<span class="tag">${escHtml(q)}<span class="tag-remove" onclick="event.stopPropagation();removeTeamTag(${i},${qi})">×</span></span>`).join('')}
+            <input type="text" placeholder="Eingabe + Enter" onkeydown="if(event.key==='Enter'){event.preventDefault();addTeamTag(${i},this)}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Beschreibung</label>
+          <textarea class="form-textarea" rows="2" onchange="state.team.mitglieder[${i}].beschreibung=this.value;markUnsaved()">${escHtml(t.beschreibung)}</textarea>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="color:var(--error)" onclick="deleteTrainer(${i})"><i data-lucide="trash-2" style="width:14px;height:14px"></i> Entfernen</button>
+      </div>
+    </div>
+  `).join('');
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+}
+
+function addTeamTag(trainerIdx, input) {
+  const val = input.value.trim();
+  if (!val) return;
+  state.team.mitglieder[trainerIdx].qualifikationen.push(val);
+  input.value = '';
+  renderTeam();
+  markUnsaved();
+}
+
+function removeTeamTag(trainerIdx, tagIdx) {
+  state.team.mitglieder[trainerIdx].qualifikationen.splice(tagIdx, 1);
+  renderTeam();
+  markUnsaved();
+}
+
+async function uploadTeamPhoto(idx, input) {
+  if (!input.files.length) return;
+  try {
+    const result = await apiUpload(input.files[0], 'trainer');
+    state.team.mitglieder[idx].foto = result.path;
+    renderTeam();
+    markUnsaved();
+    toast('Foto hochgeladen', 'success');
+  } catch (e) { toast('Upload fehlgeschlagen', 'error'); }
+}
+
+function addTrainer() {
+  pushUndo();
+  state.team.mitglieder.push({ name: '', rolle: '', qualifikationen: [], beschreibung: '', foto: '' });
+  renderTeam();
+  markUnsaved();
+}
+
+async function deleteTrainer(idx) {
+  const ok = await confirm('Trainer entfernen', `${state.team.mitglieder[idx].name || 'Diesen Trainer'} wirklich entfernen?`);
+  if (!ok) return;
+  pushUndo();
+  state.team.mitglieder.splice(idx, 1);
+  renderTeam();
+  markUnsaved();
+}
+
+function collectTeam() { return state.team; }
+
+/* =========================================================================
+   Modul 7: Hero
+   ========================================================================= */
+function renderHero() {
+  const data = state.hero || DEFAULTS.hero;
+  document.getElementById('hero-badge').value = data.badge || '';
+  document.getElementById('hero-headline').value = data.headline || '';
+  document.getElementById('hero-subheadline').value = data.subheadline || '';
+  document.getElementById('hero-cta1-text').value = data.ctaPrimary?.text || '';
+  document.getElementById('hero-cta1-href').value = data.ctaPrimary?.href || '';
+  document.getElementById('hero-cta2-text').value = data.ctaSecondary?.text || '';
+  document.getElementById('hero-cta2-href').value = data.ctaSecondary?.href || '';
+  document.getElementById('hero-trust').value = data.vertrauenssignal || '';
+  document.getElementById('hero-bg-path').value = data.hintergrundBild || '';
+
+  const kz = document.getElementById('hero-kennzahlen');
+  const kennzahlen = data.kennzahlen || [{},{},{}];
+  kz.innerHTML = kennzahlen.map((k, i) => `
+    <div>
+      <div class="form-group">
+        <label class="form-label">Wert ${i + 1}</label>
+        <input type="text" class="form-input" value="${escHtml(k.wert||'')}" onchange="state.hero.kennzahlen[${i}].wert=this.value;markUnsaved()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Label ${i + 1}</label>
+        <input type="text" class="form-input" value="${escHtml(k.label||'')}" onchange="state.hero.kennzahlen[${i}].label=this.value;markUnsaved()">
+      </div>
+    </div>
+  `).join('');
+  updateHeroPreview();
+}
+
+function updateHeroPreview() {
+  const preview = document.getElementById('hero-preview');
+  const badge = document.getElementById('hero-badge')?.value || '';
+  const hl = document.getElementById('hero-headline')?.value || '';
+  const sub = document.getElementById('hero-subheadline')?.value || '';
+  const bg = document.getElementById('hero-bg-path')?.value || '';
+  document.getElementById('hero-prev-badge').textContent = badge;
+  document.getElementById('hero-prev-headline').textContent = hl;
+  document.getElementById('hero-prev-sub').textContent = sub;
+  if (bg) preview.style.backgroundImage = `url(/public${bg})`;
+}
+
+async function uploadHeroBg(input) {
+  if (!input.files.length) return;
+  try {
+    const result = await apiUpload(input.files[0], 'gallery');
+    document.getElementById('hero-bg-path').value = result.path;
+    state.hero.hintergrundBild = result.path;
+    updateHeroPreview();
+    markUnsaved();
+    toast('Hintergrundbild hochgeladen', 'success');
+  } catch (e) { toast('Upload fehlgeschlagen', 'error'); }
+}
+
+function collectHero() {
+  return {
+    badge: document.getElementById('hero-badge')?.value || '',
+    headline: document.getElementById('hero-headline')?.value || '',
+    subheadline: document.getElementById('hero-subheadline')?.value || '',
+    ctaPrimary: { text: document.getElementById('hero-cta1-text')?.value || '', href: document.getElementById('hero-cta1-href')?.value || '' },
+    ctaSecondary: { text: document.getElementById('hero-cta2-text')?.value || '', href: document.getElementById('hero-cta2-href')?.value || '' },
+    kennzahlen: state.hero?.kennzahlen || DEFAULTS.hero.kennzahlen,
+    vertrauenssignal: document.getElementById('hero-trust')?.value || '',
+    hintergrundBild: document.getElementById('hero-bg-path')?.value || ''
+  };
+}
+
+/* =========================================================================
+   Modul 8: Banner
+   ========================================================================= */
+function renderBanner() {
+  const data = state.banner || DEFAULTS.banner;
+  document.getElementById('banner-aktiv-toggle').className = 'toggle' + (data.aktiv ? ' active' : '');
+  document.getElementById('banner-text').value = data.text || '';
+  document.getElementById('banner-typ').value = data.typ || 'info';
+  document.getElementById('banner-position').value = data.position || 'above-header';
+  document.getElementById('banner-link-text').value = data.link?.text || '';
+  document.getElementById('banner-link-href').value = data.link?.href || '';
+  document.getElementById('banner-start').value = data.startDatum || '';
+  document.getElementById('banner-end').value = data.endDatum || '';
+  document.getElementById('banner-dismissable-toggle').className = 'toggle' + (data.dismissable !== false ? ' active' : '');
+  updateCharCounter(document.getElementById('banner-text'), 'banner-chars', 120);
+  updateBannerPreview();
+}
+
+function updateBannerPreview() {
+  const typ = document.getElementById('banner-typ')?.value || 'info';
+  const text = document.getElementById('banner-text')?.value || 'Banner-Vorschau';
+  const preview = document.getElementById('banner-preview');
+  preview.className = `banner-preview type-${typ}`;
+  document.getElementById('banner-prev-text').textContent = text || 'Banner-Vorschau';
+}
+
+function toggleBannerActive() {
+  state.banner.aktiv = !state.banner.aktiv;
+  document.getElementById('banner-aktiv-toggle').classList.toggle('active');
+  markUnsaved();
+}
+
+function toggleBannerDismissable() {
+  state.banner.dismissable = !(state.banner.dismissable !== false);
+  document.getElementById('banner-dismissable-toggle').classList.toggle('active');
+  markUnsaved();
+}
+
+function collectBanner() {
+  const linkText = document.getElementById('banner-link-text')?.value || '';
+  const linkHref = document.getElementById('banner-link-href')?.value || '';
+  return {
+    aktiv: state.banner?.aktiv || false,
+    text: document.getElementById('banner-text')?.value || '',
+    typ: document.getElementById('banner-typ')?.value || 'info',
+    link: linkText || linkHref ? { text: linkText, href: linkHref } : null,
+    startDatum: document.getElementById('banner-start')?.value || '',
+    endDatum: document.getElementById('banner-end')?.value || '',
+    position: document.getElementById('banner-position')?.value || 'above-header',
+    dismissable: state.banner?.dismissable !== false
+  };
+}
+
+/* =========================================================================
+   Trust Bar
+   ========================================================================= */
+function renderTrustbar() {
+  const data = state.trustbar || DEFAULTS.trustbar;
+  const ratingEl = document.getElementById('trustbar-rating');
+  const reviewsEl = document.getElementById('trustbar-reviews');
+  const kurseEl = document.getElementById('trustbar-kurse');
+
+  ratingEl.value = String(data.rating ?? 4.9);
+  reviewsEl.value = String(data.totalReviews ?? 167);
+  kurseEl.value = String(data.liveKurse ?? 16);
+
+  // Live-Vorschau
+  updateTrustbarPreview();
+
+  // Sync-Status
+  const statusEl = document.getElementById('trustbar-sync-status');
+  if (data.lastGoogleSync) {
+    const d = new Date(data.lastGoogleSync);
+    statusEl.textContent = `Letzte Sync: ${d.toLocaleDateString('de-DE')} ${d.toLocaleTimeString('de-DE')}`;
+    statusEl.style.color = 'var(--success)';
+  } else {
+    statusEl.textContent = 'Noch nicht synchronisiert';
+    statusEl.style.color = 'var(--text-muted)';
+  }
+
+  // Live-Update bei Eingabe
+  ratingEl.oninput = () => { markUnsaved(); updateTrustbarPreview(); };
+  reviewsEl.oninput = () => { markUnsaved(); updateTrustbarPreview(); };
+  kurseEl.oninput = () => { markUnsaved(); updateTrustbarPreview(); };
+}
+
+function updateTrustbarPreview() {
+  const rating = parseFloat(document.getElementById('trustbar-rating').value) || 0;
+  const reviews = parseInt(document.getElementById('trustbar-reviews').value) || 0;
+  const kurse = parseInt(document.getElementById('trustbar-kurse').value) || 0;
+  const previewEl = document.getElementById('trustbar-preview');
+  if (!previewEl) return;
+  previewEl.innerHTML = `
+    <div><strong style="font-size:18px">${rating.toFixed(1).replace('.', ',')}/5</strong><br><span style="color:var(--text-muted);font-size:12px">basierend auf ${reviews} Bewertungen</span></div>
+    <div><strong style="font-size:18px">${kurse}+</strong><br><span style="color:var(--text-muted);font-size:12px">Live-Kurse pro Woche</span></div>
+    <div><strong style="font-size:18px">Holthausen</strong><br><span style="color:var(--text-muted);font-size:12px">mitten in Hattingen</span></div>
+  `;
+}
+
+function collectTrustbar() {
+  return {
+    rating: parseFloat(document.getElementById('trustbar-rating').value) || 4.9,
+    totalReviews: parseInt(document.getElementById('trustbar-reviews').value) || 167,
+    liveKurse: parseInt(document.getElementById('trustbar-kurse').value) || 16,
+    lastGoogleSync: state.trustbar?.lastGoogleSync || null
+  };
+}
+
+async function syncGoogleReviews() {
+  const statusEl = document.getElementById('trustbar-sync-status');
+  statusEl.textContent = 'Synchronisiere mit Google...';
+  try {
+    const res = await fetch(`${API}/api/google-reviews`);
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('trustbar-rating').value = data.rating;
+      document.getElementById('trustbar-reviews').value = data.totalReviews;
+      state.trustbar = {
+        ...state.trustbar,
+        rating: data.rating,
+        totalReviews: data.totalReviews,
+        lastGoogleSync: data.fetchedAt
+      };
+      statusEl.textContent = `Erfolgreich synchronisiert: ${data.rating}★ (${data.totalReviews} Bewertungen)`;
+      statusEl.style.color = 'var(--success)';
+      markUnsaved();
+    } else {
+      statusEl.textContent = data.message || 'Synchronisation fehlgeschlagen';
+      statusEl.style.color = 'var(--warning)';
+    }
+  } catch (e) {
+    statusEl.textContent = 'Fehler: Server nicht erreichbar';
+    statusEl.style.color = 'var(--error)';
+  }
+}
+
+/* =========================================================================
+   Analytics
+   ========================================================================= */
+async function renderAnalytics() {
+  try {
+    const [data, realtime] = await Promise.all([
+      fetch(`${API}/api/analytics`).then(r => r.json()),
+      fetch(`${API}/api/analytics/realtime`).then(r => r.json())
+    ]);
+
+    document.getElementById('analytics-today').textContent = data.today ?? 0;
+    document.getElementById('analytics-week').textContent = data.week ?? 0;
+    document.getElementById('analytics-month').textContent = data.month ?? 0;
+    document.getElementById('analytics-live').textContent = realtime.activeVisitors ?? 0;
+    document.getElementById('analytics-bounce').textContent = data.bounceRate ?? 0;
+
+    const pagesEl = document.getElementById('analytics-pages');
+    if (data.topPages?.length) {
+      pagesEl.innerHTML = data.topPages.map(p =>
+        `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--text-primary)">${escHtml(p.page)}</span>
+          <strong>${p.count}</strong>
+        </div>`
+      ).join('');
+    } else {
+      pagesEl.innerHTML = '<p style="color:var(--text-muted)">Noch keine Daten</p>';
+    }
+
+    const devEl = document.getElementById('analytics-devices');
+    const totalDev = (data.devices?.mobile || 0) + (data.devices?.tablet || 0) + (data.devices?.desktop || 0);
+    if (totalDev > 0) {
+      devEl.innerHTML = ['mobile', 'tablet', 'desktop'].map(d => {
+        const count = data.devices[d] || 0;
+        const pct = Math.round((count / totalDev) * 100);
+        const colors = { mobile: 'var(--brand-red)', tablet: 'var(--warning)', desktop: 'var(--info)' };
+        return `<div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+            <span>${d.charAt(0).toUpperCase() + d.slice(1)}</span>
+            <span>${pct}% (${count})</span>
+          </div>
+          <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${colors[d]};border-radius:3px"></div>
+          </div>
+        </div>`;
+      }).join('');
+    } else {
+      devEl.innerHTML = '<p style="color:var(--text-muted)">Noch keine Daten</p>';
+    }
+
+    const refEl = document.getElementById('analytics-referrers');
+    if (data.topReferrers?.length) {
+      refEl.innerHTML = data.topReferrers.map(r =>
+        `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span>${escHtml(r.source)}</span>
+          <strong>${r.count}</strong>
+        </div>`
+      ).join('');
+    } else {
+      refEl.innerHTML = '<p style="color:var(--text-muted)">Noch keine Daten</p>';
+    }
+
+    const ctaEl = document.getElementById('analytics-cta');
+    const ctaEntries = Object.entries(data.ctaClicks || {});
+    if (ctaEntries.length) {
+      ctaEl.innerHTML = ctaEntries.map(([name, count]) =>
+        `<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)">
+          <span>${escHtml(name)}</span>
+          <strong>${count}</strong>
+        </div>`
+      ).join('');
+    } else {
+      ctaEl.innerHTML = '<p style="color:var(--text-muted)">Noch keine CTA-Klicks</p>';
+    }
+
+    const timeEl = document.getElementById('analytics-timeline');
+    if (data.dailyTimeline?.length) {
+      const maxCount = Math.max(...data.dailyTimeline.map(d => d.count), 1);
+      timeEl.innerHTML = data.dailyTimeline.map(d => {
+        const pct = Math.max((d.count / maxCount) * 100, 2);
+        const label = d.date.slice(5);
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px" title="${d.date}: ${d.count} Aufrufe">
+          <div style="width:100%;height:${pct}%;min-height:2px;background:var(--brand-red);border-radius:2px 2px 0 0;opacity:${d.count > 0 ? 1 : 0.2}"></div>
+          <span style="font-size:8px;color:var(--text-muted);writing-mode:vertical-lr;transform:rotate(180deg)">${label}</span>
+        </div>`;
+      }).join('');
+    }
+
+    const hoursEl = document.getElementById('analytics-hours');
+    if (data.peakHours) {
+      const topHours = data.peakHours
+        .map((c, h) => ({ hour: h, count: c }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5)
+        .filter(h => h.count > 0);
+      if (topHours.length) {
+        hoursEl.innerHTML = topHours.map(h =>
+          `<div style="display:flex;justify-content:space-between;padding:2px 0">
+            <span>${String(h.hour).padStart(2,'0')}:00</span>
+            <strong>${h.count}</strong>
+          </div>`
+        ).join('');
+      } else {
+        hoursEl.innerHTML = '<p style="color:var(--text-muted)">Noch keine Daten</p>';
+      }
+    }
+
+    lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+  } catch (e) {
+    console.error('Analytics laden fehlgeschlagen:', e);
+    document.getElementById('analytics-today').textContent = '!';
+  }
+}
+
+/* =========================================================================
+   History
+   ========================================================================= */
+async function renderHistory() {
+  const list = document.getElementById('history-list');
+  try {
+    const history = await apiGet('/api/history');
+    if (!history.length) {
+      list.innerHTML = '<div class="empty-state"><p>Noch keine Backups vorhanden.</p></div>';
+      return;
+    }
+    list.innerHTML = history.map(h => `
+      <div class="history-item">
+        <span class="history-time">${formatTimestamp(h.filename)}</span>
+        <button class="btn btn-secondary btn-sm" onclick="restoreBackup('${h.filename}')">Wiederherstellen</button>
+      </div>
+    `).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="empty-state"><p>Server nicht erreichbar.</p></div>';
+  }
+}
+
+function formatTimestamp(filename) {
+  const m = filename.match(/backup-(\d{4})-(\d{2})-(\d{2})T(\d{2})-(\d{2})-(\d{2})/);
+  if (!m) return filename;
+  return `${m[3]}.${m[2]}.${m[1]} ${m[4]}:${m[5]}:${m[6]}`;
+}
+
+async function restoreBackup(filename) {
+  const ok = await confirm('Backup wiederherstellen', 'Alle aktuellen Daten werden durch dieses Backup ersetzt. Fortfahren?');
+  if (!ok) return;
+  try {
+    await fetch(`${API}/api/history/restore/${filename}`, { method: 'POST' });
+    await loadContent();
+    renderModule(currentModule);
+    toast('Backup wiederhergestellt', 'success');
+  } catch (e) { toast('Fehler beim Wiederherstellen', 'error'); }
+}
+
+/* =========================================================================
+   Settings
+   ========================================================================= */
+function renderSettings() {
+  const isDark = document.documentElement.classList.contains('dark');
+  document.getElementById('settings-dark-toggle').className = 'toggle' + (isDark ? ' active' : '');
+}
+
+function changePin() {
+  const val = document.getElementById('settings-new-pin').value;
+  if (!/^\d{4}$/.test(val)) { toast('PIN muss 4 Ziffern haben', 'warning'); return; }
+  localStorage.setItem('ff-dashboard-pin', val);
+  document.getElementById('settings-new-pin').value = '';
+  toast('PIN geändert', 'success');
+}
+
+async function exportData() {
+  try {
+    const data = await apiGet('/api/content');
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `fitness-factory-content-${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(url);
+    toast('Export heruntergeladen', 'success');
+  } catch (e) { toast('Export fehlgeschlagen', 'error'); }
+}
+
+async function importData(input) {
+  if (!input.files.length) return;
+  const ok = await confirm('Daten importieren', 'Alle aktuellen Daten werden überschrieben. Fortfahren?');
+  if (!ok) { input.value = ''; return; }
+  try {
+    const text = await input.files[0].text();
+    const data = JSON.parse(text);
+    await apiPut('/api/content', data);
+    await loadContent();
+    renderModule(currentModule);
+    toast('Import erfolgreich', 'success');
+  } catch (e) { toast('Import fehlgeschlagen: ' + e.message, 'error'); }
+  input.value = '';
+}
+
+/* =========================================================================
+   Dark Mode
+   ========================================================================= */
+function toggleDarkMode() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('ff-dark-mode', isDark);
+  const icon = document.getElementById('dark-icon');
+  icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+  document.getElementById('dark-label').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+  if (document.getElementById('settings-dark-toggle')) {
+    document.getElementById('settings-dark-toggle').className = 'toggle' + (isDark ? ' active' : '');
+  }
+}
+
+function initDarkMode() {
+  if (localStorage.getItem('ff-dark-mode') === 'true') {
+    document.documentElement.classList.add('dark');
+    document.getElementById('dark-icon').setAttribute('data-lucide', 'sun');
+    document.getElementById('dark-label').textContent = 'Light Mode';
+  }
+}
+
+/* =========================================================================
+   Server Status
+   ========================================================================= */
+async function checkServer() {
+  try {
+    const status = await apiGet('/api/status');
+    serverOnline = status.online;
+    document.getElementById('server-dot').className = 'dot online';
+    document.getElementById('server-status-text').textContent = 'Server erreichbar';
+    document.getElementById('version-text').textContent = `v${status.version || 0}`;
+  } catch {
+    serverOnline = false;
+    document.getElementById('server-dot').className = 'dot offline';
+    document.getElementById('server-status-text').textContent = 'Server offline';
+  }
+}
+
+/* =========================================================================
+   Keyboard Shortcuts
+   ========================================================================= */
+function initKeyboard() {
+  document.addEventListener('keydown', e => {
+    const tag = document.activeElement?.tagName;
+    const isInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      saveCurrentModule();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+      e.preventDefault();
+      undoLastChange();
+      return;
+    }
+    if (!isInput && e.key >= '1' && e.key <= '8') {
+      switchModule(MODULES[+e.key - 1]);
+    }
+  });
+}
+
+/* =========================================================================
+   Helpers
+   ========================================================================= */
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* =========================================================================
+   Init
+   ========================================================================= */
+async function initApp() {
+  initDarkMode();
+  initKeyboard();
+  initGalerieUpload();
+  await loadContent();
+  await checkServer();
+  renderModule('galerie');
+  lucide.createIcons({ attrs: { class: '' }, nameAttr: 'data-lucide' });
+  setInterval(checkServer, 30000);
+}
+
+// Start
+initPin();
+// If already authenticated, init immediately
+if (document.getElementById('pin-overlay').classList.contains('hidden')) {
+  initApp();
+}
+</script>
+</body>
+</html>

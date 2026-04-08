@@ -1,0 +1,166 @@
+# ============================================================
+# Fitness Factory Hattingen — .htaccess
+# Hosting: ALL-INKL.COM (Apache)
+# Erstellt: 2026-04-02 | Prompt 2.10 Deployment
+# ============================================================
+
+# ------------------------------------------------------------
+# 1. HTTPS Redirect (HTTP → HTTPS)
+# ------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ------------------------------------------------------------
+# 2. www → non-www Redirect (Kanonische Domain)
+# ------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ------------------------------------------------------------
+# 3. SPA-Routing (React Router — alle Routen → index.html)
+# ------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# ------------------------------------------------------------
+# 4. WordPress → React 301-Redirects
+# ------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Alte WordPress-Seiten
+  RewriteRule ^home/?$                      /                     [R=301,L]
+  RewriteRule ^class-timetable/?$           /kursplan/            [R=301,L]
+  RewriteRule ^kurse/?$                     /kursplan/            [R=301,L]
+  RewriteRule ^mitgliedschaft/?$            /mitgliedschaft/      [R=301,L]
+  RewriteRule ^anmeldung/?$                 /probetraining/       [R=301,L]
+  RewriteRule ^probetraining/?$             /probetraining/       [R=301,L]
+  RewriteRule ^team/?$                      /team/                [R=301,L]
+  RewriteRule ^kontakt/?$                   /kontakt/             [R=301,L]
+  RewriteRule ^impressum/?$                 /impressum/           [R=301,L]
+  RewriteRule ^datenschutz/?$               /datenschutz/         [R=301,L]
+
+  # WordPress-interne Seiten (410 Gone)
+  RewriteRule ^wp-admin/?$                  -                     [R=410,L]
+  RewriteRule ^wp-login\.php$               -                     [R=410,L]
+  RewriteRule ^wp-content/.*$               -                     [R=410,L]
+  RewriteRule ^wp-includes/.*$              -                     [R=410,L]
+  RewriteRule ^xmlrpc\.php$                 -                     [R=410,L]
+  RewriteRule ^feed/?$                      -                     [R=410,L]
+  RewriteRule ^category/.*$                 -                     [R=410,L]
+  RewriteRule ^tag/.*$                      -                     [R=410,L]
+  RewriteRule ^author/.*$                   -                     [R=410,L]
+</IfModule>
+
+# ------------------------------------------------------------
+# 5. Security Headers
+# ------------------------------------------------------------
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "DENY"
+  Header set X-XSS-Protection "1; mode=block"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+  # CSP — angepasst für GTM, Fonts, WhatsApp
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://analytics.google.com; frame-src https://www.google.com;"
+</IfModule>
+
+# ------------------------------------------------------------
+# 6. Browser-Caching (1 Jahr für Assets, 0 für HTML)
+# ------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # HTML — immer frisch laden
+  ExpiresByType text/html                   "access plus 0 seconds"
+
+  # CSS & JavaScript — 1 Jahr (Vite hashed filenames)
+  ExpiresByType text/css                    "access plus 1 year"
+  ExpiresByType application/javascript      "access plus 1 year"
+  ExpiresByType text/javascript             "access plus 1 year"
+
+  # Bilder
+  ExpiresByType image/webp                  "access plus 1 year"
+  ExpiresByType image/jpeg                  "access plus 1 year"
+  ExpiresByType image/png                   "access plus 1 year"
+  ExpiresByType image/svg+xml               "access plus 1 year"
+  ExpiresByType image/gif                   "access plus 1 year"
+  ExpiresByType image/x-icon               "access plus 1 year"
+
+  # Fonts
+  ExpiresByType font/woff2                  "access plus 1 year"
+  ExpiresByType font/woff                   "access plus 1 year"
+  ExpiresByType font/ttf                    "access plus 1 year"
+
+  # Daten
+  ExpiresByType application/json            "access plus 0 seconds"
+  ExpiresByType application/xml             "access plus 0 seconds"
+</IfModule>
+
+# Cache-Control Headers ergänzend
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2|woff|ttf|webp|jpg|jpeg|png|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ------------------------------------------------------------
+# 7. Gzip-Komprimierung
+# ------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff2
+  AddOutputFilterByType DEFLATE font/woff
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE text/plain
+
+  # Komprimierung für bestimmte Browser ausschalten (Bugfixes)
+  BrowserMatch ^Mozilla/4 gzip-only-text/html
+  BrowserMatch ^Mozilla/4\.0[678] no-gzip
+  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+</IfModule>
+
+# ------------------------------------------------------------
+# 8. MIME-Types (für sicheres Serving)
+# ------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType application/javascript           .js .mjs
+  AddType text/css                         .css
+  AddType font/woff2                       .woff2
+  AddType font/woff                        .woff
+  AddType image/webp                       .webp
+  AddType image/svg+xml                    .svg
+</IfModule>
+
+# ------------------------------------------------------------
+# 9. Verzeichnis-Listing deaktivieren
+# ------------------------------------------------------------
+Options -Indexes
+
+# ------------------------------------------------------------
+# 10. Sensible Dateien sperren
+# ------------------------------------------------------------
+<FilesMatch "(^\.env|^\.git|composer\.(json|lock)|package(-lock)?\.json|yarn\.lock)$">
+  Require all denied
+</FilesMatch>

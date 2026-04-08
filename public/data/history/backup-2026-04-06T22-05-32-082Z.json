@@ -1,0 +1,186 @@
+{
+  "_meta": {
+    "lastModified": "2026-04-06T22:05:18.497Z",
+    "version": 22
+  },
+  "galerie": null,
+  "kursplan": {
+    "kurse": [
+      {
+        "tag": "Montag",
+        "tagKurz": "Mo",
+        "items": [
+          {
+            "name": "Spinning",
+            "uhrzeit": "17:30",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Wirbelsäulen-Gymnastik",
+            "uhrzeit": "19:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Boxen",
+            "uhrzeit": "13:00",
+            "dauer": "90 Min",
+            "level": "Alle Level"
+          }
+        ]
+      },
+      {
+        "tag": "Dienstag",
+        "tagKurz": "Di",
+        "items": [
+          {
+            "name": "Bauch-Express",
+            "uhrzeit": "10:00",
+            "dauer": "30 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Spinning",
+            "uhrzeit": "18:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          }
+        ]
+      },
+      {
+        "tag": "Mittwoch",
+        "tagKurz": "Mi",
+        "items": [
+          {
+            "name": "Tabata",
+            "uhrzeit": "10:00",
+            "dauer": "45 Min",
+            "level": "Fortgeschritten"
+          },
+          {
+            "name": "Yoga",
+            "uhrzeit": "18:30",
+            "dauer": "60 Min",
+            "level": "Alle Level"
+          }
+        ]
+      },
+      {
+        "tag": "Donnerstag",
+        "tagKurz": "Do",
+        "items": [
+          {
+            "name": "Tae-Bo",
+            "uhrzeit": "10:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Spinning",
+            "uhrzeit": "18:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          }
+        ]
+      },
+      {
+        "tag": "Freitag",
+        "tagKurz": "Fr",
+        "items": [
+          {
+            "name": "Rücken-Fit",
+            "uhrzeit": "10:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Zumba",
+            "uhrzeit": "17:00",
+            "dauer": "60 Min",
+            "level": "Alle Level"
+          }
+        ]
+      },
+      {
+        "tag": "Samstag",
+        "tagKurz": "Sa",
+        "items": []
+      },
+      {
+        "tag": "Sonntag",
+        "tagKurz": "So",
+        "items": [
+          {
+            "name": "Spinning",
+            "uhrzeit": "10:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Full Body Intervall",
+            "uhrzeit": "11:00",
+            "dauer": "45 Min",
+            "level": "Alle Level"
+          },
+          {
+            "name": "Pilates",
+            "uhrzeit": "14:00",
+            "dauer": "60 Min",
+            "level": "Alle Level"
+          }
+        ]
+      }
+    ],
+    "hinweis": "Kurszeiten können sich gelegentlich ändern."
+  },
+  "oeffnungszeiten": null,
+  "aktionen": null,
+  "bewertungen": null,
+  "team": null,
+  "hero": {
+    "badge": "Fitnessstudio Hattingen",
+    "headline": "Dein Gym in Hattingen",
+    "subheadline": "Sauna, Live-Kurse, Getränkeflat und persönliche Betreuung — alles inklusive ab 35 €/Monat.",
+    "ctaPrimary": {
+      "text": "Probetraining buchen",
+      "href": "/probetraining"
+    },
+    "ctaSecondary": {
+      "text": "Preise ansehen",
+      "href": "/mitgliedschaft"
+    },
+    "kennzahlen": [
+      {
+        "wert": "Mo–Fr",
+        "label": "bis 23 Uhr"
+      },
+      {
+        "wert": "Getränkeflat",
+        "label": "inklusive"
+      },
+      {
+        "wert": "∞",
+        "label": "Sauna inkl."
+      }
+    ],
+    "vertrauenssignal": "Über 500 zufriedene Mitglieder in Hattingen",
+    "hintergrundBild": "/images/studio-dsc-01.jpg"
+  },
+  "banner": {
+    "aktiv": true,
+    "text": "1234",
+    "typ": "aktion",
+    "link": null,
+    "startDatum": "",
+    "endDatum": "",
+    "position": "below-header",
+    "dismissable": false
+  },
+  "trustbar": {
+    "rating": 4.9,
+    "totalReviews": 167,
+    "liveKurse": 17,
+    "lastGoogleSync": null
+  }
+}

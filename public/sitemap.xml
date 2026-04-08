@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+    http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Homepage — Primäres SEO-Ziel: "Fitnessstudio Hattingen" -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Probetraining — Primäre Conversion-Seite -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/probetraining/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Mitgliedschaft & Preise -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/mitgliedschaft/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Kursplan — wöchentliche Änderungen möglich -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/kursplan/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Fremdgeh-Aktion — markteinzigartiges Angebot -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/fremdgeh-aktion/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Team — Vertrauensseite -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/team/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- FAQ — Featured-Snippet-Potenzial -->
+  <url>
+    <loc>https://fitness-factory-hattingen.de/faq/</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Noindex-Seiten sind NICHT in der Sitemap: -->
+  <!-- /impressum/, /datenschutz/, /agb/, /kuendigung/ -->
+
+</urlset>

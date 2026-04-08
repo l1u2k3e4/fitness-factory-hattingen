@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Legal-Seiten — kein SEO-Wert, Crawl-Budget schonen
+Disallow: /impressum/
+Disallow: /datenschutz/
+Disallow: /agb/
+Disallow: /kuendigung/
+
+# Build-Artefakte und interne Pfade
+Disallow: /dist/
+Disallow: /.vite/
+Disallow: /node_modules/
+
+# Sitemap
+Sitemap: https://fitness-factory-hattingen.de/sitemap.xml
