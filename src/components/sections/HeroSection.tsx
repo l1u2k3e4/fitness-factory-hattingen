@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
+import { Phone } from 'lucide-react'
 import { fadeInUp, staggerContainer } from '@/lib/animations'
 import { cn } from '@/lib/cn'
 import { assetUrl } from '@/lib/assetUrl'
 import Badge from '@/components/ui/Badge'
+import Button from '@/components/ui/Button'
 import { useDynamicHero } from '@/contexts/ContentContext'
 
 /**
@@ -79,10 +81,10 @@ export default function HeroSection() {
             )}
           </motion.p>
 
-          {/* Schnellkennzahlen */}
+          {/* Schnellkennzahlen — nur Desktop */}
           <motion.div
             variants={fadeInUp}
-            className="mt-12 flex flex-wrap gap-8"
+            className="mt-12 hidden md:flex flex-wrap gap-8"
             aria-label="Studio-Kennzahlen"
           >
             {HERO.kennzahlen.map((stat) => (
@@ -96,6 +98,19 @@ export default function HeroSection() {
                 <span className="font-body text-body-sm text-brand-light-secondary">{stat.label}</span>
               </div>
             ))}
+          </motion.div>
+
+          {/* CTAs — nur Mobile */}
+          <motion.div
+            variants={fadeInUp}
+            className="mt-10 flex md:hidden flex-col gap-3"
+          >
+            <Button to={HERO.ctaPrimary.href} variant="primary" size="lg" fullWidth aria-label={HERO.ctaPrimary.ariaLabel}>
+              {HERO.ctaPrimary.label}
+            </Button>
+            <Button href="tel:+492324337777" variant="dark-outline" size="lg" icon={Phone} fullWidth>
+              Jetzt anrufen
+            </Button>
           </motion.div>
         </motion.div>
       </div>
