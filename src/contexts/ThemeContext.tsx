@@ -12,7 +12,7 @@ import type { ReactNode } from 'react'
 import { themes, DEFAULT_THEME } from '@/themes'
 import type { ThemeId, ThemeConfig } from '@/themes'
 
-const STORAGE_KEY = 'ff-theme'
+const STORAGE_KEY = 'ff-theme-v2'
 
 interface ThemeContextValue {
   themeId: ThemeId
