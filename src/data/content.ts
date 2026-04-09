@@ -404,7 +404,7 @@ export const PROBETRAINING_CTA = {
 
 export const TEAM = {
   sectionBadge: 'Unser Team',
-  headline: 'Menschen, keine Maschinen.',
+  headline: 'Dein Team. Dein Studio.',
   subheadline:
     'Wir kennen dich beim Namen — und wissen, was dich weiterbringt. Persönliche Betreuung statt anonymem Großstudio.',
   mitglieder: [
