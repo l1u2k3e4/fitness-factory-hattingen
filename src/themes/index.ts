@@ -14,7 +14,7 @@ export const themes: Record<ThemeId, ThemeConfig> = {
   'energetic-v2': energeticV2Theme,
 }
 
-export const DEFAULT_THEME: ThemeId = 'classic'
+export const DEFAULT_THEME: ThemeId = 'energetic-v2'
 
 export const themeIds = Object.keys(themes) as ThemeId[]
 
