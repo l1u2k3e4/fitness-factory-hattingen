@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/lib/animations'
 import { cn } from '@/lib/cn'
+import { assetUrl } from '@/lib/assetUrl'
 import Badge from '@/components/ui/Badge'
 import { useDynamicHero } from '@/contexts/ContentContext'
 
@@ -23,7 +24,7 @@ export default function HeroSection() {
     >
       {/* Hintergrundbild */}
       <img
-        src="/images/hero-bg.jpg"
+        src={assetUrl('/images/hero-bg.jpg')}
         alt=""
         width={1920}
         height={1279}

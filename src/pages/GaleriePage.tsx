@@ -8,6 +8,7 @@ import ProbetrainingCta from '@/components/sections/ProbetrainingCtaV2'
 import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations'
 import { useInView } from '@/hooks/useInView'
 import { META, GALERIE_PAGE } from '@/data/content'
+import { assetUrl } from '@/lib/assetUrl'
 import { useDynamicGalerie } from '@/contexts/ContentContext'
 import { BREADCRUMBS } from '@/lib/jsonld'
 import { cn } from '@/lib/cn'
@@ -158,7 +159,7 @@ export default function GaleriePage() {
                 >
                   {isVideo(bild.src) ? (
                     <video
-                      src={bild.src}
+                      src={assetUrl(bild.src)}
                       muted
                       playsInline
                       preload="metadata"
@@ -241,7 +242,7 @@ export default function GaleriePage() {
             >
               {isVideo(activeBild.src) ? (
                 <video
-                  src={activeBild.src}
+                  src={assetUrl(activeBild.src)}
                   controls
                   autoPlay
                   playsInline

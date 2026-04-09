@@ -7,7 +7,7 @@
     "dev": "vite",
     "dashboard": "node Dashboard/server.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run dashboard\"",
-    "build": "tsc -b && vite build && cp public/.htaccess dist/.htaccess",
+    "build": "tsc -b && vite build && cp public/.htaccess dist/.htaccess && cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview"
   },

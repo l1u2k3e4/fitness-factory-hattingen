@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Phone, Mail, MapPin, Instagram, Facebook } from 'lucide-react'
 import { SITE } from '@/data/content'
+import { assetUrl } from '@/lib/assetUrl'
 
 /**
  * Footer — Vollständiger Website-Footer.
@@ -25,7 +26,7 @@ export default function Footer() {
               aria-label="Fitness Factory Hattingen — Startseite"
             >
               <img
-                src="/images/logo-fitness-factory.png"
+                src={assetUrl('/images/logo-fitness-factory.png')}
                 alt="Fitness Factory Hattingen"
                 className="h-12 w-auto"
                 width={160}

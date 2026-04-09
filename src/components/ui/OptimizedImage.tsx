@@ -1,3 +1,5 @@
+import { assetUrl } from '@/lib/assetUrl'
+
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string
   alt: string
@@ -33,15 +35,18 @@ export default function OptimizedImage({
   // Nur <picture> mit WebP verwenden wenn explizit ein webpSrc übergeben wurde.
   // Auto-Derivation entfernt, da keine WebP-Dateien vorhanden sind und
   // Vite-Dev-Server bei 404 eine HTML-Seite zurückgibt, die den Fallback blockiert.
-  if (!webpSrc) {
-    return <img src={src} alt={alt} width={width} height={height} {...props} />
+  const resolvedSrc = assetUrl(src)
+  const resolvedWebp = webpSrc ? assetUrl(webpSrc) : undefined
+
+  if (!resolvedWebp) {
+    return <img src={resolvedSrc} alt={alt} width={width} height={height} {...props} />
   }
 
   return (
     <picture>
-      <source srcSet={webpSrc} type="image/webp" />
+      <source srcSet={resolvedWebp} type="image/webp" />
       <img
-        src={src}
+        src={resolvedSrc}
         alt={alt}
         width={width}
         height={height}

@@ -159,6 +159,10 @@ export const designTokens: Partial<Config['theme']> = {
       from: { opacity: '0' },
       to: { opacity: '1' },
     },
+    'marquee': {
+      '0%': { transform: 'translateX(0)' },
+      '100%': { transform: 'translateX(-50%)' },
+    },
   },
 
   animation: {
@@ -168,6 +172,7 @@ export const designTokens: Partial<Config['theme']> = {
     'ping-green': 'ping-green 1.5s cubic-bezier(0,0,0.2,1) infinite',
     'count-up': 'count-up 0.4s ease-out forwards',
     'fade-in': 'fade-in 0.4s ease-out forwards',
+    'marquee': 'marquee 15s linear infinite',
   },
 
   backdropBlur: {

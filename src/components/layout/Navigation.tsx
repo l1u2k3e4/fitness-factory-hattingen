@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Phone, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/cn'
+import { assetUrl } from '@/lib/assetUrl'
 import { slideOverRight, backdropFade, hamburgerTop, hamburgerMiddle, hamburgerBottom } from '@/lib/animations'
 import { useScrollPosition } from '@/hooks/useScrollPosition'
 import { useTheme } from '@/hooks/useTheme'
@@ -147,7 +148,7 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
             onClick={closeMenu}
           >
             <img
-              src="/images/logo-fitness-factory.png"
+              src={assetUrl('/images/logo-fitness-factory.png')}
               alt="Fitness Factory Hattingen"
               className="h-10 md:h-12 w-auto"
               width={160}

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ZoomIn, Play } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import OptimizedImage from '@/components/ui/OptimizedImage'
+import { assetUrl } from '@/lib/assetUrl'
 import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations'
 import { useInView } from '@/hooks/useInView'
 import { useDynamicGalerie } from '@/contexts/ContentContext'
@@ -76,7 +77,7 @@ export default function GalerieSection() {
                   {hasRealImage ? (
                     isVideo(bild.src) ? (
                       <video
-                        src={bild.src}
+                        src={assetUrl(bild.src)}
                         muted
                         playsInline
                         preload="metadata"
@@ -183,7 +184,7 @@ export default function GalerieSection() {
               {activeBild.src && !activeBild.src.startsWith('[TBD') ? (
                 isVideo(activeBild.src) ? (
                   <video
-                    src={activeBild.src}
+                    src={assetUrl(activeBild.src)}
                     controls
                     autoPlay
                     playsInline

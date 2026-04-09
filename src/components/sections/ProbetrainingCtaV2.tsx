@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { MessageCircle, ArrowRight } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { assetUrl } from '@/lib/assetUrl'
 import { fadeInUp, staggerContainer } from '@/lib/animations'
 import { useInView } from '@/hooks/useInView'
 import { PROBETRAINING_CTA } from '@/data/content'
@@ -20,7 +21,7 @@ export default function ProbetrainingCtaV2() {
     >
       {/* Hintergrundbild */}
       <img
-        src="/images/cta-bg.jpg"
+        src={assetUrl('/images/cta-bg.jpg')}
         alt=""
         width={1920}
         height={1279}

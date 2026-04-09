@@ -381,6 +381,11 @@
    @layer components — Wiederverwendbare Utility-Klassen
    ============================================================ */
 
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
 @layer components {
   /* Container */
   .container-site {

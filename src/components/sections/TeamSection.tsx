@@ -3,6 +3,7 @@ import { User } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { staggerContainer, fadeInUp } from '@/lib/animations'
+import { assetUrl } from '@/lib/assetUrl'
 import { useInView } from '@/hooks/useInView'
 import { useDynamicTeam } from '@/contexts/ContentContext'
 
@@ -61,7 +62,7 @@ export default function TeamSection({ showHeader = true }: { showHeader?: boolea
               >
                 {trainer.foto && !trainer.foto.startsWith('[TBD') ? (
                   <img
-                    src={trainer.foto}
+                    src={assetUrl(trainer.foto)}
                     alt={`${trainer.name} — ${trainer.rolle}`}
                     className="w-full h-full object-cover object-top"
                     loading="lazy"
