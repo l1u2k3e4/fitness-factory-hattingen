@@ -74,17 +74,17 @@ export default function PreiseSection() {
                 </div>
               )}
 
-              {/* Name & Laufzeit */}
+              {/* Laufzeit & Name */}
               <div className="mb-5 mt-2">
                 <h3 className="font-display font-black text-h3 text-brand-text mb-1 leading-tight">
-                  {tarif.name}
+                  {tarif.laufzeit}
                 </h3>
-                <p className="font-body text-body-sm text-brand-muted">{tarif.laufzeit} Laufzeit</p>
+                <p className="font-body text-body-sm text-brand-muted">{tarif.name}-Tarif</p>
               </div>
 
               {/* Preis */}
               <div className="mb-5 pb-5 border-b border-brand-border">
-                <div className="flex items-end gap-1.5">
+                <div className="flex items-baseline gap-0.5">
                   <span
                     className={cn(
                       'font-display font-black text-display leading-none',
@@ -94,7 +94,7 @@ export default function PreiseSection() {
                   >
                     {tarif.monatspreis}&nbsp;€
                   </span>
-                  <span className="font-body text-body-sm text-brand-muted pb-1">/Monat</span>
+                  <span className="font-body text-body-sm text-brand-muted">/Monat</span>
                 </div>
                 <p className="font-body text-body-sm text-brand-muted mt-1.5">{tarif.beschreibung}</p>
               </div>
@@ -114,7 +114,7 @@ export default function PreiseSection() {
                 to="/probetraining"
                 variant={tarif.highlight ? 'primary' : 'ghost'}
                 fullWidth
-                aria-label={`${tarif.name}-Mitgliedschaft — Probetraining buchen`}
+                aria-label={`${tarif.laufzeit} Mitgliedschaft — Probetraining buchen`}
               >
                 Probetraining buchen
               </Button>

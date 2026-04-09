@@ -25,7 +25,7 @@ export const SITE = {
     googleMapsUrl: 'https://maps.google.com/?q=Im+Vogelsang+95,+45527+Hattingen',
     googleMapsDirectionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=Im+Vogelsang+95,+45527+Hattingen',
     googleMapsEmbedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2488.5!2d7.1834!3d51.3837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b919a3a2d7e5f3%3A0x4c3e65e9cfb08f47!2sFitness%20Factory%20Hattingen!5e0!3m2!1sde!2sde!4v1712345678901!5m2!1sde!2sde',
+      'https://www.google.com/maps?q=Fitness+Factory+Hattingen,+Im+Vogelsang+95,+45527+Hattingen&output=embed',
   },
   kontakt: {
     telefon: '02324 33777',
