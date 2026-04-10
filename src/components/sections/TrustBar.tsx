@@ -1,4 +1,3 @@
-import { useRef, useEffect, useState } from 'react'
 import { Star, Calendar, MapPin } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { staggerContainer, fadeInUp } from '@/lib/animations'
@@ -15,32 +14,18 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 /**
  * TrustBar — Vertrauenssignale direkt unter dem Hero.
- * Weißer Hintergrund mit roter Trennlinie oben.
- * Auf kleinen Screens: Auto-Scroll Marquee von rechts nach links.
- * Auf größeren Screens: statische 3-Spalten-Zeile.
+ * Auf Mobile (< md): Endlos-Marquee von rechts nach links (pure CSS).
+ * Auf Desktop (md+): statische 3-Spalten-Zeile mit Fade-in Stagger.
+ *
+ * Das Layout wird per Tailwind-Breakpoint gesteuert (nicht via JS-Messung),
+ * damit es keinen Render-Race gibt. Die Marquee läuft endlos — moderne
+ * Browser pausieren off-screen CSS-Animationen automatisch (GPU-Compositing),
+ * daher ist eine JS-Pause-Logik unnötig und nur eine Fehlerquelle.
  */
 export default function TrustBar() {
   const TRUST_BAR = useDynamicTrustBar()
-  // Für Items-Stagger-Animation (einmalig)
+  // Für Items-Stagger-Animation auf Desktop (einmalig)
   const { ref: itemsRef, inView: itemsInView } = useInView<HTMLDivElement>({ threshold: 0.2 })
-  // Für Marquee-Pause (toggle) — pausiert Endlosschleife wenn TrustBar off-screen
-  const { ref: marqueeRef, inView: marqueeVisible } = useInView<HTMLElement>({
-    threshold: 0,
-    once: false,
-  })
-  const trackRef = useRef<HTMLDivElement>(null)
-  const [needsMarquee, setNeedsMarquee] = useState(false)
-
-  useEffect(() => {
-    function check() {
-      const el = trackRef.current
-      if (!el) return
-      setNeedsMarquee(el.scrollWidth > el.clientWidth + 4)
-    }
-    check()
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
-  }, [])
 
   const items = TRUST_BAR.items
 
@@ -85,23 +70,29 @@ export default function TrustBar() {
 
   return (
     <section
-      ref={marqueeRef}
       id="trust"
-      className="bg-brand-bg border-y border-brand-border py-5 md:py-7"
+      className="bg-brand-bg border-y border-brand-border py-5 md:py-7 overflow-hidden"
       aria-label="Fitness Factory Hattingen — auf einen Blick"
     >
-      <div className="max-w-[1280px] mx-auto px-4 md:px-8">
-        {/* Measurement container (hidden when marquee active) */}
+      {/* Mobile: Endlos-Marquee (pure CSS, keine JS-Messung, keine Pause-Logik) */}
+      <div className="md:hidden overflow-hidden" aria-hidden="true">
+        <div className="flex gap-10 animate-marquee w-max">
+          {/* Duplizierte Items für nahtlose Endlosschleife (translateX -50%) */}
+          {items.map((item) => renderItem(item, 'a'))}
+          <div className="flex-shrink-0 w-8" aria-hidden="true" />
+          {items.map((item) => renderItem(item, 'b'))}
+          <div className="flex-shrink-0 w-8" aria-hidden="true" />
+        </div>
+      </div>
+
+      {/* Desktop: statische 3-Spalten-Zeile mit Stagger-Fade-in */}
+      <div className="hidden md:block max-w-[1280px] mx-auto px-4 md:px-8">
         <motion.div
-          ref={(el) => {
-            // Combine refs: useInView + trackRef
-            ;(itemsRef as React.MutableRefObject<HTMLDivElement | null>).current = el
-            ;(trackRef as React.MutableRefObject<HTMLDivElement | null>).current = el
-          }}
+          ref={itemsRef}
           variants={staggerContainer}
           initial="initial"
           animate={itemsInView ? 'animate' : 'initial'}
-          className={`flex gap-6 sm:gap-8 justify-center ${needsMarquee ? 'hidden' : ''}`}
+          className="flex gap-6 sm:gap-8 justify-center"
         >
           {items.map((item) => (
             <motion.div key={item.label} variants={fadeInUp} className="flex-shrink-0">
@@ -109,25 +100,6 @@ export default function TrustBar() {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Marquee — nur sichtbar wenn Items nicht passen */}
-        {needsMarquee && (
-          <div
-            className="overflow-hidden"
-            aria-hidden="true"
-          >
-            {/* Marquee pausiert automatisch wenn TrustBar off-screen → kein GPU-Drain */}
-            <div
-              className={`flex gap-10 animate-marquee ${!marqueeVisible ? '[animation-play-state:paused]' : ''}`}
-            >
-              {/* Duplizierte Items für nahtlose Endlosschleife */}
-              {items.map((item) => renderItem(item, 'a'))}
-              <div className="flex-shrink-0 w-8" aria-hidden="true" />
-              {items.map((item) => renderItem(item, 'b'))}
-              <div className="flex-shrink-0 w-8" aria-hidden="true" />
-            </div>
-          </div>
-        )}
 
         <motion.p
           initial={{ opacity: 0 }}
@@ -138,6 +110,11 @@ export default function TrustBar() {
           {SITE.oeffnungszeiten.wochentage} &nbsp;·&nbsp; {SITE.oeffnungszeiten.wochenende}
         </motion.p>
       </div>
+
+      {/* Öffnungszeiten auch auf Mobile unter dem Marquee */}
+      <p className="md:hidden text-center font-body text-caption text-brand-muted mt-4 px-4">
+        {SITE.oeffnungszeiten.wochentage} &nbsp;·&nbsp; {SITE.oeffnungszeiten.wochenende}
+      </p>
     </section>
   )
 }
