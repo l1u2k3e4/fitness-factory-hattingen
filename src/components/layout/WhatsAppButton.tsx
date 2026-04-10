@@ -2,13 +2,17 @@ import { SITE } from '@/data/content'
 
 /**
  * WhatsApp Floating Button — Fixed rechts unten.
- * Auf Mobile: über der StickyCtaBar (bottom-20).
+ * Auf Mobile: über der StickyCtaBar — bottom = 5rem (80px) + safe-area.
+ * Die Sticky-CTA ist 64px hoch + env(safe-area-inset-bottom). Auf iOS Safari
+ * ändert sich safe-area dynamisch beim Ein-/Ausblenden der URL-Bar — deshalb
+ * MUSS der Button-bottom ebenfalls mit safe-area skalieren, sonst überlappt er
+ * im scrolled-down-State.
  * Auf Desktop: bottom-6.
  * CSS-animierter Ping-Ring und Entry-Animation (kein Framer Motion = kein Batterie-Drain).
  */
 export default function WhatsAppButton() {
   return (
-    <div className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-40 animate-whatsapp-enter">
+    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 md:bottom-6 md:right-6 z-40 animate-whatsapp-enter">
       <a
         href={SITE.kontakt.whatsappLinkAllgemein}
         target="_blank"
