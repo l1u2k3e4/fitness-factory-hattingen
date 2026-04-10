@@ -41,16 +41,19 @@ export default function StickyCtaBar({ hidden = false }: StickyCtaBarProps) {
   return (
     <div
       className={cn(
-        'sticky-cta md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 bg-brand-dark border-t border-white/[0.08] shadow-bar',
+        'sticky-cta md:hidden fixed bottom-0 left-0 right-0 z-50 bg-brand-dark border-t border-white/[0.08] shadow-bar',
         'transform-gpu transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        'pb-[env(safe-area-inset-bottom)]',
         isVisible ? 'translate-y-0' : 'translate-y-full',
       )}
+      // Safe-Area als PADDING (nicht innerhalb einer fixen Höhe) — verhindert
+      // iOS-Safari-Shift beim Scrollen, wenn die URL-Bar ein-/ausblendet.
+      // Content-Höhe bleibt fix 64px, Safe-Area wird additiv darunter gerendert.
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       role="complementary"
       aria-label="Schnellkontakt"
       aria-hidden={!isVisible}
     >
-      <div className="h-full grid grid-cols-3">
+      <div className="h-16 grid grid-cols-3">
         {/* Anrufen */}
         <a
           href={SITE.kontakt.telefonLink}
