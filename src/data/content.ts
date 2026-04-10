@@ -829,7 +829,7 @@ export const PAGE_PROBETRAINING = {
     badge: 'Kein Vertrag. Kein Druck.',
     headline: 'Trainier einen Tag mit uns.',
     subheadline:
-      'Schau dir das Studio an, test die Geräte, geh danach in die Sauna — und entscheide in Ruhe.',
+      'Schau dir das Studio an, test die Geräte — und entscheide in Ruhe.',
   },
   ablauf: {
     headline: 'So läuft dein Probetraining ab',
@@ -851,8 +851,8 @@ export const PAGE_PROBETRAINING = {
       },
       {
         nummer: '04',
-        titel: 'Sauna & Entscheidung',
-        text: 'Danach gönn dir die Sauna. Und dann entscheidest du — ohne Druck, ohne Frist.',
+        titel: 'In Ruhe entscheiden',
+        text: 'Du überlegst dir alles in deinem Tempo — ohne Druck, ohne Frist. Wir sind da, wenn du Fragen hast.',
       },
     ],
   },

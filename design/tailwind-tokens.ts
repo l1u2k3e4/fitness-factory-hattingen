@@ -159,10 +159,12 @@ export const designTokens: Partial<Config['theme']> = {
       from: { opacity: '0' },
       to: { opacity: '1' },
     },
-    'marquee': {
-      '0%': { transform: 'translate3d(0, 0, 0)' },
-      '100%': { transform: 'translate3d(-50%, 0, 0)' },
-    },
+    // NOTE: 'marquee' keyframes + animation sind bewusst NICHT hier definiert.
+    // Grund: Der esbuild-CSS-Optimizer foldet `translate3d(0,0,0)` zu
+    // `translateZ(0)`, was auf iOS Safari mit dem 100%-Frame
+    // `translate3d(-50%,0,0)` kollidiert (mixed transform functions → Animation
+    // friert ein). Die marquee-Definition liegt in src/index.css mit CSS
+    // Custom Properties, die der Optimizer nicht folden kann.
   },
 
   animation: {
@@ -172,7 +174,7 @@ export const designTokens: Partial<Config['theme']> = {
     'ping-green': 'ping-green 1.5s cubic-bezier(0,0,0.2,1) infinite',
     'count-up': 'count-up 0.4s ease-out forwards',
     'fade-in': 'fade-in 0.4s ease-out forwards',
-    'marquee': 'marquee 15s linear infinite',
+    // 'marquee' siehe src/index.css
   },
 
   backdropBlur: {

@@ -417,10 +417,22 @@
   .animate-whatsapp-enter { animation: none; opacity: 1; }
 }
 
-/* Marquee — GPU-Hint via will-change. KEIN statisches transform hier,
-   weil das auf iOS Safari die @keyframes-transform überschreiben und
-   die Animation visuell einfrieren lässt. */
+/* Marquee — iOS-Safari-robuste Definition.
+   WICHTIG: Werte MÜSSEN über CSS Custom Properties laufen, sonst foldet
+   der esbuild-CSS-Optimizer `translate3d(0,0,0)` im 0%-Frame zu
+   `translateZ(0)`. Das kollidiert mit dem 100%-Frame `translate3d(-50%,0,0)`
+   → mixed transform functions → iOS Safari friert die Animation visuell ein.
+   Über `var(...)` sieht der Optimizer die Werte nicht und kann nichts folden.
+   Siehe memory/feedback_ios_safari_gotchas.md. */
+@keyframes marquee {
+  from { transform: translate3d(var(--marquee-start), 0, 0); }
+  to   { transform: translate3d(var(--marquee-end),   0, 0); }
+}
+
 .animate-marquee {
+  --marquee-start: 0%;
+  --marquee-end: -50%;
+  animation: marquee 15s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;

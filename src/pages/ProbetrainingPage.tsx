@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { MessageCircle, Phone, CheckCircle, Send, CalendarDays, ClipboardCheck, Dumbbell, Waves } from 'lucide-react'
+import { MessageCircle, Phone, CheckCircle, Send, CalendarDays, ClipboardCheck, Dumbbell, Sparkles } from 'lucide-react'
 import SeoHead from '@/lib/seo'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
@@ -14,7 +14,7 @@ import { META, PAGE_PROBETRAINING, SITE } from '@/data/content'
 import { BREADCRUMBS } from '@/lib/jsonld'
 
 // Icons für die 4 Ablauf-Schritte
-const schrittIcons = [CalendarDays, ClipboardCheck, Dumbbell, Waves]
+const schrittIcons = [CalendarDays, ClipboardCheck, Dumbbell, Sparkles]
 
 /**
  * ProbetrainingPage — Probetraining buchen.
