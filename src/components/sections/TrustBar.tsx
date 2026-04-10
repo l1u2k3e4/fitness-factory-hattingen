@@ -36,7 +36,7 @@ export default function TrustBar() {
     return (
       <div
         key={`${item.label}-${suffix}`}
-        className="flex items-center gap-3 flex-shrink-0"
+        className="flex items-center gap-3"
       >
         <div
           className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-card bg-brand-primary-light border border-brand-primary/20"
@@ -68,26 +68,30 @@ export default function TrustBar() {
     )
   }
 
+  // Dreifach duplizieren für lückenlosen Loop (Pattern von wigro-reifen-website)
+  const tripled = [...items, ...items, ...items]
+
   return (
     <section
       id="trust"
-      className="bg-brand-bg border-y border-brand-border py-5 md:py-7 overflow-hidden"
+      className="bg-brand-bg border-y border-brand-border py-5 md:py-7 overflow-x-clip"
       aria-label="Fitness Factory Hattingen — auf einen Blick"
     >
-      {/* Mobile: Endlos-Marquee. display:inline-flex sizet automatisch
-          zur Content-Breite und ist iOS-Safari-robust (anders als
-          width:max-content in einem block-Parent). */}
-      <div className="md:hidden whitespace-nowrap">
+      {/* Mobile: Endlos-Marquee — Struktur 1:1 vom wigro-reifen-website
+          Pattern (bewiesen auf iOS Safari funktionsfähig).
+          KEY: `flex w-max` statt `inline-flex`, direkt auf dem animierten
+          Element — kein Wrapper mit whitespace-nowrap. */}
+      <div className="md:hidden relative">
         <div
-          className="animate-marquee"
-          style={{ display: 'inline-flex', gap: '2.5rem', alignItems: 'center' }}
+          className="flex items-center gap-10 animate-marquee w-max"
+          style={{ backfaceVisibility: 'hidden' }}
           aria-hidden="true"
         >
-          {/* Duplizierte Items für nahtlose Endlosschleife (translate3d -50% 0 0) */}
-          {items.map((item) => renderItem(item, 'a'))}
-          <div style={{ width: '2rem', flexShrink: 0 }} aria-hidden="true" />
-          {items.map((item) => renderItem(item, 'b'))}
-          <div style={{ width: '2rem', flexShrink: 0 }} aria-hidden="true" />
+          {tripled.map((item, i) => (
+            <div key={`${item.label}-${i}`} className="shrink-0">
+              {renderItem(item, String(i))}
+            </div>
+          ))}
         </div>
       </div>
 
