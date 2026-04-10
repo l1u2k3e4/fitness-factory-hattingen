@@ -417,22 +417,24 @@
   .animate-whatsapp-enter { animation: none; opacity: 1; }
 }
 
-/* Marquee — iOS-Safari-robuste Definition.
-   WICHTIG: Werte MÜSSEN über CSS Custom Properties laufen, sonst foldet
-   der esbuild-CSS-Optimizer `translate3d(0,0,0)` im 0%-Frame zu
-   `translateZ(0)`. Das kollidiert mit dem 100%-Frame `translate3d(-50%,0,0)`
-   → mixed transform functions → iOS Safari friert die Animation visuell ein.
-   Über `var(...)` sieht der Optimizer die Werte nicht und kann nichts folden.
+/* Marquee — iOS-Safari-robuste Definition (Pattern von wigro-reifen-website).
+   KEY INSIGHT: Der esbuild-CSS-Optimizer foldet `translate3d(0,0,0)` zu
+   `translateZ(0)`, kollidiert dann mit `translate3d(-50%,0,0)` im 100%-Frame
+   (mixed transform functions → iOS Safari friert die Animation ein).
+   Auch `var()` innerhalb `translate3d()` hat auf iOS Safari bekannte
+   Interpolations-Bugs in @keyframes.
+   LÖSUNG: Zwei getrennte Transform-Funktionen `translate(X) translateZ(0)`.
+   Das ist bereits "zwei Funktionen" — der Optimizer kann es nicht zu einer
+   Single-Function folden, die Struktur beider Keyframes bleibt identisch,
+   und iOS Safari interpoliert sauber.
    Siehe memory/feedback_ios_safari_gotchas.md. */
 @keyframes marquee {
-  from { transform: translate3d(var(--marquee-start), 0, 0); }
-  to   { transform: translate3d(var(--marquee-end),   0, 0); }
+  0%   { transform: translate(0) translateZ(0); }
+  100% { transform: translate(-50%) translateZ(0); }
 }
 
 .animate-marquee {
-  --marquee-start: 0%;
-  --marquee-end: -50%;
-  animation: marquee 15s linear infinite;
+  animation: marquee 20s linear infinite;
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
