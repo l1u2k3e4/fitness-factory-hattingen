@@ -160,9 +160,8 @@ export const designTokens: Partial<Config['theme']> = {
       to: { opacity: '1' },
     },
     'marquee': {
-      // translateZ(0) forciert GPU-Compositing-Layer → keine CPU-Repaints
-      '0%': { transform: 'translateX(0) translateZ(0)' },
-      '100%': { transform: 'translateX(-50%) translateZ(0)' },
+      '0%': { transform: 'translate3d(0, 0, 0)' },
+      '100%': { transform: 'translate3d(-50%, 0, 0)' },
     },
   },
 

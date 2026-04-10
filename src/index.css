@@ -417,11 +417,13 @@
   .animate-whatsapp-enter { animation: none; opacity: 1; }
 }
 
-/* Marquee — GPU-Hints für flüssige Endlos-Animation */
+/* Marquee — GPU-Hint via will-change. KEIN statisches transform hier,
+   weil das auf iOS Safari die @keyframes-transform überschreiben und
+   die Animation visuell einfrieren lässt. */
 .animate-marquee {
   will-change: transform;
   backface-visibility: hidden;
-  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
 }
 
 /* Sticky-CTA instant verstecken wenn Mobile-Menu offen (via body.menu-open Class) */

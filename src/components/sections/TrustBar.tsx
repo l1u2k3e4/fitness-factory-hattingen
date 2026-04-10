@@ -74,21 +74,20 @@ export default function TrustBar() {
       className="bg-brand-bg border-y border-brand-border py-5 md:py-7 overflow-hidden"
       aria-label="Fitness Factory Hattingen — auf einen Blick"
     >
-      {/* Mobile: Endlos-Marquee (pure CSS, keine JS-Messung, keine Pause-Logik).
-          width:max-content via inline-style ist iOS-Safari-sicher — die
-          Tailwind-Klasse w-max wird in Kombination mit overflow-hidden
-          Parents auf iOS manchmal auf 0 zusammengelegt. */}
-      <div className="md:hidden">
+      {/* Mobile: Endlos-Marquee. display:inline-flex sizet automatisch
+          zur Content-Breite und ist iOS-Safari-robust (anders als
+          width:max-content in einem block-Parent). */}
+      <div className="md:hidden whitespace-nowrap">
         <div
-          className="flex gap-10 animate-marquee flex-none"
-          style={{ width: 'max-content' }}
+          className="animate-marquee"
+          style={{ display: 'inline-flex', gap: '2.5rem', alignItems: 'center' }}
           aria-hidden="true"
         >
-          {/* Duplizierte Items für nahtlose Endlosschleife (translateX -50%) */}
+          {/* Duplizierte Items für nahtlose Endlosschleife (translate3d -50% 0 0) */}
           {items.map((item) => renderItem(item, 'a'))}
-          <div className="flex-shrink-0 w-8" aria-hidden="true" />
+          <div style={{ width: '2rem', flexShrink: 0 }} aria-hidden="true" />
           {items.map((item) => renderItem(item, 'b'))}
-          <div className="flex-shrink-0 w-8" aria-hidden="true" />
+          <div style={{ width: '2rem', flexShrink: 0 }} aria-hidden="true" />
         </div>
       </div>
 
