@@ -171,7 +171,7 @@ export default function MitgliedschaftPage() {
                 <ul className="flex flex-col gap-2 mb-8 flex-1" aria-label="Inklusive Leistungen">
                   {tarif.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2.5">
-                      <Check className="w-4 h-4 flex-shrink-0 text-brand-success" aria-hidden="true" />
+                      <Check className="w-4 h-4 flex-shrink-0 text-brand-primary" aria-hidden="true" />
                       <span className="font-body text-body-sm text-brand-muted">{feature}</span>
                     </li>
                   ))}
@@ -224,10 +224,10 @@ export default function MitgliedschaftPage() {
                   className="flex gap-4 p-4 bg-brand-surface border border-brand-border rounded-card"
                 >
                   <div
-                    className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-card bg-green-50 border border-green-200 mt-0.5"
+                    className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-card bg-brand-primary-light border border-brand-primary/20 mt-0.5"
                     aria-hidden="true"
                   >
-                    <Icon className="w-4.5 h-4.5 text-brand-success" />
+                    <Icon className="w-4.5 h-4.5 text-brand-primary" />
                   </div>
                   <div>
                     <p className="font-body font-semibold text-body-sm text-brand-text leading-tight mb-1">

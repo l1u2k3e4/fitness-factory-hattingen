@@ -74,9 +74,16 @@ export default function TrustBar() {
       className="bg-brand-bg border-y border-brand-border py-5 md:py-7 overflow-hidden"
       aria-label="Fitness Factory Hattingen — auf einen Blick"
     >
-      {/* Mobile: Endlos-Marquee (pure CSS, keine JS-Messung, keine Pause-Logik) */}
-      <div className="md:hidden overflow-hidden" aria-hidden="true">
-        <div className="flex gap-10 animate-marquee w-max">
+      {/* Mobile: Endlos-Marquee (pure CSS, keine JS-Messung, keine Pause-Logik).
+          width:max-content via inline-style ist iOS-Safari-sicher — die
+          Tailwind-Klasse w-max wird in Kombination mit overflow-hidden
+          Parents auf iOS manchmal auf 0 zusammengelegt. */}
+      <div className="md:hidden">
+        <div
+          className="flex gap-10 animate-marquee flex-none"
+          style={{ width: 'max-content' }}
+          aria-hidden="true"
+        >
           {/* Duplizierte Items für nahtlose Endlosschleife (translateX -50%) */}
           {items.map((item) => renderItem(item, 'a'))}
           <div className="flex-shrink-0 w-8" aria-hidden="true" />
