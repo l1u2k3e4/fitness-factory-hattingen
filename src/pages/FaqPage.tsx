@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Plus, Minus } from 'lucide-react'
 import SeoHead from '@/lib/seo'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import ProbetrainingCta from '@/components/sections/ProbetrainingCtaV2'
-import { accordionContent, staggerContainer, fadeInUp } from '@/lib/animations'
+import { staggerContainer, fadeInUp } from '@/lib/animations'
 import { cn } from '@/lib/cn'
 import { useInView } from '@/hooks/useInView'
 import { META, PAGE_FAQ } from '@/data/content'
@@ -169,25 +169,22 @@ export default function FaqPage() {
                           </span>
                         </button>
 
-                        <AnimatePresence initial={false}>
-                          {isOpen && (
-                            <motion.div
-                              id={panelId}
-                              role="region"
-                              aria-labelledby={buttonId}
-                              key={panelId}
-                              variants={accordionContent}
-                              initial="initial"
-                              animate="animate"
-                              exit="exit"
-                              className="overflow-hidden"
-                            >
-                              <p className="font-body text-body text-brand-muted leading-relaxed pb-5 pr-9">
-                                {item.antwort}
-                              </p>
-                            </motion.div>
+                        {/* Panel — CSS grid-rows Transition (kein Framer-Motion Height-Thrashing) */}
+                        <div
+                          id={panelId}
+                          role="region"
+                          aria-labelledby={buttonId}
+                          className={cn(
+                            'grid transition-[grid-template-rows] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
+                            isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
                           )}
-                        </AnimatePresence>
+                        >
+                          <div className="overflow-hidden">
+                            <p className="font-body text-body text-brand-muted leading-relaxed pb-5 pr-9">
+                              {item.antwort}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     )
                   })}

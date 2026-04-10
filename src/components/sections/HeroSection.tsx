@@ -6,6 +6,7 @@ import { assetUrl } from '@/lib/assetUrl'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { useDynamicHero } from '@/contexts/ContentContext'
+import { SITE } from '@/data/content'
 
 /**
  * HeroSection — Hauptheld der Homepage.
@@ -108,7 +109,7 @@ export default function HeroSection() {
             <Button to={HERO.ctaPrimary.href} variant="primary" size="lg" fullWidth aria-label={HERO.ctaPrimary.ariaLabel}>
               {HERO.ctaPrimary.label}
             </Button>
-            <Button href="tel:+492324337777" variant="dark-outline" size="lg" icon={Phone} fullWidth>
+            <Button href={SITE.kontakt.telefonLink} variant="dark-outline" size="lg" icon={Phone} fullWidth aria-label={`Jetzt anrufen: ${SITE.kontakt.telefon}`}>
               Jetzt anrufen
             </Button>
           </motion.div>

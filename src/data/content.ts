@@ -22,8 +22,8 @@ export const SITE = {
     ort: 'Hattingen',
     stadtteil: 'Holthausen',
     vollstaendig: 'Im Vogelsang 95, 45527 Hattingen',
-    googleMapsUrl: 'https://maps.google.com/?q=Im+Vogelsang+95,+45527+Hattingen',
-    googleMapsDirectionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=Im+Vogelsang+95,+45527+Hattingen',
+    googleMapsUrl: 'https://maps.google.com/?q=Fitness+Factory+Hattingen,+Im+Vogelsang+95,+45527+Hattingen',
+    googleMapsDirectionsUrl: 'https://www.google.com/maps/dir/?api=1&destination=Fitness+Factory+Hattingen,+Im+Vogelsang+95,+45527+Hattingen',
     googleMapsEmbedUrl:
       'https://www.google.com/maps?q=Fitness+Factory+Hattingen,+Im+Vogelsang+95,+45527+Hattingen&output=embed',
   },
@@ -432,7 +432,7 @@ export const TEAM = {
     },
   ],
   ctaLabel: 'Lerne uns beim Probetraining kennen →',
-  ctaHref: '#probetraining',
+  ctaHref: '/probetraining/',
 } as const
 
 // ---------------------------------------------------------------------------

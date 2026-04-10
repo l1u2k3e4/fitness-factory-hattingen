@@ -13,22 +13,33 @@ import { getConsent } from '@/components/layout/CookieConsent'
 
 /**
  * Öffnet die beste verfügbare Navigations-App für die Route zum Studio.
- * iOS → Apple Maps, Android → Google Maps App, Desktop → Google Maps Web
+ *
+ * Strategie: Business-Name + Adresse als Destination → Map-Apps lösen zum
+ * verifizierten Google-Business-Eintrag auf (nicht zu einer beliebigen
+ * "Im Vogelsang"-Straße — diesen Namen gibt es in mehreren deutschen Städten).
+ *
+ * - iOS → Apple Maps (App oder Web)
+ * - Android → https://maps.google.com/... wird von Android automatisch
+ *   an die installierte Google-Maps-App übergeben (Intent-Handling des OS),
+ *   fällt auf die Web-Version zurück wenn keine App installiert ist.
+ * - Desktop → Google Maps Web
  */
 function openRouteNavigation(_?: React.MouseEvent) {
-  const destination = encodeURIComponent('Im Vogelsang 95, 45527 Hattingen, Germany')
+  const destination = encodeURIComponent(
+    'Fitness Factory Hattingen, Im Vogelsang 95, 45527 Hattingen'
+  )
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-  const isAndroid = /Android/.test(navigator.userAgent)
 
   if (isIOS) {
-    window.open(`maps://maps.apple.com/?daddr=${destination}&dirflg=d`, '_blank')
-  } else if (isAndroid) {
-    window.open(`google.navigation:q=${destination}`, '_blank')
-    setTimeout(() => {
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${destination}`, '_blank')
-    }, 500)
+    // Apple Maps mit https-Scheme → öffnet Maps-App auf iOS, Web auf macOS
+    window.open(`https://maps.apple.com/?daddr=${destination}&dirflg=d`, '_blank')
   } else {
-    window.open(`https://www.google.com/maps/dir/?api=1&destination=${destination}`, '_blank')
+    // Google Maps Universal-URL → Android öffnet Google-Maps-App automatisch,
+    // Desktop öffnet Web-Version
+    window.open(
+      `https://www.google.com/maps/dir/?api=1&destination=${destination}`,
+      '_blank'
+    )
   }
 }
 

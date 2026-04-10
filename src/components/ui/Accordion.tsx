@@ -76,7 +76,7 @@ function AccordionItemComponent({
         role="region"
         aria-labelledby={headingId}
         className={cn(
-          'grid transition-[grid-template-rows] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          'grid transition-[grid-template-rows] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]',
           isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         )}
       >
