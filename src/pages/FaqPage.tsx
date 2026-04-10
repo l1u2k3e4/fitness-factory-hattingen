@@ -82,7 +82,7 @@ export default function FaqPage() {
 
       {/* Kategorie-Navigation */}
       <nav
-        className="sticky top-[64px] md:top-[72px] z-20 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border py-3"
+        className="sticky top-[64px] md:top-[72px] z-20 bg-brand-bg border-b border-brand-border py-3"
         aria-label="FAQ-Kategorien"
       >
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">

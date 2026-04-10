@@ -26,7 +26,7 @@ export default function HeroSection() {
     >
       {/* Hintergrundbild */}
       <img
-        src={assetUrl('/images/hero-bg.jpg')}
+        src={assetUrl('/images/hero-bg.webp')}
         alt=""
         width={1920}
         height={1279}

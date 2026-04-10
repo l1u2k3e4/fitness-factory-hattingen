@@ -417,7 +417,7 @@ export const TEAM = {
       ],
       beschreibung:
         'Alex hat die Fitness Factory mit einer klaren Vision gegründet: Ein Studio, in dem jeder Mensch individuell betreut wird. Als Inhaber und Cheftrainer kennt er jedes Mitglied persönlich und sorgt dafür, dass Training Ergebnisse liefert — nicht nur Schweiß.',
-      foto: '/Trainer/Alex_02.jpeg',
+      foto: '/Trainer/Alex_02.webp',
     },
     {
       name: 'Carla',
@@ -428,7 +428,7 @@ export const TEAM = {
       ],
       beschreibung:
         'Carla bringt Energie in jede Spinning-Stunde. Mit mitreißender Musik und motivierenden Ansagen sorgt sie dafür, dass du deine Grenzen sprengst — und dabei Spaß hast. Ihre Kurse sind legendär und regelmäßig ausgebucht.',
-      foto: '/Trainer/Carla.jpeg',
+      foto: '/Trainer/Carla.webp',
     },
   ],
   ctaLabel: 'Lerne uns beim Probetraining kennen →',
@@ -585,67 +585,67 @@ export const GALERIE = {
   subheadline: 'Hier trainierst du — nicht in einem anonymen Ketten-Studio.',
   bilder: [
     {
-      src: '/images/studio-dsc-01.jpg',
+      src: '/images/studio-dsc-01.webp',
       alt: 'Fitnessgeräte im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-02.jpg',
+      src: '/images/studio-dsc-02.webp',
       alt: 'Kursraum für Yoga und Spinning im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-03.jpg',
+      src: '/images/studio-dsc-03.webp',
       alt: 'Trainingsbereich im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-04.jpg',
+      src: '/images/studio-dsc-04.webp',
       alt: 'Kraftbereich im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-05.jpg',
+      src: '/images/studio-dsc-05.webp',
       alt: 'Cardiobereich im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-06.jpg',
+      src: '/images/studio-dsc-06.webp',
       alt: 'Gerätepark im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-07.jpg',
+      src: '/images/studio-dsc-07.webp',
       alt: 'Trainingsbereich im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-dsc-08.jpg',
+      src: '/images/studio-dsc-08.webp',
       alt: 'Studiobereich im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-galerie-01.jpg',
+      src: '/images/studio-galerie-01.webp',
       alt: 'Ausstattung im Fitness Factory Hattingen',
       kategorie: 'Studio',
     },
     {
-      src: '/Galerie/Sauna/Sauna_Außenbereich_01.jpeg',
+      src: '/Galerie/Sauna/Sauna_Außenbereich_01.webp',
       alt: 'Sauna Außenbereich im Fitness Factory Hattingen',
       kategorie: 'Sauna',
     },
     {
-      src: '/Galerie/Sauna/Sauna_Innenbereich_01.jpeg',
+      src: '/Galerie/Sauna/Sauna_Innenbereich_01.webp',
       alt: 'Sauna Innenbereich im Fitness Factory Hattingen',
       kategorie: 'Sauna',
     },
     {
-      src: '/Galerie/Sauna/Sauna_Innenbereich_02.jpeg',
+      src: '/Galerie/Sauna/Sauna_Innenbereich_02.webp',
       alt: 'Sauna im Fitness Factory Hattingen',
       kategorie: 'Sauna',
     },
     {
-      src: '/Galerie/Lounge/Theke-Lounge.jpeg',
+      src: '/Galerie/Lounge/Theke-Lounge.webp',
       alt: 'Lounge und Theke im Fitness Factory Hattingen',
       kategorie: 'Lounge',
     },

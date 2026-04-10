@@ -21,7 +21,13 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
  */
 export default function TrustBar() {
   const TRUST_BAR = useDynamicTrustBar()
-  const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.2 })
+  // Für Items-Stagger-Animation (einmalig)
+  const { ref: itemsRef, inView: itemsInView } = useInView<HTMLDivElement>({ threshold: 0.2 })
+  // Für Marquee-Pause (toggle) — pausiert Endlosschleife wenn TrustBar off-screen
+  const { ref: marqueeRef, inView: marqueeVisible } = useInView<HTMLElement>({
+    threshold: 0,
+    once: false,
+  })
   const trackRef = useRef<HTMLDivElement>(null)
   const [needsMarquee, setNeedsMarquee] = useState(false)
 
@@ -79,6 +85,7 @@ export default function TrustBar() {
 
   return (
     <section
+      ref={marqueeRef}
       id="trust"
       className="bg-brand-bg border-y border-brand-border py-5 md:py-7"
       aria-label="Fitness Factory Hattingen — auf einen Blick"
@@ -87,13 +94,13 @@ export default function TrustBar() {
         {/* Measurement container (hidden when marquee active) */}
         <motion.div
           ref={(el) => {
-            // Combine refs
-            (ref as React.MutableRefObject<HTMLDivElement | null>).current = el
+            // Combine refs: useInView + trackRef
+            ;(itemsRef as React.MutableRefObject<HTMLDivElement | null>).current = el
             ;(trackRef as React.MutableRefObject<HTMLDivElement | null>).current = el
           }}
           variants={staggerContainer}
           initial="initial"
-          animate={inView ? 'animate' : 'initial'}
+          animate={itemsInView ? 'animate' : 'initial'}
           className={`flex gap-6 sm:gap-8 justify-center ${needsMarquee ? 'hidden' : ''}`}
         >
           {items.map((item) => (
@@ -109,7 +116,10 @@ export default function TrustBar() {
             className="overflow-hidden"
             aria-hidden="true"
           >
-            <div className="flex gap-10 animate-marquee">
+            {/* Marquee pausiert automatisch wenn TrustBar off-screen → kein GPU-Drain */}
+            <div
+              className={`flex gap-10 animate-marquee ${!marqueeVisible ? '[animation-play-state:paused]' : ''}`}
+            >
               {/* Duplizierte Items für nahtlose Endlosschleife */}
               {items.map((item) => renderItem(item, 'a'))}
               <div className="flex-shrink-0 w-8" aria-hidden="true" />
@@ -121,7 +131,7 @@ export default function TrustBar() {
 
         <motion.p
           initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
+          animate={itemsInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
           className="text-center font-body text-caption text-brand-muted mt-4 md:mt-5"
         >

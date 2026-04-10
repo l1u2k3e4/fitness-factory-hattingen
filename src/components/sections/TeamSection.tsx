@@ -66,6 +66,9 @@ export default function TeamSection({ showHeader = true }: { showHeader?: boolea
                     alt={`${trainer.name} — ${trainer.rolle}`}
                     className="w-full h-full object-cover object-top"
                     loading="lazy"
+                    decoding="async"
+                    width={600}
+                    height={450}
                   />
                 ) : (
                   <div className="flex flex-col items-center gap-3" aria-hidden="true">

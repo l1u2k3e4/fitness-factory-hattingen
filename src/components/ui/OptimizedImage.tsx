@@ -15,6 +15,10 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
  * Verhindert CLS durch obligatorische width/height Props.
  * WebP wird aus src-Pfad auto-generiert (.jpg/.png → .webp).
  *
+ * Auto-Derivation läuft NUR in Production, weil der Vite Dev-Server bei 404
+ * eine HTML-Seite ausliefert, die den <picture>-Fallback blockiert.
+ * In Production sind alle WebP-Varianten als statische Assets vorhanden.
+ *
  * Verwendung:
  *   <OptimizedImage
  *     src="/images/geraete.jpg"
@@ -30,16 +34,32 @@ export default function OptimizedImage({
   webpSrc,
   width,
   height,
+  decoding = 'async',
   ...props
 }: OptimizedImageProps) {
-  // Nur <picture> mit WebP verwenden wenn explizit ein webpSrc übergeben wurde.
-  // Auto-Derivation entfernt, da keine WebP-Dateien vorhanden sind und
-  // Vite-Dev-Server bei 404 eine HTML-Seite zurückgibt, die den Fallback blockiert.
   const resolvedSrc = assetUrl(src)
-  const resolvedWebp = webpSrc ? assetUrl(webpSrc) : undefined
+
+  // WebP-Path automatisch ableiten: .jpg/.jpeg/.png → .webp
+  const derivedWebp = src.replace(/\.(jpe?g|png)$/i, '.webp')
+  const hasWebpCandidate = derivedWebp !== src
+
+  const resolvedWebp = webpSrc
+    ? assetUrl(webpSrc)
+    : hasWebpCandidate && import.meta.env.PROD
+    ? assetUrl(derivedWebp)
+    : undefined
 
   if (!resolvedWebp) {
-    return <img src={resolvedSrc} alt={alt} width={width} height={height} {...props} />
+    return (
+      <img
+        src={resolvedSrc}
+        alt={alt}
+        width={width}
+        height={height}
+        decoding={decoding}
+        {...props}
+      />
+    )
   }
 
   return (
@@ -50,6 +70,7 @@ export default function OptimizedImage({
         alt={alt}
         width={width}
         height={height}
+        decoding={decoding}
         {...props}
       />
     </picture>

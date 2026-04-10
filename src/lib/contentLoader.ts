@@ -75,7 +75,7 @@ export async function loadOverrides(): Promise<ContentOverrides | null> {
   if (cachedOverrides !== undefined && cachedOverrides !== null) return cachedOverrides
 
   try {
-    const response = await fetch('/data/content-overrides.json', {
+    const response = await fetch(`${import.meta.env.BASE_URL}data/content-overrides.json`, {
       cache: 'no-store',
     })
     if (!response.ok) {

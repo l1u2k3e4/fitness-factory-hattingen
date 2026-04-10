@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import SeoHead from '@/lib/seo'
 import { SITE } from '@/data/content'
 import { BREADCRUMBS } from '@/lib/jsonld'
@@ -137,7 +138,7 @@ export default function AgbPage() {
                 <p>
                   Die im Rahmen der Mitgliedschaft erhobenen personenbezogenen Daten werden ausschließlich zur
                   Vertragsabwicklung verwendet. Details zur Datenverarbeitung finden Sie in unserer{' '}
-                  <a href="/datenschutz/" className="text-brand-primary hover:underline">Datenschutzerklärung</a>.
+                  <Link to="/datenschutz" className="text-brand-primary hover:underline">Datenschutzerklärung</Link>.
                 </p>
               </section>
 

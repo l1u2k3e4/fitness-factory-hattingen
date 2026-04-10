@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState } from 'react'
-import { useInView, animate } from 'framer-motion'
+import { useRef, useEffect } from 'react'
 import { cn } from '@/lib/cn'
+import { useInView } from '@/hooks/useInView'
 import { counterConfig } from '@/lib/animations'
 
 interface CounterProps {
@@ -22,7 +22,7 @@ interface CounterProps {
 
 /**
  * Counter — Animierte Zahl die von 0 auf `value` hochzählt wenn in Viewport.
- * Nutzt Framer Motion animate() mit onUpdate-Callback.
+ * Schreibt direkt in `textContent` via Ref → 0 React-Renders pro Sekunde.
  * prefers-reduced-motion: Zeigt sofort den Endwert.
  */
 export default function Counter({
@@ -34,48 +34,69 @@ export default function Counter({
   wrapperClassName,
   decimals = 0,
 }: CounterProps) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const isInView = useInView(ref, { once: true, amount: 0.5 })
-  const [displayValue, setDisplayValue] = useState('0')
+  const wrapperRef = useRef<HTMLSpanElement>(null)
+  const numberRef = useRef<HTMLSpanElement>(null)
+  const { ref: inViewRef, inView } = useInView<HTMLSpanElement>({ threshold: 0.5 })
   const hasAnimatedRef = useRef(false)
 
-  const prefersReduced =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  // Wrapper-Ref mit useInView-Ref kombinieren
+  const setRefs = (el: HTMLSpanElement | null) => {
+    wrapperRef.current = el
+    ;(inViewRef as React.MutableRefObject<HTMLSpanElement | null>).current = el
+  }
 
   useEffect(() => {
-    if (!isInView || hasAnimatedRef.current || !value) return
+    if (!inView || hasAnimatedRef.current || !value) return
     hasAnimatedRef.current = true
 
+    const target = numberRef.current
+    if (!target) return
+
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     if (prefersReduced) {
-      setDisplayValue(formatValue(value, decimals))
+      target.textContent = formatValue(value, decimals)
       return
     }
 
-    const controls = animate(0, value, {
-      duration,
-      ease: counterConfig.ease,
-      onUpdate: (latest) => {
-        setDisplayValue(formatValue(latest, decimals))
-      },
-      onComplete: () => {
-        setDisplayValue(formatValue(value, decimals))
-      },
-    })
+    // RAF-Loop: schreibt direkt in DOM, umgeht React-Render komplett
+    let rafId = 0
+    let startTs: number | null = null
+    const durationMs = duration * 1000
+
+    const tick = (ts: number) => {
+      if (startTs === null) startTs = ts
+      const elapsed = ts - startTs
+      const progress = Math.min(elapsed / durationMs, 1)
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+      const current = eased * value
+      target.textContent = formatValue(current, decimals)
+      if (progress < 1) {
+        rafId = requestAnimationFrame(tick)
+      } else {
+        target.textContent = formatValue(value, decimals)
+      }
+    }
+
+    rafId = requestAnimationFrame(tick)
 
     return () => {
-      controls.stop()
+      if (rafId) cancelAnimationFrame(rafId)
     }
-  }, [isInView, value, duration, decimals, prefersReduced])
+  }, [inView, value, duration, decimals])
 
   return (
-    <span ref={ref} className={cn('tabular-nums', wrapperClassName)}>
+    <span ref={setRefs} className={cn('tabular-nums', wrapperClassName)}>
       {prefix && (
         <span className={cn('font-display', className)} aria-hidden="true">
           {prefix}
         </span>
       )}
       <span
+        ref={numberRef}
         className={cn(
           'font-display font-black',
           'font-feature-settings-tnum',
@@ -83,7 +104,7 @@ export default function Counter({
         )}
         aria-label={`${prefix}${value}${suffix}`}
       >
-        {displayValue}
+        0
       </span>
       {suffix && (
         <span className={cn('font-display', className)} aria-hidden="true">

@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, Phone, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/cn'
 import { assetUrl } from '@/lib/assetUrl'
-import { slideOverRight, backdropFade, hamburgerTop, hamburgerMiddle, hamburgerBottom } from '@/lib/animations'
-import { useScrollPosition } from '@/hooks/useScrollPosition'
+import { hamburgerTop, hamburgerMiddle, hamburgerBottom } from '@/lib/animations'
+import { useIsScrolled } from '@/hooks/useScrollPosition'
 import { useTheme } from '@/hooks/useTheme'
 import { SITE } from '@/data/content'
 
@@ -81,10 +81,9 @@ interface NavigationProps {
 export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null)
-  const { scrollY } = useScrollPosition()
+  const isScrolled = useIsScrolled(8)
   const location = useLocation()
   const { showSwitcher } = useTheme()
-  const isScrolled = scrollY > 8
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const closeMenu = () => {
@@ -96,6 +95,21 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
   useEffect(() => {
     closeMenu()
   }, [location.pathname])
+
+  // Body-Scroll sperren wenn Menu offen + body.menu-open Class (für Sticky-CTA-Hide via CSS)
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.classList.add('menu-open')
+    } else {
+      document.body.style.overflow = ''
+      document.body.classList.remove('menu-open')
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.classList.remove('menu-open')
+    }
+  }, [menuOpen])
 
   // Escape key closes menu
   useEffect(() => {
@@ -153,6 +167,9 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
               className="h-10 md:h-12 w-auto"
               width={160}
               height={48}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           </Link>
 
@@ -264,132 +281,124 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {menuOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              key="backdrop"
-              variants={backdropFade}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="fixed inset-0 z-50 bg-brand-overlay"
-              onClick={closeMenu}
-              aria-hidden="true"
-            />
+      {/* Mobile Menu Overlay — CSS Transitions (kein Framer Motion = kein Stottern) */}
 
-            {/* Slide-Over Panel */}
-            <motion.div
-              key="menu"
-              id="mobile-menu"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Navigationsmenü"
-              variants={slideOverRight}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              className="fixed top-0 right-0 bottom-0 z-50 w-[min(320px,85vw)] bg-brand-bg border-l border-brand-border flex flex-col"
-            >
-              {/* Panel Header */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-brand-border">
-                <span className="font-display font-black text-h4 text-brand-text uppercase tracking-tight">
-                  Menü
-                </span>
-                <button
-                  type="button"
-                  onClick={closeMenu}
-                  className="w-9 h-9 flex items-center justify-center text-brand-muted hover:text-brand-text transition-colors duration-150 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-                  aria-label="Menü schließen"
-                >
-                  <X className="w-5 h-5" aria-hidden="true" />
-                </button>
-              </div>
-
-              {/* Nav Links with Accordions */}
-              <nav className="flex-1 px-6 py-6 flex flex-col gap-1 overflow-y-auto" aria-label="Mobile Navigation">
-                {NAV_ITEMS.map((item) => (
-                  <div key={item.label}>
-                    {/* Accordion Toggle */}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setMobileAccordion((prev) =>
-                          prev === item.label ? null : item.label
-                        )
-                      }
-                      className={cn(
-                        'w-full flex items-center justify-between font-body font-medium text-body-lg py-3 px-3 rounded-card transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
-                        mobileAccordion === item.label
-                          ? 'text-brand-primary bg-brand-primary/5'
-                          : 'text-brand-text hover:text-brand-primary hover:bg-brand-surface'
-                      )}
-                      aria-expanded={mobileAccordion === item.label}
-                    >
-                      {item.label}
-                      {item.children && (
-                        <ChevronDown
-                          className={cn(
-                            'w-4 h-4 transition-transform duration-200',
-                            mobileAccordion === item.label ? 'rotate-180' : ''
-                          )}
-                          aria-hidden="true"
-                        />
-                      )}
-                    </button>
-
-                    {/* Accordion Children */}
-                    <AnimatePresence>
-                      {item.children && mobileAccordion === item.label && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="pl-4 pb-2">
-                            {item.children.map((child) => (
-                              <Link
-                                key={child.href}
-                                to={child.href}
-                                onClick={closeMenu}
-                                className="block py-2.5 px-3 font-body text-body text-brand-muted hover:text-brand-primary transition-colors duration-150 rounded-card"
-                              >
-                                {child.label}
-                              </Link>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))}
-              </nav>
-
-              {/* CTA-Bereich */}
-              <div className="px-6 py-6 border-t border-brand-border flex flex-col gap-3">
-                <Link
-                  to="/probetraining"
-                  onClick={closeMenu}
-                  className="block w-full text-center font-display font-bold text-body-lg text-white bg-brand-primary py-4 rounded-button hover:bg-brand-primary-hover transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
-                >
-                  Probetraining buchen
-                </Link>
-                <a
-                  href={SITE.kontakt.telefonLink}
-                  className="flex items-center justify-center gap-2 w-full text-center font-display font-bold text-body text-brand-primary border-2 border-brand-primary py-3.5 rounded-button hover:bg-brand-primary hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
-                >
-                  <Phone className="w-4 h-4" />
-                  Jetzt anrufen
-                </a>
-              </div>
-            </motion.div>
-          </>
+      {/* Backdrop */}
+      <div
+        className={cn(
+          'fixed inset-0 z-50 bg-brand-overlay transition-opacity duration-200',
+          menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none',
         )}
-      </AnimatePresence>
+        onClick={closeMenu}
+        aria-hidden="true"
+      />
+
+      {/* Slide-Over Panel */}
+      <div
+        id="mobile-menu"
+        role="dialog"
+        aria-modal={menuOpen}
+        aria-label="Navigationsmenü"
+        inert={!menuOpen ? (true as unknown as undefined) : undefined}
+        className={cn(
+          'fixed top-0 right-0 bottom-0 z-50 w-[min(320px,85vw)] bg-brand-bg border-l border-brand-border flex flex-col',
+          'transform-gpu transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          menuOpen ? 'translate-x-0' : 'translate-x-full',
+        )}
+      >
+        {/* Panel Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-brand-border">
+          <span className="font-display font-black text-h4 text-brand-text uppercase tracking-tight">
+            Menü
+          </span>
+          <button
+            type="button"
+            onClick={closeMenu}
+            className="w-9 h-9 flex items-center justify-center text-brand-muted hover:text-brand-text transition-colors duration-150 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+            aria-label="Menü schließen"
+          >
+            <X className="w-5 h-5" aria-hidden="true" />
+          </button>
+        </div>
+
+        {/* Nav Links with Accordions */}
+        <nav className="flex-1 px-6 py-6 flex flex-col gap-1 overflow-y-auto" aria-label="Mobile Navigation">
+          {NAV_ITEMS.map((item) => (
+            <div key={item.label}>
+              {/* Accordion Toggle */}
+              <button
+                type="button"
+                onClick={() =>
+                  setMobileAccordion((prev) =>
+                    prev === item.label ? null : item.label
+                  )
+                }
+                className={cn(
+                  'w-full flex items-center justify-between font-body font-medium text-body-lg py-3 px-3 rounded-card transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
+                  mobileAccordion === item.label
+                    ? 'text-brand-primary bg-brand-primary/5'
+                    : 'text-brand-text hover:text-brand-primary hover:bg-brand-surface'
+                )}
+                aria-expanded={mobileAccordion === item.label}
+              >
+                {item.label}
+                {item.children && (
+                  <ChevronDown
+                    className={cn(
+                      'w-4 h-4 transition-transform duration-200',
+                      mobileAccordion === item.label ? 'rotate-180' : ''
+                    )}
+                    aria-hidden="true"
+                  />
+                )}
+              </button>
+
+              {/* Accordion Children — CSS Grid-Rows Transition */}
+              {item.children && (
+                <div
+                  className={cn(
+                    'grid transition-[grid-template-rows] duration-200 ease-out',
+                    mobileAccordion === item.label ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+                  )}
+                >
+                  <div className="overflow-hidden">
+                    <div className="pl-4 pb-2">
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          to={child.href}
+                          onClick={closeMenu}
+                          className="block py-2.5 px-3 font-body text-body text-brand-muted hover:text-brand-primary transition-colors duration-150 rounded-card"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </nav>
+
+        {/* CTA-Bereich */}
+        <div className="px-6 py-6 border-t border-brand-border flex flex-col gap-3">
+          <Link
+            to="/probetraining"
+            onClick={closeMenu}
+            className="block w-full text-center font-display font-bold text-body-lg text-white bg-brand-primary py-4 rounded-button hover:bg-brand-primary-hover transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+          >
+            Probetraining buchen
+          </Link>
+          <a
+            href={SITE.kontakt.telefonLink}
+            className="flex items-center justify-center gap-2 w-full text-center font-display font-bold text-body text-brand-primary border-2 border-brand-primary py-3.5 rounded-button hover:bg-brand-primary hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
+          >
+            <Phone className="w-4 h-4" />
+            Jetzt anrufen
+          </a>
+        </div>
+      </div>
     </>
   )
 }

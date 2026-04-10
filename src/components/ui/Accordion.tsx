@@ -1,8 +1,6 @@
 import { useState, useId } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/cn'
-import { accordionContent } from '@/lib/animations'
 
 interface AccordionItem {
   frage: string
@@ -60,46 +58,40 @@ function AccordionItemComponent({
       >
         <span className="flex-1 pr-2">{item.frage}</span>
 
-        {/* Chevron-Icon — rotiert bei open */}
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+        {/* Chevron-Icon — CSS-Transform (kein Framer Motion) */}
+        <ChevronDown
           className={cn(
-            'flex-shrink-0 w-5 h-5 text-brand-muted group-hover:text-brand-primary transition-colors duration-150',
-            isOpen && 'text-brand-primary'
+            'flex-shrink-0 w-5 h-5 text-brand-muted group-hover:text-brand-primary',
+            'transition-[transform,color] duration-200 ease-out',
+            isOpen && 'text-brand-primary rotate-180'
           )}
+          strokeWidth={1.75}
           aria-hidden="true"
-        >
-          <ChevronDown className="w-5 h-5" strokeWidth={1.75} />
-        </motion.span>
+        />
       </button>
 
-      {/* Panel mit AnimatePresence */}
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            key={panelId}
-            id={panelId}
-            role="region"
-            aria-labelledby={headingId}
-            variants={accordionContent}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            style={{ overflow: 'hidden' }}
-          >
-            <p className="font-body text-body text-brand-muted leading-relaxed pb-5 pr-8">
-              {item.antwort}
-            </p>
-          </motion.div>
+      {/* Panel — CSS grid-rows Transition (kein Layout-Thrashing wie height:auto) */}
+      <div
+        id={panelId}
+        role="region"
+        aria-labelledby={headingId}
+        className={cn(
+          'grid transition-[grid-template-rows] duration-250 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         )}
-      </AnimatePresence>
+      >
+        <div className="overflow-hidden">
+          <p className="font-body text-body text-brand-muted leading-relaxed pb-5 pr-8">
+            {item.antwort}
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
 
 /**
- * Accordion — FAQ-Komponente mit AnimatePresence height-Animation.
+ * Accordion — FAQ-Komponente mit CSS grid-rows Animation (ohne Framer Motion).
  *
  * Accessibility:
  * - button aria-expanded + aria-controls
@@ -108,9 +100,9 @@ function AccordionItemComponent({
  * - unique IDs per useId()
  *
  * Animation:
- * - Framer Motion height: 0 → auto (accordionContent variant)
- * - Chevron-Rotation 0° → 180°
- * - GPU-only: opacity + height (layout triggering aber notwendig für Accordion)
+ * - CSS: grid-template-rows 0fr → 1fr (kein height:auto Layout-Thrashing)
+ * - Chevron: rotate-180 via Tailwind transition-transform
+ * - Panel bleibt immer im DOM (kein AnimatePresence-Unmount)
  */
 export default function Accordion({ items, multiple = false, className }: AccordionProps) {
   const [openIndices, setOpenIndices] = useState<Set<number>>(new Set())

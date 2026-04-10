@@ -21,7 +21,7 @@ export default function ProbetrainingCtaV2() {
     >
       {/* Hintergrundbild */}
       <img
-        src={assetUrl('/images/cta-bg.jpg')}
+        src={assetUrl('/images/cta-bg.webp')}
         alt=""
         width={1920}
         height={1279}

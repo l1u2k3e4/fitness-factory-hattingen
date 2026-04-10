@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Cookie, ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/cn'
@@ -252,12 +253,12 @@ export default function CookieConsent() {
           <p className="font-body text-body-sm text-brand-text/70 leading-relaxed mb-5">
             Wir nutzen Cookies, um die Website zu verbessern und dir relevante Inhalte zu zeigen.
             Du kannst selbst entscheiden, welche Kategorien du erlaubst.{' '}
-            <a
-              href="/datenschutz"
+            <Link
+              to="/datenschutz"
               className="text-brand-primary hover:text-brand-primary-hover underline underline-offset-2 transition-colors duration-150"
             >
               Datenschutzerklärung
-            </a>
+            </Link>
           </p>
 
           {/* Detailansicht: Kategorien */}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { MessageCircle, Phone, CheckCircle, Send, CalendarDays, ClipboardCheck, Dumbbell, Waves } from 'lucide-react'
 import SeoHead from '@/lib/seo'
@@ -349,9 +350,9 @@ export default function ProbetrainingPage() {
                         />
                         <span className="font-body text-caption text-brand-muted group-hover:text-brand-text transition-colors duration-150 leading-relaxed">
                           Ich habe die{' '}
-                          <a href="/datenschutz" className="text-brand-primary hover:text-brand-primary-hover underline underline-offset-1">
+                          <Link to="/datenschutz" className="text-brand-primary hover:text-brand-primary-hover underline underline-offset-1">
                             Datenschutzerklärung
-                          </a>{' '}
+                          </Link>{' '}
                           gelesen und stimme zu.
                         </span>
                       </label>

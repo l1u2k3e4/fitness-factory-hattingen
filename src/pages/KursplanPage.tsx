@@ -94,7 +94,7 @@ export default function KursplanPage() {
       >
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
           {/* Filter-Bereich */}
-          <div className="sticky top-[64px] md:top-[72px] z-20 bg-brand-surface/95 backdrop-blur-md border-b border-brand-border py-4 mb-8">
+          <div className="sticky top-[64px] md:top-[72px] z-20 bg-brand-surface border-b border-brand-border py-4 mb-8">
             {/* Wochentag-Tabs */}
             <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-4" role="tablist" aria-label="Wochentag wählen">
               <button

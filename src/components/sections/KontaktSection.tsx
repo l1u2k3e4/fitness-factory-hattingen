@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Phone, Mail, MapPin, Clock, MessageCircle, Navigation, Send, CheckCircle } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
@@ -421,12 +422,12 @@ export default function KontaktSection({ showHeader = true }: { showHeader?: boo
                       />
                       <span className="font-body text-caption text-brand-muted group-hover:text-brand-text transition-colors duration-150 leading-relaxed">
                         Ich habe die{' '}
-                        <a
-                          href="/datenschutz"
+                        <Link
+                          to="/datenschutz"
                           className="text-brand-primary hover:text-brand-primary-hover underline underline-offset-1"
                         >
                           Datenschutzerklärung
-                        </a>{' '}
+                        </Link>{' '}
                         gelesen und stimme der Verarbeitung meiner Daten zu.
                       </span>
                     </label>

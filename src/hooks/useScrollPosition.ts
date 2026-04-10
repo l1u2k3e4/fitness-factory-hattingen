@@ -1,30 +1,37 @@
 import { useState, useEffect } from 'react'
 
 /**
- * Gibt die aktuelle Scroll-Position zurück.
- * Wird für Sticky Nav (scrolled state) und StickyCtaBar (nach 30% Scroll) verwendet.
+ * useIsScrolled — Boolean-Hook für Scroll-Threshold.
+ * Feuert setState NUR beim Überschreiten der Schwelle (nicht bei jedem Scroll-Pixel).
+ *
+ * Pattern: rAF-ticking, passive listener.
+ * Ergebnis: 1 Re-Render pro Scroll-Session statt 60/Sek.
+ *
+ * Verwendung:
+ *   const isScrolled = useIsScrolled(8)  // true wenn scrollY > 8
  */
-export function useScrollPosition() {
-  const [scrollY, setScrollY] = useState(0)
-  const [scrollPercent, setScrollPercent] = useState(0)
+export function useIsScrolled(threshold = 8): boolean {
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY
-      setScrollY(currentScrollY)
+    let ticking = false
 
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      if (docHeight > 0) {
-        setScrollPercent(Math.round((currentScrollY / docHeight) * 100))
-      }
+    const handleScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > threshold)
+        ticking = false
+      })
     }
 
-    // Passive listener für Performance
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll() // Initialwert setzen
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [threshold])
 
-  return { scrollY, scrollPercent }
+  return isScrolled
 }

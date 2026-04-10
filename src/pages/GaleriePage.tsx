@@ -245,6 +245,7 @@ export default function GaleriePage() {
                   src={assetUrl(activeBild.src)}
                   controls
                   autoPlay
+                  muted
                   playsInline
                   className="w-full h-auto max-h-[80vh] object-contain bg-brand-dark"
                 />
