@@ -691,7 +691,7 @@ export const TESTIMONIALS = {
       plattform: 'Google',
     },
   ],
-  googleMapsLink: 'https://www.google.com/maps/place/Fitness+Factory+Hattingen/',
+  googleMapsLink: 'https://www.google.com/maps/place/Fitness+Factory+Hattingen/@51.4000923,7.2161118,17z/data=!4m6!3m5!1s0x47b8df60dc494941:0x1fed9d3d9590afa0!8m2!3d51.4000923!4d7.2161118!16s%2Fg%2F1tx463lz',
   ctaLabel: 'Alle Bewertungen auf Google →',
 } as const
 
