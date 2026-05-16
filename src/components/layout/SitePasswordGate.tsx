@@ -76,28 +76,6 @@ export default function SitePasswordGate({ children }: Props) {
       className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden px-4 py-10"
       style={{ backgroundColor: 'rgb(var(--ff-dark))' }}
     >
-      {/* Animierte Neon-Hintergrund-Blobs */}
-      <div
-        className="pointer-events-none absolute -top-32 -left-32 h-[28rem] w-[28rem] rounded-full opacity-40 blur-3xl"
-        style={{ backgroundColor: 'rgb(var(--ff-primary) / 0.25)' }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -bottom-40 -right-32 h-[32rem] w-[32rem] rounded-full opacity-30 blur-3xl"
-        style={{ backgroundColor: 'rgb(var(--ff-primary) / 0.18)' }}
-        aria-hidden="true"
-      />
-      {/* Subtiles Grid-Overlay für Tech-Look */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgb(var(--ff-light)) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--ff-light)) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
-        }}
-        aria-hidden="true"
-      />
-
       <motion.div
         key={shake}
         initial={{ opacity: 0, y: 24 }}
@@ -215,11 +193,12 @@ export default function SitePasswordGate({ children }: Props) {
               setValue(e.target.value)
               if (error) setError(null)
             }}
-            placeholder="••••••••••••"
+            placeholder="Passwort eingeben"
             aria-invalid={error ? 'true' : 'false'}
             aria-describedby={error ? 'site-pw-error' : undefined}
             className={cn(
-              'w-full rounded-input px-4 py-3.5 font-body text-body text-center tracking-[0.4em]',
+              'w-full rounded-input px-4 py-3.5 font-body text-body',
+              'placeholder:font-body placeholder:text-body-sm placeholder:tracking-normal',
               'transition-all duration-200',
               'focus:outline-none'
             )}
