@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Clock } from 'lucide-react'
 import {
@@ -6,7 +6,6 @@ import {
 } from '@/contexts/ContentContext'
 import type { SonderEintrag } from '@/lib/contentLoader'
 
-const POPUP_HEIGHT_PX = 52
 const TICK_INTERVAL_MS = 60_000
 
 const TAGES_FORMATTER = new Intl.DateTimeFormat('de-DE', {
@@ -77,6 +76,7 @@ export default function SonderOeffnungszeitenPopup() {
   const [demoModus, setDemoModus] = useState(false)
   const [dismissed, setDismissed] = useState(false)
   const [jetzt, setJetzt] = useState(() => new Date())
+  const popupRef = useRef<HTMLDivElement | null>(null)
 
   // Minütliches Re-Check, damit das Pop-Up zur richtigen Tageszeit verschwindet
   useEffect(() => {
@@ -105,21 +105,31 @@ export default function SonderOeffnungszeitenPopup() {
 
   const istSichtbar = !dismissed && aktive.length > 0
 
-  // CSS-Variable für Header-Offset setzen, damit Sticky-Nav nicht verdeckt wird
+  // CSS-Variable für Header-Offset setzen — Höhe dynamisch via ResizeObserver,
+  // damit der Sticky-Header pixelgenau unter dem Banner sitzt (keine Lücke).
   useEffect(() => {
     const root = document.documentElement
-    if (istSichtbar) {
-      root.style.setProperty('--popup-height', `${POPUP_HEIGHT_PX}px`)
-      root.dataset.sonderPopup = 'visible'
-    } else {
+    if (!istSichtbar || !popupRef.current) {
       root.style.setProperty('--popup-height', '0px')
       delete root.dataset.sonderPopup
+      return
     }
+
+    root.dataset.sonderPopup = 'visible'
+    const el = popupRef.current
+    const updateHeight = () => {
+      root.style.setProperty('--popup-height', `${el.offsetHeight}px`)
+    }
+    updateHeight()
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(el)
+
     return () => {
+      observer.disconnect()
       root.style.setProperty('--popup-height', '0px')
       delete root.dataset.sonderPopup
     }
-  }, [istSichtbar])
+  }, [istSichtbar, aktive.length])
 
   const handleDismiss = useCallback(() => {
     setDismissed(true)
@@ -130,6 +140,7 @@ export default function SonderOeffnungszeitenPopup() {
     <AnimatePresence>
       {istSichtbar && (
         <motion.div
+          ref={popupRef}
           key="sonder-popup"
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

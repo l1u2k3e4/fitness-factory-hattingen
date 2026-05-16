@@ -158,7 +158,7 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
           {/* Logo */}
           <Link
             to="/"
-            className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-sm"
+            className="flex items-center gap-2 outline-none rounded-sm"
             aria-label="Fitness Factory Hattingen — Startseite"
             onClick={closeMenu}
           >

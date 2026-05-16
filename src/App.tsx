@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ContentProvider } from '@/contexts/ContentContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
-import { ThemeVariantProvider } from '@/contexts/ThemeVariantContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import Layout from '@/components/layout/Layout'
 import PageLoader from '@/components/ui/PageLoader'
@@ -42,7 +41,6 @@ export default function App() {
   return (
     <ContentProvider>
     <ThemeProvider>
-    <ThemeVariantProvider>
     <AuthProvider>
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Suspense fallback={<PageLoader />}>
@@ -78,7 +76,6 @@ export default function App() {
       </Suspense>
     </BrowserRouter>
     </AuthProvider>
-    </ThemeVariantProvider>
     </ThemeProvider>
     </ContentProvider>
   )

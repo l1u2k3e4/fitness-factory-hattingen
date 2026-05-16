@@ -6,9 +6,7 @@ import Footer from './Footer'
 import WhatsAppButton from './WhatsAppButton'
 import StickyCtaBar from './StickyCtaBar'
 import CookieConsent from './CookieConsent'
-import ThemeSwitcher from '@/components/ui/ThemeSwitcher'
 import SonderOeffnungszeitenPopup from '@/components/ui/SonderOeffnungszeitenPopup'
-import { useTheme } from '@/hooks/useTheme'
 import { trackPageView } from '@/lib/analytics'
 
 /**
@@ -20,7 +18,6 @@ export default function Layout() {
   const { pathname } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [cookieBannerVisible, setCookieBannerVisible] = useState(false)
-  const { showSwitcher } = useTheme()
 
   // Scroll to top + track page view on route change
   useEffect(() => {
@@ -29,12 +26,9 @@ export default function Layout() {
   }, [pathname])
 
   return (
-    <div className={`min-h-screen bg-brand-bg text-brand-text flex flex-col ${showSwitcher ? 'pt-12' : ''}`}>
+    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col">
       {/* Sonder-Öffnungszeiten Pop-Up — fixed top, setzt --popup-height für Header-Offset */}
       <SonderOeffnungszeitenPopup />
-
-      {/* Theme-Switcher — nur sichtbar im Dev-Modus oder mit ?showThemes */}
-      <ThemeSwitcher />
 
       {/* Skip to content — Accessibility */}
       <a
