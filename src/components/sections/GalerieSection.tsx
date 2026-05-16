@@ -215,10 +215,6 @@ export default function GalerieSection() {
                 </div>
               )}
 
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-dark/90 to-transparent p-4">
-                <p className="font-body text-body-sm text-brand-light">{activeBild.alt}</p>
-              </div>
-
               <button
                 type="button"
                 onClick={closeLightbox}

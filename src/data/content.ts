@@ -624,11 +624,6 @@ export const GALERIE = {
       kategorie: 'Studio',
     },
     {
-      src: '/images/studio-galerie-01.webp',
-      alt: 'Ausstattung im Fitness Factory Hattingen',
-      kategorie: 'Studio',
-    },
-    {
       src: '/Galerie/Sauna/Sauna_Außenbereich_01.webp',
       alt: 'Sauna Außenbereich im Fitness Factory Hattingen',
       kategorie: 'Sauna',

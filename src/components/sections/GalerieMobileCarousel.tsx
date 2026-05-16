@@ -335,15 +335,7 @@ export default function GalerieMobileCarousel({ images }: GalerieMobileCarouselP
                 </div>
               )}
 
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-dark/90 to-transparent p-4 flex items-end justify-between rounded-b-card-lg pointer-events-none">
-                <div className="min-w-0 pr-3">
-                  <p className="font-body text-body-sm text-brand-light truncate">
-                    {activeBild.alt}
-                  </p>
-                  <span className="font-body text-caption text-brand-light/60">
-                    {activeBild.kategorie}
-                  </span>
-                </div>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-dark/90 to-transparent p-4 flex items-end justify-end rounded-b-card-lg pointer-events-none">
                 <span className="font-body text-body-sm text-brand-light/80 tabular-nums shrink-0">
                   {lightbox.index + 1} / {lightboxList.length}
                 </span>
