@@ -167,8 +167,16 @@ export default function CookieConsent({ onVisibilityChange }: CookieConsentProps
   })
 
   useEffect(() => {
+    // Dev-Modus: Auf localhost den Banner bei jedem Page-Load zeigen,
+    // damit das Cookie-Verhalten auch im normalen Browser-Fenster testbar ist
+    // (sonst nur im Inkognito sichtbar, da das Cookie persistiert).
+    const isLocalhost =
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1')
+
     const saved = readCookieConsent()
-    if (!saved) {
+    if (!saved || isLocalhost) {
       setVisible(true)
       return
     }

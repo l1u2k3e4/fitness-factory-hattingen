@@ -147,7 +147,7 @@ export const META = {
 // ---------------------------------------------------------------------------
 
 export const HERO = {
-  badge: 'Fitnessstudio Hattingen',
+  badge: 'Fitness Factory',
   // SEO-optimierte Headline — "Hattingen" wird in brand-primary hervorgehoben
   headlineZeile1: 'Dein Gym in',
   headlineZeile2: 'Hattingen',
@@ -167,9 +167,8 @@ export const HERO = {
     label: 'Auf WhatsApp schreiben',
     href: 'https://wa.me/4915737580001?text=Hallo%2C%20ich%20m%C3%B6chte%20ein%20Probetraining%20buchen.',
   },
-  // Schnellkennzahlen unter den CTAs
+  // Schnellkennzahlen unter den CTAs (erster Slot wird durch Live-Öffnungsstatus ersetzt)
   kennzahlen: [
-    { wert: 'Mo–Fr', label: 'bis 23 Uhr' },
     { wert: 'Getränkeflat', label: 'inklusive' },
     { wert: '∞', label: 'Sauna inkl.' },
   ],
@@ -1132,9 +1131,9 @@ export const PAGE_FAQ = {
       kategorie: 'Mitgliedschaft & Preise',
       items: [
         {
-          frage: 'Gibt es einen Studentenrabatt oder ermäßigte Tarife?',
+          frage: 'Was bietet ihr für Mitgliedschaften?',
           antwort:
-            'Ja — wir bieten vergünstigte Tarife für Studenten, Schüler und Auszubildende an. Komm einfach mit einem gültigen Nachweis vorbei oder ruf uns an, und wir finden den passenden Tarif für dich.',
+            'Wir bieten flexible Mitgliedschaften — von monatlich kündbar bis hin zu vergünstigten Laufzeitverträgen. Wir finden den passenden Tarif für dich. Komm einfach vorbei oder ruf uns an, und wir beraten dich persönlich.',
         },
         {
           frage: 'Wie läuft die Fremdgeh-Aktion genau ab?',

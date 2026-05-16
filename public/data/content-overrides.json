@@ -139,7 +139,7 @@
   "bewertungen": null,
   "team": null,
   "hero": {
-    "badge": "Fitnessstudio Hattingen",
+    "badge": "Fitness Factory",
     "headline": "Dein Gym in Hattingen",
     "subheadline": "Sauna, Live-Kurse, Getränkeflat und persönliche Betreuung — alles inklusive ab 35 €/Monat.",
     "ctaPrimary": {
@@ -151,10 +151,6 @@
       "href": "/mitgliedschaft"
     },
     "kennzahlen": [
-      {
-        "wert": "Mo–Fr",
-        "label": "bis 23 Uhr"
-      },
       {
         "wert": "Getränkeflat",
         "label": "inklusive"

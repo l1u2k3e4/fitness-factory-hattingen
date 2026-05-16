@@ -7,6 +7,7 @@ import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { useDynamicHero } from '@/contexts/ContentContext'
 import { SITE } from '@/data/content'
+import { useOpenStatus } from '@/hooks/useOpenStatus'
 
 /**
  * HeroSection — Hauptheld der Homepage.
@@ -15,6 +16,9 @@ import { SITE } from '@/data/content'
  */
 export default function HeroSection() {
   const HERO = useDynamicHero()
+  const { isOpen, label } = useOpenStatus()
+  const [statusBig, statusSmall] = label.split(' — ')
+  const statusAria = isOpen ? 'Studio aktuell geöffnet' : 'Studio aktuell geschlossen'
   return (
     <section
       id="hero"
@@ -82,21 +86,44 @@ export default function HeroSection() {
             )}
           </motion.p>
 
-          {/* Schnellkennzahlen — nur Desktop */}
+          {/* Schnellkennzahlen — nur Desktop, in einer Reihe */}
           <motion.div
             variants={fadeInUp}
-            className="mt-12 hidden md:flex flex-wrap gap-8"
+            className="mt-12 hidden md:flex flex-nowrap items-start gap-6 lg:gap-8"
             aria-label="Studio-Kennzahlen"
           >
+            {/* Live-Öffnungsstatus */}
+            <div
+              className="flex flex-col gap-0.5"
+              role="status"
+              aria-live="polite"
+              aria-label={statusAria}
+            >
+              <span className="font-display font-black text-h3 leading-none inline-flex items-center gap-2 whitespace-nowrap">
+                <span
+                  className={isOpen
+                    ? 'w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse'
+                    : 'w-2.5 h-2.5 rounded-full bg-red-400'}
+                  aria-hidden="true"
+                />
+                <span className={isOpen ? 'text-green-400' : 'text-red-400'}>
+                  {statusBig}
+                </span>
+              </span>
+              <span className="font-body text-body-sm text-brand-light-secondary whitespace-nowrap">
+                {statusSmall ?? ''}
+              </span>
+            </div>
+
             {HERO.kennzahlen.map((stat) => (
               <div key={stat.label} className="flex flex-col gap-0.5">
                 <span
-                  className="font-display font-black text-h2 text-brand-light leading-none"
+                  className="font-display font-black text-h3 text-brand-light leading-none whitespace-nowrap"
                   style={{ fontFeatureSettings: '"tnum"' }}
                 >
                   {stat.wert}
                 </span>
-                <span className="font-body text-body-sm text-brand-light-secondary">{stat.label}</span>
+                <span className="font-body text-body-sm text-brand-light-secondary whitespace-nowrap">{stat.label}</span>
               </div>
             ))}
           </motion.div>
@@ -106,6 +133,24 @@ export default function HeroSection() {
             variants={fadeInUp}
             className="mt-10 flex md:hidden flex-col gap-3"
           >
+            {/* Live-Öffnungsstatus — Mobile (kompakt) */}
+            <div
+              className="inline-flex items-center gap-2 self-start font-body text-body-sm font-medium"
+              role="status"
+              aria-live="polite"
+              aria-label={statusAria}
+            >
+              <span
+                className={isOpen
+                  ? 'w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse'
+                  : 'w-2.5 h-2.5 rounded-full bg-red-400'}
+                aria-hidden="true"
+              />
+              <span className={isOpen ? 'text-green-400' : 'text-red-400'}>
+                {label}
+              </span>
+            </div>
+
             <Button to={HERO.ctaPrimary.href} variant="primary" size="lg" fullWidth aria-label={HERO.ctaPrimary.ariaLabel}>
               {HERO.ctaPrimary.label}
             </Button>
