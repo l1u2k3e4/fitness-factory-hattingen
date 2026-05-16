@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type FormEvent, type ReactNode } from 'react'
-import { Lock } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Lock, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/cn'
 
 const STORAGE_KEY = 'ff-site-access-v1'
@@ -30,7 +31,7 @@ function persistSession() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ ts: Date.now() }))
   } catch {
-    // localStorage nicht verfügbar (z.B. Private-Modus älterer Browser) — Session nur für dieses Tab
+    // localStorage nicht verfügbar — Session nur für dieses Tab
   }
 }
 
@@ -43,6 +44,7 @@ export default function SitePasswordGate({ children }: Props) {
   const [value, setValue] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [checking, setChecking] = useState(false)
+  const [shake, setShake] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -61,6 +63,7 @@ export default function SitePasswordGate({ children }: Props) {
     } else {
       setError('Falsches Passwort')
       setValue('')
+      setShake((s) => s + 1)
       inputRef.current?.focus()
     }
     setChecking(false)
@@ -69,17 +72,130 @@ export default function SitePasswordGate({ children }: Props) {
   if (unlocked) return <>{children}</>
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-brand-dark px-4">
-      <div className="w-full max-w-sm rounded-card-lg border border-brand-dark-border bg-black/40 p-8 shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm">
-        <div className="mb-6 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/15 ring-1 ring-brand-primary/30">
-            <Lock className="h-5 w-5 text-brand-primary" aria-hidden="true" />
-          </div>
-          <h1 className="font-display text-h3 font-black uppercase tracking-tight text-brand-light">
-            Fitness Factory
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden px-4 py-10"
+      style={{ backgroundColor: 'rgb(var(--ff-dark))' }}
+    >
+      {/* Animierte Neon-Hintergrund-Blobs */}
+      <div
+        className="pointer-events-none absolute -top-32 -left-32 h-[28rem] w-[28rem] rounded-full opacity-40 blur-3xl"
+        style={{ backgroundColor: 'rgb(var(--ff-primary) / 0.25)' }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-40 -right-32 h-[32rem] w-[32rem] rounded-full opacity-30 blur-3xl"
+        style={{ backgroundColor: 'rgb(var(--ff-primary) / 0.18)' }}
+        aria-hidden="true"
+      />
+      {/* Subtiles Grid-Overlay für Tech-Look */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgb(var(--ff-light)) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--ff-light)) 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+        }}
+        aria-hidden="true"
+      />
+
+      <motion.div
+        key={shake}
+        initial={{ opacity: 0, y: 24 }}
+        animate={
+          shake > 0
+            ? { opacity: 1, y: 0, x: [0, -10, 10, -8, 8, -4, 0] }
+            : { opacity: 1, y: 0 }
+        }
+        transition={
+          shake > 0
+            ? { x: { duration: 0.45, ease: 'easeInOut' }, opacity: { duration: 0.3 }, y: { duration: 0.3 } }
+            : { duration: 0.45, ease: [0.16, 1, 0.3, 1] }
+        }
+        className={cn(
+          'relative z-10 w-full max-w-md overflow-hidden p-8 sm:p-10',
+          'rounded-card-lg border'
+        )}
+        style={{
+          backgroundColor: 'rgb(var(--ff-surface) / 0.6)',
+          borderColor: 'rgb(var(--ff-primary) / 0.35)',
+          boxShadow:
+            'var(--ff-shadow-glow), 0 0 0 1px rgb(var(--ff-primary) / 0.15), 0 24px 80px rgba(0,0,0,0.55)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
+        {/* Top accent line */}
+        <div
+          className="absolute inset-x-0 top-0 h-px"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent 0%, rgb(var(--ff-primary)) 50%, transparent 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="mb-8 flex flex-col items-center text-center">
+          <motion.div
+            initial={{ scale: 0.7, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.12, type: 'spring', stiffness: 280, damping: 20 }}
+            className="relative mb-5"
+          >
+            {/* Glow halo */}
+            <div
+              className="absolute inset-0 rounded-full blur-xl"
+              style={{ backgroundColor: 'rgb(var(--ff-primary) / 0.5)' }}
+              aria-hidden="true"
+            />
+            <div
+              className="relative flex h-16 w-16 items-center justify-center rounded-full"
+              style={{
+                backgroundColor: 'rgb(var(--ff-primary) / 0.12)',
+                border: '1px solid rgb(var(--ff-primary) / 0.45)',
+                boxShadow: '0 0 24px rgb(var(--ff-primary) / 0.45), inset 0 0 12px rgb(var(--ff-primary) / 0.15)',
+              }}
+            >
+              <Lock
+                className="h-7 w-7"
+                style={{ color: 'rgb(var(--ff-primary))' }}
+                aria-hidden="true"
+              />
+            </div>
+          </motion.div>
+
+          <h1
+            className="font-display font-black uppercase leading-none tracking-tight"
+            style={{
+              color: 'rgb(var(--ff-light))',
+              fontSize: 'clamp(2rem, 4vw + 1rem, 3.25rem)',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            Fitness <span style={{ color: 'rgb(var(--ff-primary))' }}>Factory</span>
           </h1>
-          <p className="mt-2 font-body text-body-sm text-brand-light-secondary">
-            Diese Seite ist passwortgeschützt.
+
+          <div
+            className="mt-3 inline-flex items-center gap-2 rounded-full px-3 py-1 font-body text-caption font-medium uppercase tracking-[0.18em]"
+            style={{
+              color: 'rgb(var(--ff-primary))',
+              backgroundColor: 'rgb(var(--ff-primary) / 0.10)',
+              border: '1px solid rgb(var(--ff-primary) / 0.30)',
+            }}
+          >
+            <span
+              className="inline-block h-1.5 w-1.5 animate-pulse rounded-full"
+              style={{ backgroundColor: 'rgb(var(--ff-primary))' }}
+              aria-hidden="true"
+            />
+            Zugang gesperrt
+          </div>
+
+          <p
+            className="mt-4 font-body text-body-sm leading-relaxed"
+            style={{ color: 'rgb(var(--ff-light-secondary))' }}
+          >
+            Diese Seite ist passwortgeschützt.<br />
+            Bitte gib dein Passwort ein, um fortzufahren.
           </p>
         </div>
 
@@ -99,44 +215,102 @@ export default function SitePasswordGate({ children }: Props) {
               setValue(e.target.value)
               if (error) setError(null)
             }}
-            placeholder="Passwort eingeben"
+            placeholder="••••••••••••"
             aria-invalid={error ? 'true' : 'false'}
             aria-describedby={error ? 'site-pw-error' : undefined}
             className={cn(
-              'w-full rounded-input border bg-black/30 px-4 py-3',
-              'font-body text-body text-brand-light placeholder:text-brand-dark-muted',
-              'transition-colors duration-150',
-              'focus:outline-none focus:ring-2 focus:ring-brand-primary/60',
-              error ? 'border-red-500/60' : 'border-brand-dark-border focus:border-brand-primary/60'
+              'w-full rounded-input px-4 py-3.5 font-body text-body text-center tracking-[0.4em]',
+              'transition-all duration-200',
+              'focus:outline-none'
             )}
+            style={{
+              backgroundColor: 'rgb(var(--ff-bg) / 0.7)',
+              color: 'rgb(var(--ff-light))',
+              border: error
+                ? '1px solid rgb(var(--ff-error))'
+                : '1px solid rgb(var(--ff-border))',
+              boxShadow: error
+                ? '0 0 0 3px rgb(var(--ff-error) / 0.15)'
+                : 'inset 0 1px 0 rgba(255,255,255,0.04)',
+            }}
+            onFocus={(e) => {
+              if (!error) {
+                e.currentTarget.style.borderColor = 'rgb(var(--ff-primary) / 0.6)'
+                e.currentTarget.style.boxShadow =
+                  '0 0 0 3px rgb(var(--ff-primary) / 0.15), 0 0 20px rgb(var(--ff-primary) / 0.20)'
+              }
+            }}
+            onBlur={(e) => {
+              if (!error) {
+                e.currentTarget.style.borderColor = 'rgb(var(--ff-border))'
+                e.currentTarget.style.boxShadow = 'inset 0 1px 0 rgba(255,255,255,0.04)'
+              }
+            }}
           />
 
           {error && (
-            <p
+            <motion.p
               id="site-pw-error"
               role="alert"
-              className="mt-2 font-body text-caption text-red-400"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-3 font-body text-caption font-medium uppercase tracking-wider"
+              style={{ color: 'rgb(var(--ff-error))' }}
             >
               {error}
-            </p>
+            </motion.p>
           )}
 
           <button
             type="submit"
             disabled={checking || value.length === 0}
             className={cn(
-              'mt-5 w-full rounded-button px-4 py-3',
-              'font-display text-body-sm font-bold uppercase tracking-wide text-white',
-              'bg-brand-primary transition-colors duration-200',
-              'hover:bg-brand-primary-hover',
-              'disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-brand-primary',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark'
+              'group mt-6 flex w-full items-center justify-center gap-2 rounded-button px-4 py-3.5',
+              'font-display text-body font-bold uppercase tracking-wider text-white',
+              'transition-all duration-200',
+              'disabled:cursor-not-allowed disabled:opacity-40',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2'
             )}
+            style={{
+              backgroundColor: 'rgb(var(--ff-primary))',
+              boxShadow:
+                value.length > 0 && !checking
+                  ? '0 0 24px rgb(var(--ff-primary) / 0.45), 0 8px 20px rgba(0,0,0,0.30)'
+                  : 'none',
+            }}
+            onMouseEnter={(e) => {
+              if (!checking && value.length > 0) {
+                e.currentTarget.style.backgroundColor = 'rgb(var(--ff-primary-hover))'
+                e.currentTarget.style.boxShadow =
+                  '0 0 32px rgb(var(--ff-primary) / 0.60), 0 12px 24px rgba(0,0,0,0.40)'
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgb(var(--ff-primary))'
+              e.currentTarget.style.boxShadow =
+                value.length > 0 && !checking
+                  ? '0 0 24px rgb(var(--ff-primary) / 0.45), 0 8px 20px rgba(0,0,0,0.30)'
+                  : 'none'
+            }}
           >
-            {checking ? 'Prüfe…' : 'Zugang'}
+            {checking ? 'Prüfe…' : 'Zugang freischalten'}
+            <ArrowRight
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
           </button>
         </form>
-      </div>
+
+        {/* Bottom accent line */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-px"
+          style={{
+            background:
+              'linear-gradient(90deg, transparent 0%, rgb(var(--ff-primary) / 0.6) 50%, transparent 100%)',
+          }}
+          aria-hidden="true"
+        />
+      </motion.div>
     </div>
   )
 }

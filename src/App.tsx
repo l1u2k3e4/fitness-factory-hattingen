@@ -40,9 +40,9 @@ const TrainerStatistikenPage = lazy(() => import('@/pages/trainer/TrainerStatist
  */
 export default function App() {
   return (
+    <ThemeProvider>
     <SitePasswordGate>
     <ContentProvider>
-    <ThemeProvider>
     <AuthProvider>
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Suspense fallback={<PageLoader />}>
@@ -78,8 +78,8 @@ export default function App() {
       </Suspense>
     </BrowserRouter>
     </AuthProvider>
-    </ThemeProvider>
     </ContentProvider>
     </SitePasswordGate>
+    </ThemeProvider>
   )
 }
