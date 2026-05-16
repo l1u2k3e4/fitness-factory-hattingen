@@ -11,7 +11,7 @@ import type { SeoProps } from '@/types'
 
 const SITE_NAME = 'Fitness Factory Hattingen'
 const BASE_URL = 'https://fitness-factory-hattingen.de'
-const DEFAULT_OG_IMAGE = '/og-image.jpg'
+const DEFAULT_OG_IMAGE_URL = 'https://fitness-factory-hattingen.vercel.app/images/logo-ff-jpg.jpg'
 
 interface SeoHeadProps extends SeoProps {
   pagePath?: string
@@ -33,7 +33,7 @@ export default function SeoHead({
 }: SeoHeadProps) {
   const fullTitle = title ?? `${SITE_NAME} | Fitnessstudio Hattingen`
   const canonicalUrl = canonical ?? `${BASE_URL}${pagePath}`
-  const ogImageUrl = ogImage ?? `${BASE_URL}${DEFAULT_OG_IMAGE}`
+  const ogImageUrl = ogImage ?? DEFAULT_OG_IMAGE_URL
   const robotsContent = noindex ? 'noindex, nofollow' : robots
 
   useEffect(() => {
@@ -81,8 +81,9 @@ export default function SeoHead({
     if (description) setMeta('meta[property="og:description"]', description)
     setMeta('meta[property="og:url"]', canonicalUrl)
     setMeta('meta[property="og:image"]', ogImageUrl)
-    setMeta('meta[property="og:image:width"]', '1200')
-    setMeta('meta[property="og:image:height"]', '630')
+    setMeta('meta[property="og:image:secure_url"]', ogImageUrl)
+    setMeta('meta[property="og:image:width"]', '512')
+    setMeta('meta[property="og:image:height"]', '512')
     setMeta('meta[property="og:image:type"]', 'image/jpeg')
     setMeta('meta[property="og:image:alt"]', ogImageAlt ?? fullTitle)
     setMeta('meta[property="og:locale"]', 'de_DE')

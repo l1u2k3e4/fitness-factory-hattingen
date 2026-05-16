@@ -648,6 +648,7 @@ export const GALERIE = {
       alt: 'Kursraum im Fitness Factory Hattingen — Live-Kurse',
       kategorie: 'Kurs',
       type: 'video',
+      poster: '/Galerie/Kursraum/Kurs_Video_Poster.jpg',
     },
   ],
 } as const

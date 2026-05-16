@@ -22,6 +22,7 @@ interface GalerieImage {
   src: string
   alt: string
   kategorie: string
+  poster?: string
 }
 
 interface CategoryCarouselProps {
@@ -111,6 +112,7 @@ function CategoryCarousel({ kategorie, images, onImageClick }: CategoryCarouselP
                 <>
                   <video
                     src={assetUrl(bild.src)}
+                    poster={bild.poster ? assetUrl(bild.poster) : undefined}
                     muted
                     playsInline
                     preload="metadata"
@@ -311,6 +313,7 @@ export default function GalerieMobileCarousel({ images }: GalerieMobileCarouselP
                 isVideo(activeBild.src) ? (
                   <video
                     src={assetUrl(activeBild.src)}
+                    poster={activeBild.poster ? assetUrl(activeBild.poster) : undefined}
                     controls
                     autoPlay
                     muted

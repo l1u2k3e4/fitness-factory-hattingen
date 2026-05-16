@@ -85,6 +85,7 @@ export default function GalerieSection() {
                     isVideo(bild.src) ? (
                       <video
                         src={assetUrl(bild.src)}
+                        poster={'poster' in bild && bild.poster ? assetUrl(bild.poster) : undefined}
                         muted
                         playsInline
                         preload="metadata"
@@ -193,6 +194,7 @@ export default function GalerieSection() {
                 isVideo(activeBild.src) ? (
                   <video
                     src={assetUrl(activeBild.src)}
+                    poster={'poster' in activeBild && activeBild.poster ? assetUrl(activeBild.poster) : undefined}
                     controls
                     autoPlay
                     muted
