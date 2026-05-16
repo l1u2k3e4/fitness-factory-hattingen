@@ -27,12 +27,14 @@ export default function StickyCtaBar({ hidden = false }: StickyCtaBarProps) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setHeroExited(!entry.isIntersecting)
+        const rootTop = entry.rootBounds?.top ?? 0
+        setHeroExited(entry.boundingClientRect.bottom <= rootTop + 1)
       },
       { threshold: 0 },
     )
 
     observer.observe(hero)
+    setHeroExited(hero.getBoundingClientRect().bottom <= 1)
     return () => observer.disconnect()
   }, [])
 
@@ -40,15 +42,11 @@ export default function StickyCtaBar({ hidden = false }: StickyCtaBarProps) {
 
   return (
     <div
+      data-visible={isVisible}
       className={cn(
-        'sticky-cta md:hidden fixed bottom-0 left-0 right-0 z-50 bg-brand-dark border-t border-white/[0.08] shadow-bar',
-        'transform-gpu transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
-        isVisible ? 'translate-y-0' : 'translate-y-full',
+        'sticky-cta md:hidden bg-brand-dark border-t border-white/[0.08] shadow-bar',
+        isVisible ? 'pointer-events-auto' : 'pointer-events-none',
       )}
-      // Safe-Area als PADDING (nicht innerhalb einer fixen Höhe) — verhindert
-      // iOS-Safari-Shift beim Scrollen, wenn die URL-Bar ein-/ausblendet.
-      // Content-Höhe bleibt fix 64px, Safe-Area wird additiv darunter gerendert.
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       role="complementary"
       aria-label="Schnellkontakt"
       aria-hidden={!isVisible}

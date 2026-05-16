@@ -10,6 +10,7 @@ import { X, ChevronLeft, ChevronRight, Play } from 'lucide-react'
 import OptimizedImage from '@/components/ui/OptimizedImage'
 import { assetUrl } from '@/lib/assetUrl'
 import { usePrefersReducedMotion } from '@/hooks/useMediaQuery'
+import { useInView } from '@/hooks/useInView'
 
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.mov']
 
@@ -36,14 +37,19 @@ function CategoryCarousel({ kategorie, images, onImageClick }: CategoryCarouselP
   const touchEndX = useRef(0)
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const reducedMotion = usePrefersReducedMotion()
+  const { ref, inView } = useInView<HTMLDivElement>({
+    threshold: 0.25,
+    rootMargin: '160px 0px 160px 0px',
+    once: false,
+  })
 
   useEffect(() => {
-    if (isPaused || reducedMotion || images.length <= 1) return
+    if (!inView || isPaused || reducedMotion || images.length <= 1) return
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % images.length)
     }, 5000)
     return () => clearInterval(timer)
-  }, [isPaused, reducedMotion, images.length])
+  }, [inView, isPaused, reducedMotion, images.length])
 
   useEffect(() => {
     return () => {
@@ -78,7 +84,7 @@ function CategoryCarousel({ kategorie, images, onImageClick }: CategoryCarouselP
   const hasRealImage = bild.src && !bild.src.startsWith('[TBD')
 
   return (
-    <div className="mb-10">
+    <div ref={ref} className="mb-10">
       <h3 className="font-display font-black text-h4 text-brand-text mb-3 px-1">
         {kategorie}
       </h3>

@@ -29,7 +29,11 @@ export default function TrustBar() {
 
   const items = TRUST_BAR.items
 
-  const renderItem = (item: typeof items[number], suffix: string) => {
+  const renderItem = (
+    item: typeof items[number],
+    suffix: string,
+    { animateNumber = true }: { animateNumber?: boolean } = {},
+  ) => {
     const Icon = iconMap[item.icon] ?? Star
     const isNumeric = item.numericValue !== null
 
@@ -49,7 +53,7 @@ export default function TrustBar() {
             className="font-display font-black text-h4 text-brand-text leading-none whitespace-nowrap"
             style={{ fontFeatureSettings: '"tnum"' }}
           >
-            {isNumeric ? (
+            {isNumeric && animateNumber ? (
               <Counter
                 value={item.numericValue}
                 suffix={item.suffix}
@@ -89,7 +93,7 @@ export default function TrustBar() {
         >
           {tripled.map((item, i) => (
             <div key={`${item.label}-${i}`} className="shrink-0">
-              {renderItem(item, String(i))}
+              {renderItem(item, String(i), { animateNumber: false })}
             </div>
           ))}
         </div>
@@ -106,7 +110,7 @@ export default function TrustBar() {
         >
           {items.map((item) => (
             <motion.div key={item.label} variants={fadeInUp} className="flex-shrink-0">
-              {renderItem(item, 'static')}
+              {renderItem(item, 'static', { animateNumber: true })}
             </motion.div>
           ))}
         </motion.div>

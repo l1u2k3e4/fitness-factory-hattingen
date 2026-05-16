@@ -23,7 +23,7 @@ export default function HeroSection() {
     <section
       id="hero"
       className={cn(
-        'relative min-h-[calc(100dvh-4rem)] md:min-h-[calc(100dvh-4.5rem)]',
+        'hero-viewport relative',
         'flex items-center',
         'bg-black overflow-hidden'
       )}

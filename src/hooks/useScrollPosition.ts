@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 /**
  * useIsScrolled — Boolean-Hook für Scroll-Threshold.
@@ -12,15 +12,21 @@ import { useState, useEffect } from 'react'
  */
 export function useIsScrolled(threshold = 8): boolean {
   const [isScrolled, setIsScrolled] = useState(false)
+  const isScrolledRef = useRef(false)
 
   useEffect(() => {
     let ticking = false
+    let rafId = 0
 
     const handleScroll = () => {
       if (ticking) return
       ticking = true
-      requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > threshold)
+      rafId = requestAnimationFrame(() => {
+        const next = window.scrollY > threshold
+        if (isScrolledRef.current !== next) {
+          isScrolledRef.current = next
+          setIsScrolled(next)
+        }
         ticking = false
       })
     }
@@ -29,6 +35,7 @@ export function useIsScrolled(threshold = 8): boolean {
     handleScroll() // Initialwert setzen
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId)
       window.removeEventListener('scroll', handleScroll)
     }
   }, [threshold])
