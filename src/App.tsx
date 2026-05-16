@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ContentProvider } from '@/contexts/ContentContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { ThemeVariantProvider } from '@/contexts/ThemeVariantContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 import Layout from '@/components/layout/Layout'
 import PageLoader from '@/components/ui/PageLoader'
 // HomePage: NICHT lazy — Hauptseite muss sofort laden (kein Code-Split)
@@ -22,6 +24,14 @@ const ImpressumPage = lazy(() => import('@/pages/ImpressumPage'))
 const DatenschutzPage = lazy(() => import('@/pages/DatenschutzPage'))
 const AgbPage = lazy(() => import('@/pages/AgbPage'))
 const KuendigungPage = lazy(() => import('@/pages/KuendigungPage'))
+// Buchungssystem: lazy
+const MeinBereichPage = lazy(() => import('@/pages/MeinBereichPage'))
+// Trainer-Dashboard: lazy
+const TrainerLoginPage = lazy(() => import('@/pages/trainer/TrainerLoginPage'))
+const TrainerLayout = lazy(() => import('@/pages/trainer/TrainerLayout'))
+const TrainerHeutePage = lazy(() => import('@/pages/trainer/TrainerHeutePage'))
+const TrainerWochePage = lazy(() => import('@/pages/trainer/TrainerWochePage'))
+const TrainerStatistikenPage = lazy(() => import('@/pages/trainer/TrainerStatistikenPage'))
 
 /**
  * App — Routing-Root der Fitness Factory Website.
@@ -32,9 +42,12 @@ export default function App() {
   return (
     <ContentProvider>
     <ThemeProvider>
+    <ThemeVariantProvider>
+    <AuthProvider>
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Suspense fallback={<PageLoader />}>
         <Routes>
+          {/* Website mit Layout (Nav + Footer) */}
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/probetraining" element={<ProbetrainingPage />} />
@@ -50,10 +63,22 @@ export default function App() {
             <Route path="/datenschutz" element={<DatenschutzPage />} />
             <Route path="/agb" element={<AgbPage />} />
             <Route path="/kuendigung" element={<KuendigungPage />} />
+            {/* Buchungssystem */}
+            <Route path="/mein-bereich" element={<MeinBereichPage />} />
+          </Route>
+
+          {/* Trainer-Dashboard (eigenes Layout, ohne Website-Nav/Footer) */}
+          <Route path="/trainer" element={<TrainerLoginPage />} />
+          <Route path="/trainer" element={<TrainerLayout />}>
+            <Route path="heute" element={<TrainerHeutePage />} />
+            <Route path="woche" element={<TrainerWochePage />} />
+            <Route path="statistiken" element={<TrainerStatistikenPage />} />
           </Route>
         </Routes>
       </Suspense>
     </BrowserRouter>
+    </AuthProvider>
+    </ThemeVariantProvider>
     </ThemeProvider>
     </ContentProvider>
   )

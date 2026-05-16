@@ -11,7 +11,7 @@ interface BadgeProps {
 const variantClasses: Record<BadgeVariant, string> = {
   // Auf hellem Hintergrund
   primary:
-    'bg-brand-primary-light text-brand-primary border-brand-primary/25',
+    'bg-brand-primary-light text-brand-primary border-brand-primary',
   accent:
     'bg-orange-50 text-orange-700 border-orange-200',
   success:

@@ -1,4 +1,9 @@
 import { SITE } from '@/data/content'
+import { cn } from '@/lib/cn'
+
+interface WhatsAppButtonProps {
+  hidden?: boolean
+}
 
 /**
  * WhatsApp Floating Button — Fixed rechts unten.
@@ -10,9 +15,19 @@ import { SITE } from '@/data/content'
  * Auf Desktop: bottom-6.
  * CSS-animierter Ping-Ring und Entry-Animation (kein Framer Motion = kein Batterie-Drain).
  */
-export default function WhatsAppButton() {
+export default function WhatsAppButton({ hidden = false }: WhatsAppButtonProps) {
   return (
-    <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 md:bottom-6 md:right-6 z-40 animate-whatsapp-enter">
+    <div
+      className={cn(
+        'fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 md:bottom-6 md:right-6 z-40 animate-whatsapp-enter',
+        'transform-gpu transition-[transform,opacity] duration-200 ease-out',
+        // Hide-Verhalten nur auf Mobile — auf Desktop ist der Banner unten links und kollidiert nicht
+        hidden
+          ? 'translate-y-[120%] opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto'
+          : 'translate-y-0 opacity-100',
+      )}
+      aria-hidden={hidden}
+    >
       <a
         href={SITE.kontakt.whatsappLinkAllgemein}
         target="_blank"

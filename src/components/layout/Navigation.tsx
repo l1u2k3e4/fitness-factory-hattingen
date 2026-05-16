@@ -151,6 +151,7 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
             ? 'border-b border-brand-dark-border'
             : 'border-b border-transparent'
         )}
+        style={{ top: `calc(var(--popup-height, 0px) + ${showSwitcher ? '3rem' : '0px'})` }}
         role="banner"
       >
         <div className="max-w-[1280px] mx-auto px-4 md:px-8 h-16 md:h-[72px] flex items-center justify-between">

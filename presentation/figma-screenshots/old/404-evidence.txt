@@ -1,0 +1,1 @@
+4 Seiten liefern dieselbe 404: /kursplan/ /kontakt/ /faq/ /leistungen/

@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X, ZoomIn, Play } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import OptimizedImage from '@/components/ui/OptimizedImage'
+import GalerieMobileCarousel from '@/components/sections/GalerieMobileCarousel'
 import { assetUrl } from '@/lib/assetUrl'
 import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations'
 import { useInView } from '@/hooks/useInView'
+import { useIsMobile } from '@/hooks/useMediaQuery'
 import { useDynamicGalerie } from '@/contexts/ContentContext'
 
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.mov']
@@ -22,6 +24,7 @@ export default function GalerieSection() {
   const GALERIE = useDynamicGalerie()
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 })
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const isMobile = useIsMobile()
 
   const openLightbox = (index: number) => setLightboxIndex(index)
   const closeLightbox = () => setLightboxIndex(null)
@@ -49,7 +52,11 @@ export default function GalerieSection() {
           </p>
         </div>
 
-        {/* Galerie-Grid */}
+        {/* Mobile: Auto-Karussell pro Kategorie */}
+        {isMobile ? (
+          <GalerieMobileCarousel images={GALERIE.bilder} />
+        ) : (
+        /* Desktop: Galerie-Grid */
         <motion.div
           ref={ref}
           variants={staggerContainer}
@@ -147,6 +154,7 @@ export default function GalerieSection() {
             )
           })}
         </motion.div>
+        )}
 
         <motion.p
           initial={{ opacity: 0 }}

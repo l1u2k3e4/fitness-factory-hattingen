@@ -1519,7 +1519,9 @@ function renderOeffnungszeiten() {
   `).join('');
 
   const sonder = document.getElementById('oeffnung-sonder');
-  sonder.innerHTML = (data.sonder || []).map((s, i) => `
+  sonder.innerHTML = (data.sonder || []).map((s, i) => {
+    const bannerOn = s.bannerAktiv !== false;
+    return `
     <div style="display:grid;grid-template-columns:140px 1fr 100px 100px auto;gap:8px;align-items:center;margin-bottom:8px;padding:8px;border:1px solid var(--border);border-radius:8px">
       <input type="date" class="form-input" value="${s.datum}" onchange="state.oeffnungszeiten.sonder[${i}].datum=this.value;markUnsaved()">
       <input type="text" class="form-input" value="${escHtml(s.anlass)}" placeholder="Anlass" onchange="state.oeffnungszeiten.sonder[${i}].anlass=this.value;markUnsaved()">
@@ -1527,6 +1529,9 @@ function renderOeffnungszeiten() {
         `<input type="time" class="form-input" value="${s.von||''}" onchange="state.oeffnungszeiten.sonder[${i}].von=this.value;markUnsaved()">
          <input type="time" class="form-input" value="${s.bis||''}" onchange="state.oeffnungszeiten.sonder[${i}].bis=this.value;markUnsaved()">`}
       <div style="display:flex;gap:4px">
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="toggleSonderBanner(${i})" title="${bannerOn?'Banner auf Website deaktivieren':'Banner auf Website aktivieren'}" style="${bannerOn?'color:var(--brand-red)':'color:var(--text-muted)'}">
+          <i data-lucide="flag" style="width:14px;height:14px"></i>
+        </button>
         <button class="btn btn-ghost btn-sm btn-icon" onclick="toggleSonderGeschlossen(${i})" title="${s.geschlossen?'Öffnen':'Schließen'}">
           <i data-lucide="${s.geschlossen?'door-open':'door-closed'}" style="width:14px;height:14px"></i>
         </button>
@@ -1534,8 +1539,8 @@ function renderOeffnungszeiten() {
           <i data-lucide="trash-2" style="width:14px;height:14px"></i>
         </button>
       </div>
-    </div>
-  `).join('') || '<p style="color:var(--text-muted);font-size:13px">Keine Sonder-Öffnungszeiten eingetragen.</p>';
+    </div>`;
+  }).join('') || '<p style="color:var(--text-muted);font-size:13px">Keine Sonder-Öffnungszeiten eingetragen.</p>';
 
   const banner = data.banner || { aktiv: false, text: '' };
   document.getElementById('oeffnung-banner-toggle').className = 'toggle' + (banner.aktiv ? ' active' : '');
@@ -1546,7 +1551,7 @@ function renderOeffnungszeiten() {
 function addSonderzeit() {
   pushUndo();
   if (!state.oeffnungszeiten.sonder) state.oeffnungszeiten.sonder = [];
-  state.oeffnungszeiten.sonder.push({ datum: '', anlass: '', von: '10:00', bis: '17:30', geschlossen: false });
+  state.oeffnungszeiten.sonder.push({ datum: '', anlass: '', von: '10:00', bis: '17:30', geschlossen: false, bannerAktiv: true });
   renderOeffnungszeiten();
   markUnsaved();
 }
@@ -1561,6 +1566,14 @@ function deleteSonder(idx) {
 function toggleSonderGeschlossen(idx) {
   pushUndo();
   state.oeffnungszeiten.sonder[idx].geschlossen = !state.oeffnungszeiten.sonder[idx].geschlossen;
+  renderOeffnungszeiten();
+  markUnsaved();
+}
+
+function toggleSonderBanner(idx) {
+  pushUndo();
+  const eintrag = state.oeffnungszeiten.sonder[idx];
+  eintrag.bannerAktiv = eintrag.bannerAktiv === false ? true : false;
   renderOeffnungszeiten();
   markUnsaved();
 }

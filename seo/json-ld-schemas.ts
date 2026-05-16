@@ -67,17 +67,23 @@ export const healthClubSchema = {
     },
   ],
 
-  /**
-   * AggregateRating — TBD: Werte aus Google Business Profile einholen.
-   * Eintragen sobald bekannt: ratingValue (z.B. 4.8), reviewCount (z.B. 127)
-   */
-  // aggregateRating: {
-  //   '@type': 'AggregateRating',
-  //   ratingValue: 'TBD',   // z.B. '4.8'
-  //   reviewCount: 'TBD',   // z.B. '127'
-  //   bestRating: '5',
-  //   worstRating: '1',
-  // },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    reviewCount: '167',
+    bestRating: '5',
+    worstRating: '1',
+  },
+
+  areaServed: [
+    { '@type': 'City', name: 'Hattingen' },
+    { '@type': 'City', name: 'Bochum' },
+    { '@type': 'City', name: 'Sprockhövel' },
+    { '@type': 'City', name: 'Witten' },
+    { '@type': 'Place', name: 'Hattingen-Holthausen' },
+    { '@type': 'Place', name: 'Bochum-Linden' },
+    { '@type': 'Place', name: 'Blankenstein' },
+  ],
 
   amenityFeature: [
     {
@@ -193,128 +199,28 @@ export const healthClubSchema = {
 
 // ---------------------------------------------------------------------------
 // 2. FAQPage Schema (Homepage + /faq/)
-// Alle FAQ-Items aus src/data/content.ts — Homepage (8) + Vollständige FAQ (weitere 13)
+// Alle FAQ-Items aus src/data/content.ts — 12 Fragen in 4 Kategorien
 // ---------------------------------------------------------------------------
 
 export const faqPageSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
   mainEntity: [
-    // --- Homepage FAQ (8 Items — direkt conversion-relevant) ---
+    // --- Probetraining ---
     {
       '@type': 'Question',
       name: 'Muss ich nach dem Probetraining sofort Mitglied werden?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Nein. Du trainierst, schaust dich um — und entscheidest danach in Ruhe. Kein Verkäufer, kein Druck.',
+        text: 'Nein. Du trainierst, schaust dich um — und entscheidest danach in Ruhe. Kein Druck.',
       },
     },
-    {
-      '@type': 'Question',
-      name: 'Was kostet die Sauna extra?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Nichts. Die Sauna ist in jeder Mitgliedschaft inklusive — vom 35€-Premium-Tarif bis zum 55€-Flex-Tarif.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Ich bin Anfänger und habe noch nie trainiert. Passt das für mich?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Ja. Wir haben Mitglieder von 18 bis 70+. Wir erstellen dir einen Trainingsplan, der zu deinem aktuellen Level passt — nicht zu dem, den du irgendwann mal haben willst.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Gibt es versteckte Kosten?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Nein. Du zahlst deinen Monatsbeitrag und einmalig 49€ Anmeldegebühr. Kurse, Sauna, Getränke, Trainingsplan — alles drin.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Kann ich monatlich kündigen?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Mit dem Flex-Tarif (55€/Monat) ja — jederzeit monatlich kündbar. Standard und Premium haben 12 bzw. 24 Monate Laufzeit, dafür deutlich günstiger.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Wo parke ich?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Direkt vor dem Studio — kostenlos. Kein Parkhaus, kein Parkticket, kein Stress.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Wie läuft die Fremdgeh-Aktion genau ab?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Du bist noch bei einem anderen Studio Mitglied? Bring deinen bestehenden Vertrag mit und trainiere 3 Monate bei uns für 0€ — nur die Anmeldegebühr (49€) fällt an.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Gibt es Kurse für Einsteiger oder ältere Mitglieder?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Ja. Wirbelsäulen-Gymnastik, Yoga, Pilates und Rücken-Fit sind explizit für alle Levels — auch für Menschen, die lange nicht trainiert haben.',
-      },
-    },
-
-    // --- Vollständige FAQ — Mitgliedschaft & Preise ---
-    {
-      '@type': 'Question',
-      name: 'Was kostet eine Mitgliedschaft im Fitnessstudio Hattingen?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Flex: 55€/Monat (monatlich kündbar), Standard: 45€/Monat (12 Monate Laufzeit), Premium: 35€/Monat (24 Monate Laufzeit). Dazu kommt einmalig eine Anmeldegebühr von 49€. Keine weiteren Kosten.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Was ist in der Mitgliedschaft enthalten?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Alles: Zugang zu allen Geräten, alle Live-Kurse, Sauna, Getränkeflat, kostenlose Duschen und Parkplätze, Ernährungsberatung und individueller Trainingsplan. Kein Aufpreis für irgendetwas davon.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Wie kündige ich meine Mitgliedschaft?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Schriftlich — per Brief, E-Mail oder persönlich vor Ort. Achte auf die Kündigungsfristen deines Tarifs. Details findest du in deinem Mitgliedsvertrag oder frag direkt bei uns nach.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Was ist die Fremdgeh-Aktion?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Du hast noch einen laufenden Vertrag bei einem anderen Studio? Kein Problem. Bei uns trainierst du die ersten 3 Monate für 0€ — nur die einmalige Anmeldegebühr (49€) fällt an. Mehr dazu auf unserer Fremdgeh-Aktion-Seite unter https://fitness-factory-hattingen.de/fremdgeh-aktion/.',
-      },
-    },
-
-    // --- Vollständige FAQ — Probetraining ---
     {
       '@type': 'Question',
       name: 'Wie buche ich ein Probetraining?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Ruf uns an (02324 33777) oder schreib uns auf WhatsApp (+49 1573 7580001). Du kannst auch einfach vorbeikommen — wir nehmen uns Zeit für dich.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Was kostet das Probetraining?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Das Probetraining ist kostenlos und unverbindlich.',
+        text: 'Ruf uns an (02324 33777) oder schreib uns auf WhatsApp (+49 1573 7580001). Ansonsten auch jederzeit buchbar über das Kontaktformular.',
       },
     },
     {
@@ -322,69 +228,85 @@ export const faqPageSchema = {
       name: 'Was soll ich zum Probetraining mitbringen?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Sportkleidung, Sportschuhe, ein Handtuch und eine Wasserflasche. Falls du in die Sauna möchtest, auch ein großes Badetuch. Mehr brauchst du nicht.',
+        text: 'Sportkleidung, Sportschuhe, ein Handtuch und eine Wasserflasche — mehr brauchst du nicht.',
       },
     },
 
-    // --- Vollständige FAQ — Ausstattung & Leistungen ---
+    // --- Mitgliedschaft & Preise ---
+    {
+      '@type': 'Question',
+      name: 'Gibt es einen Studentenrabatt oder ermäßigte Tarife?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Ja — wir bieten vergünstigte Tarife für Studenten, Schüler und Auszubildende an. Komm einfach mit einem gültigen Nachweis vorbei oder ruf uns an, und wir finden den passenden Tarif für dich.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Wie läuft die Fremdgeh-Aktion genau ab?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Du bist noch bei einem anderen Studio Mitglied? Bring deinen bestehenden Vertrag mit und trainiere bis zu 3 Monate bei uns für 0 € — nur die Anmeldegebühr (49 €) fällt an.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Was ist die Fremdgeh-Aktion?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Du hast noch einen laufenden Vertrag bei einem anderen Studio? Kein Problem. Bei uns trainierst du bis zu 3 Monate für 0 € — nur die einmalige Anmeldegebühr (49 €) fällt an. Mehr dazu auf unserer Fremdgeh-Aktion-Seite.',
+      },
+    },
+
+    // --- Training & Kurse ---
+    {
+      '@type': 'Question',
+      name: 'Ich bin Anfänger und habe noch nie trainiert. Ist das etwas für mich?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Ja. Wir haben Mitglieder von 18 bis 70+, Einsteiger und langjährige Sportler. Wir erstellen dir einen Trainingsplan, der zu dir passt und deine Ziele und Wünsche umsetzt. Unsere Trainer sind immer ansprechbar.',
+      },
+    },
     {
       '@type': 'Question',
       name: 'Muss ich Kurse vorher anmelden?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Nein. Du kommst einfach zur Kurszeit dazu. Keine Anmeldung, kein Aufpreis.',
+        text: 'Ja, Kurse müssen vorab in einer Gruppe gebucht werden. Wir haben jedoch ausreichend Kursplätze, um die Bedürfnisse unserer Mitglieder zu decken.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Wie sind die Öffnungszeiten des Fitnessstudios in Hattingen?',
+      name: 'Was für Geräte habt ihr?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Montag bis Freitag von 08:00 bis 23:00 Uhr, Samstag und Sonntag von 10:00 bis 17:30 Uhr.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Gibt es kostenlose Parkplätze am Fitnessstudio?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Ja. Direkt vor dem Studio — kostenlos und in der Regel ausreichend Plätze vorhanden.',
+        text: 'Wir haben alles da — von Gym 80, Cybex, Life Fitness, Panatta und Nautilus — um unseren Mitgliedern das beste Equipment zu ermöglichen.',
       },
     },
 
-    // --- Vollständige FAQ — Für wen geeignet? ---
+    // --- Allgemein & Kontakt ---
     {
       '@type': 'Question',
-      name: 'Gibt es Kurse für ältere Menschen oder bei Rückenproblemen?',
+      name: 'Wie sind die Öffnungszeiten?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Ja. Wirbelsäulen-Gymnastik, Pilates, Yoga und Rücken-Fit sind explizit für alle Level ausgelegt und besonders geeignet bei Rückenbeschwerden oder nach langen Sitztagen.',
+        text: 'Montag bis Freitag von 08:00 bis 23:00 Uhr, Samstag und Sonntag von 10:00 bis 17:30 Uhr. An Feiertagen per Aushang oder sichtbar via Google Maps sowie Instagram.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Sind die Kurse für alle Level geeignet?',
+      name: 'Wie komme ich zum Studio?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Die meisten unserer Kurse sind für alle Level ausgelegt. Tabata und Tae-Bo sind etwas intensiver — wer neu einsteigt, kann aber auch dort sein eigenes Tempo gehen.',
-      },
-    },
-
-    // --- Vollständige FAQ — Kontakt & Anreise ---
-    {
-      '@type': 'Question',
-      name: 'Wie komme ich zum Fitnessstudio Fitness Factory Hattingen?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Wir sind im Stadtteil Holthausen: Im Vogelsang 95, 45527 Hattingen. Mit dem Auto direkt vor der Tür parken (kostenlos). Aus Richtung Hattingen-Mitte: B51 Richtung Holthausen, Im Vogelsang abbiegen.',
+        text: 'Wir sind im Stadtteil Holthausen: Im Vogelsang 95, 45527 Hattingen. Mit dem Auto direkt vor der Tür parken (kostenlos). Mit dem Bus: Haltestelle Zum Ludwigstal, dann 10 Minuten Fußweg.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Wie kann ich die Fitness Factory Hattingen am schnellsten erreichen?',
+      name: 'Wie kann ich euch am schnellsten erreichen?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'WhatsApp ist am schnellsten: +49 1573 7580001. Telefonisch erreichst du uns auf 02324 33777 während der Öffnungszeiten.',
+        text: 'Egal ob über WhatsApp oder einen direkten Anruf im Studio — wir sind während der Öffnungszeiten jederzeit erreichbar.',
       },
     },
   ],

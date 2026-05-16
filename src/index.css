@@ -304,6 +304,50 @@
     --ff-shadow-dark-card-hover: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(199,31,32,0.20), 0 8px 32px rgba(0,0,0,0.20);
     --ff-shadow-whatsapp: 0 2px 12px rgba(37,211,102,0.30), 0 1px 4px rgba(0,0,0,0.15);
     --ff-shadow-glow: none;
+
+    /* Design-Varianten Tokens (Default = Klassisch) */
+    --cta-glow: none;
+    --cta-gradient: none;
+  }
+
+  /* ============================================================
+     Versteckte Design-Varianten (Tastenkürzel Cmd/Ctrl + 5/6/7)
+     Setzt nur die Tokens um, die sich pro Variante unterscheiden —
+     alle anderen --ff-* Werte bleiben unverändert.
+     ============================================================ */
+
+  /* Variante: Energetisch — höherer Kontrast, kräftigeres Rot, dunklere Hero/Footer-Hintergründe */
+  [data-variant='energetisch'] {
+    --ff-primary: 231 7 17;
+    --ff-primary-hover: 200 16 46;
+    --ff-dark: 0 0 0;
+    --ff-dark-soft: 5 5 5;
+    --ff-dark-border: 13 13 13;
+    --cta-glow: none;
+    --cta-gradient: none;
+  }
+
+  /* Variante: Energetisch V2 — wie Energetisch + Gradient-Akzente, dezenter Glow auf CTAs */
+  [data-variant='energetisch-v2'] {
+    --ff-primary: 231 7 17;
+    --ff-primary-hover: 255 26 26;
+    --ff-dark: 0 0 0;
+    --ff-dark-soft: 5 5 5;
+    --ff-dark-border: 13 13 13;
+    --cta-glow: 0 0 20px rgba(231, 7, 17, 0.30);
+    --cta-gradient: linear-gradient(135deg, #E70711 0%, #FF4444 100%);
+  }
+
+  /* Primär-CTAs nutzen Glow + Gradient automatisch, sobald die Tokens gesetzt sind.
+     bg-brand-primary Hintergrund wird vom Gradient überschrieben; ohne Variante (none)
+     bleibt das Klassik-Erscheinungsbild unverändert. */
+  [data-variant='energetisch-v2'] .bg-brand-primary {
+    background-image: var(--cta-gradient);
+    box-shadow: var(--cta-glow);
+  }
+
+  [data-variant='energetisch-v2'] .bg-brand-primary:hover {
+    box-shadow: 0 0 28px rgba(231, 7, 17, 0.45);
   }
 
   html {
@@ -419,7 +463,8 @@
 }
 
 .animate-whatsapp-enter {
-  animation: whatsapp-enter 0.4s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both;
+  animation: none;
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

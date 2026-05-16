@@ -12,6 +12,8 @@ import { assetUrl } from '@/lib/assetUrl'
 import { useDynamicGalerie } from '@/contexts/ContentContext'
 import { BREADCRUMBS } from '@/lib/jsonld'
 import { cn } from '@/lib/cn'
+import { useIsMobile } from '@/hooks/useMediaQuery'
+import GalerieMobileCarousel from '@/components/sections/GalerieMobileCarousel'
 
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.mov']
 
@@ -28,6 +30,7 @@ export default function GaleriePage() {
   const { ref, inView } = useInView<HTMLDivElement>({ threshold: 0.1 })
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [activeKategorie, setActiveKategorie] = useState<string>('Alle')
+  const isMobile = useIsMobile()
 
   // Einzigartige Kategorien aus den Bildern
   const kategorien = ['Alle', ...Array.from(new Set(GALERIE.bilder.map((b) => b.kategorie)))]
@@ -112,6 +115,10 @@ export default function GaleriePage() {
         aria-label="Studio-Galerie"
       >
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
+          {isMobile ? (
+            <GalerieMobileCarousel images={GALERIE.bilder} />
+          ) : (
+          <>
           {/* Kategorie-Filter */}
           <div className="flex flex-wrap gap-2 mb-8 justify-center" role="tablist" aria-label="Galerie-Kategorie">
             {kategorien.map((kat) => (
@@ -210,6 +217,8 @@ export default function GaleriePage() {
               </motion.div>
             ))}
           </motion.div>
+          </>
+          )}
         </div>
       </section>
 

@@ -44,7 +44,14 @@ export interface ContentOverrides {
   hero?: Record<string, unknown> | null
   oeffnungszeiten?: {
     regulaer: Array<{ tag: string; von: string; bis: string }>
-    sonder?: Array<{ datum: string; anlass: string; geschlossen: boolean; von?: string; bis?: string }>
+    sonder?: Array<{
+      datum: string
+      anlass: string
+      geschlossen: boolean
+      von?: string
+      bis?: string
+      bannerAktiv?: boolean
+    }>
     banner?: { aktiv: boolean; text: string }
   } | null
   aktionen?: Array<Record<string, unknown>> | null
@@ -193,6 +200,39 @@ export function getOeffnungszeiten(overrides: ContentOverrides | null) {
     }
   }
   return DEFAULT_SITE.oeffnungszeiten
+}
+
+export interface SonderEintrag {
+  id: string
+  datum: string
+  anlass: string
+  oeffnung: string
+  schliessung: string
+  geschlossen: boolean
+  bannerAktiv: boolean
+}
+
+/**
+ * Gibt die Sonder-Öffnungszeiten als normalisierte Liste zurück.
+ * Default: bannerAktiv = true (zeigt Pop-Up automatisch sobald Eintrag existiert).
+ */
+export function getSonderOeffnungszeiten(
+  overrides: ContentOverrides | null,
+): SonderEintrag[] {
+  const sonder = overrides?.oeffnungszeiten?.sonder
+  if (!Array.isArray(sonder)) return []
+
+  return sonder
+    .filter((s) => s && typeof s.datum === 'string' && s.datum.length > 0)
+    .map((s, i) => ({
+      id: `so-${s.datum}-${i}`,
+      datum: s.datum,
+      anlass: s.anlass || 'Sonder-Öffnungszeiten',
+      oeffnung: s.von || '',
+      schliessung: s.bis || '',
+      geschlossen: !!s.geschlossen,
+      bannerAktiv: s.bannerAktiv !== false,
+    }))
 }
 
 /**

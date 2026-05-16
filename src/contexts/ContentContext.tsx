@@ -9,6 +9,7 @@ import {
   getHero,
   getBanner,
   getTrustBar,
+  getSonderOeffnungszeiten,
 } from '@/lib/contentLoader'
 
 interface ContentContextValue {
@@ -68,4 +69,9 @@ export function useDynamicBanner() {
 export function useDynamicTrustBar() {
   const { overrides } = useContent()
   return getTrustBar(overrides)
+}
+
+export function useDynamicSonderOeffnungszeiten() {
+  const { overrides } = useContent()
+  return getSonderOeffnungszeiten(overrides)
 }

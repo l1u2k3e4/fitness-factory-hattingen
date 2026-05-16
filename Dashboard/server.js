@@ -12,7 +12,7 @@ const IMAGES_DIR = path.join(PROJECT_ROOT, 'public', 'images')
 const TRAINER_DIR = path.join(PROJECT_ROOT, 'public', 'Trainer')
 const HISTORY_DIR = path.join(PROJECT_ROOT, 'public', 'data', 'history')
 
-const PORT = 3002
+const PORT = process.env.PORT || 3003
 
 const app = express()
 app.use(cors())

@@ -33,6 +33,20 @@ export default function FaqPage() {
     })
   }
 
+  const scrollToKategorie = (idx: number) => {
+    const element = document.getElementById(`kategorie-${idx}`)
+    if (!element) return
+    // Sticky-Header (64px mobile / 72px desktop) + sticky Kategorie-Nav (gemessen) + Luft
+    const headerHeight = window.innerWidth >= 768 ? 72 : 64
+    const filterNav = document.querySelector<HTMLElement>(
+      'nav[aria-label="FAQ-Kategorien"]'
+    )
+    const filterHeight = filterNav?.offsetHeight ?? 56
+    const offset = headerHeight + filterHeight + 16
+    const top = element.getBoundingClientRect().top + window.scrollY - offset
+    window.scrollTo({ top, behavior: 'smooth' })
+  }
+
   // JSON-LD FAQPage Schema aus allen FAQ-Einträgen
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -86,15 +100,16 @@ export default function FaqPage() {
         aria-label="FAQ-Kategorien"
       >
         <div className="max-w-[1280px] mx-auto px-4 md:px-8">
-          <div className="flex gap-2 overflow-x-auto pb-0.5 no-scrollbar">
+          <div className="flex gap-2 overflow-x-auto pb-0.5 no-scrollbar md:justify-center">
             {PAGE_FAQ.kategorien.map((kat, idx) => (
-              <a
+              <button
                 key={kat.kategorie}
-                href={`#kategorie-${idx}`}
+                type="button"
+                onClick={() => scrollToKategorie(idx)}
                 className="flex-shrink-0 font-body text-body-sm text-brand-muted hover:text-brand-text border border-brand-border hover:border-brand-text rounded-full px-3 py-1.5 transition-[color,border-color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
               >
                 {kat.kategorie}
-              </a>
+              </button>
             ))}
           </div>
         </div>

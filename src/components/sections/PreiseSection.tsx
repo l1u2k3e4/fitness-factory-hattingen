@@ -60,11 +60,6 @@ export default function PreiseSection() {
                   : 'bg-brand-bg border-brand-border'
               )}
             >
-              {/* Hervorhebungs-Balken oben */}
-              {tarif.highlight && (
-                <div className="absolute top-0 left-0 right-0 h-1 bg-brand-primary rounded-t-card-lg" />
-              )}
-
               {/* Highlight Badge */}
               {tarif.badge && (
                 <div className="absolute -top-3.5 left-6">

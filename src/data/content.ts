@@ -1109,132 +1109,82 @@ export const PAGE_FAQ = {
   },
   kategorien: [
     {
-      kategorie: 'Mitgliedschaft & Preise',
-      items: [
-        {
-          frage: 'Was kostet eine Mitgliedschaft?',
-          antwort:
-            'Flex: 55€/Monat (monatlich kündbar), Standard: 45€/Monat (12 Monate Laufzeit), Premium: 35€/Monat (24 Monate Laufzeit). Dazu kommt einmalig eine Anmeldegebühr von 49€. Keine weiteren Kosten.',
-        },
-        {
-          frage: 'Was ist in der Mitgliedschaft enthalten?',
-          antwort:
-            'Alles: Zugang zu allen Geräten, alle Live-Kurse, Sauna, Getränkeflat, kostenlose Duschen und Parkplätze, Ernährungsberatung und individueller Trainingsplan. Kein Aufpreis für irgendetwas davon.',
-        },
-        {
-          frage: 'Gibt es versteckte Kosten?',
-          antwort:
-            'Nein. Du zahlst deinen Monatsbeitrag und einmalig 49€ Anmeldegebühr. Das war es.',
-        },
-        {
-          frage: 'Kann ich monatlich kündigen?',
-          antwort:
-            'Mit dem Flex-Tarif ja — jederzeit zum Monatsende kündbar. Standard und Premium laufen 12 bzw. 24 Monate. Für die längere Bindung bekommst du deutlich günstigere Monatsbeiträge.',
-        },
-        {
-          frage: 'Wie kündige ich meine Mitgliedschaft?',
-          antwort:
-            'Schriftlich — per Brief, E-Mail oder persönlich vor Ort. Achte auf die Kündigungsfristen deines Tarifs. Details findest du in deinem Mitgliedsvertrag oder einfach direkt bei uns anfragen.',
-        },
-        {
-          frage: 'Gibt es einen Studentenrabatt oder ermäßigte Tarife?',
-          antwort:
-            '[TBD: Vom Kunden — falls Rabatte existieren hier eintragen, ansonsten: "Derzeit bieten wir keine pauschalen Sonderkonditionen an. Sprich uns persönlich an — wir finden gemeinsam eine Lösung."]',
-        },
-        {
-          frage: 'Was ist die Fremdgeh-Aktion?',
-          antwort:
-            'Du hast noch einen laufenden Vertrag bei einem anderen Studio? Kein Problem. Bei uns trainierst du die ersten 3 Monate für 0€ — nur die einmalige Anmeldegebühr (49€) fällt an. Mehr dazu auf unserer Fremdgeh-Aktion-Seite.',
-        },
-      ],
-    },
-    {
       kategorie: 'Probetraining',
       items: [
         {
+          frage: 'Muss ich nach dem Probetraining sofort Mitglied werden?',
+          antwort:
+            'Nein. Du trainierst, schaust dich um — und entscheidest danach in Ruhe. Kein Druck.',
+        },
+        {
           frage: 'Wie buche ich ein Probetraining?',
           antwort:
-            'Ruf uns an (02324 33777) oder schreib uns auf WhatsApp (+49 1573 7580001). Du kannst auch einfach vorbeikommen — wir nehmen uns Zeit für dich.',
-        },
-        {
-          frage: 'Was kostet das Probetraining?',
-          antwort:
-            'Das Probetraining ist kostenlos.',
-        },
-        {
-          frage: 'Muss ich nach dem Probetraining Mitglied werden?',
-          antwort:
-            'Nein. Du kommst, trainierst, schaust dir alles an — und entscheidest dann in Ruhe. Kein Druck, keine Verkaufsgespräche.',
+            'Ruf uns an (02324 33777) oder schreib uns auf WhatsApp (+49 1573 7580001). Ansonsten auch jederzeit buchbar über das Kontaktformular.',
         },
         {
           frage: 'Was soll ich zum Probetraining mitbringen?',
           antwort:
-            'Sportkleidung, Sportschuhe, ein Handtuch und eine Wasserflasche. Falls du in die Sauna möchtest, auch ein großes Badetuch. Mehr brauchst du nicht.',
+            'Sportkleidung, Sportschuhe, ein Handtuch und eine Wasserflasche — mehr brauchst du nicht.',
         },
       ],
     },
     {
-      kategorie: 'Ausstattung & Leistungen',
+      kategorie: 'Mitgliedschaft & Preise',
       items: [
         {
-          frage: 'Was kostet die Sauna extra?',
+          frage: 'Gibt es einen Studentenrabatt oder ermäßigte Tarife?',
           antwort:
-            'Nichts. Die Sauna ist in jeder Mitgliedschaft inklusive — egal welchen Tarif du wählst.',
+            'Ja — wir bieten vergünstigte Tarife für Studenten, Schüler und Auszubildende an. Komm einfach mit einem gültigen Nachweis vorbei oder ruf uns an, und wir finden den passenden Tarif für dich.',
         },
         {
-          frage: 'Muss ich Kurse vorher anmelden?',
+          frage: 'Wie läuft die Fremdgeh-Aktion genau ab?',
           antwort:
-            'Nein. Du kommst einfach zur Kurszeit dazu. Keine Anmeldung, kein Aufpreis.',
+            'Du bist noch bei einem anderen Studio Mitglied? Bring deinen bestehenden Vertrag mit und trainiere bis zu 3 Monate bei uns für 0 € — nur die Anmeldegebühr (49 €) fällt an.',
         },
         {
-          frage: 'Wie sind die Öffnungszeiten?',
+          frage: 'Was ist die Fremdgeh-Aktion?',
           antwort:
-            'Montag bis Freitag von 08:00 bis 23:00 Uhr, Samstag und Sonntag von 10:00 bis 17:30 Uhr.',
-        },
-        {
-          frage: 'Gibt es kostenlose Parkplätze?',
-          antwort:
-            'Ja. Direkt vor dem Studio — kostenlos und in der Regel ausreichend Plätze vorhanden.',
-        },
-        {
-          frage: 'Was für Geräte habt ihr?',
-          antwort:
-            '[TBD: Vom Kunden — konkrete Gerätebeschreibung, z.B. "Cardiogeräte (Laufband, Crosstrainer, Fahrrad), freie Gewichte, Kraftgeräte"]',
+            'Du hast noch einen laufenden Vertrag bei einem anderen Studio? Kein Problem. Bei uns trainierst du bis zu 3 Monate für 0 € — nur die einmalige Anmeldegebühr (49 €) fällt an. Mehr dazu auf unserer Fremdgeh-Aktion-Seite.',
         },
       ],
     },
     {
-      kategorie: 'Für wen ist das Studio geeignet?',
+      kategorie: 'Training & Kurse',
       items: [
         {
           frage: 'Ich bin Anfänger und habe noch nie trainiert. Ist das etwas für mich?',
           antwort:
-            'Ja. Wir haben Mitglieder von 18 bis 70+, Einsteiger und langjährige Sportler. Wir erstellen dir einen Trainingsplan, der zu dir passt — nicht zu einem Fitness-Profi. Und unsere Trainer sind immer ansprechbar.',
+            'Ja. Wir haben Mitglieder von 18 bis 70+, Einsteiger und langjährige Sportler. Wir erstellen dir einen Trainingsplan, der zu dir passt und deine Ziele und Wünsche umsetzt. Unsere Trainer sind immer ansprechbar.',
         },
         {
-          frage: 'Gibt es Kurse für ältere Menschen oder bei Rückenproblemen?',
+          frage: 'Muss ich Kurse vorher anmelden?',
           antwort:
-            'Ja. Wirbelsäulen-Gymnastik, Pilates, Yoga und Rücken-Fit sind explizit für alle Level ausgelegt und besonders geeignet bei Rückenbeschwerden oder nach langen Sitztagen.',
+            'Ja, Kurse müssen vorab in einer Gruppe gebucht werden. Wir haben jedoch ausreichend Kursplätze, um die Bedürfnisse unserer Mitglieder zu decken.',
         },
         {
-          frage: 'Sind Kurse für alle Level geeignet?',
+          frage: 'Was für Geräte habt ihr?',
           antwort:
-            'Die meisten unserer Kurse sind für alle Level ausgelegt. Tabata und Tae-Bo sind etwas intensiver — wer neu einsteigt, kann aber auch dort sein eigenes Tempo gehen.',
+            'Wir haben alles da — von Gym 80, Cybex, Life Fitness, Panatta und Nautilus — um unseren Mitgliedern das beste Equipment zu ermöglichen.',
         },
       ],
     },
     {
-      kategorie: 'Kontakt & Anreise',
+      kategorie: 'Allgemein & Kontakt',
       items: [
+        {
+          frage: 'Wie sind die Öffnungszeiten?',
+          antwort:
+            'Montag bis Freitag von 08:00 bis 23:00 Uhr, Samstag und Sonntag von 10:00 bis 17:30 Uhr. An Feiertagen per Aushang oder sichtbar via Google Maps sowie Instagram.',
+        },
         {
           frage: 'Wie komme ich zum Studio?',
           antwort:
-            'Wir sind im Stadtteil Holthausen: Im Vogelsang 95, 45527 Hattingen. Mit dem Auto direkt vor der Tür parken (kostenlos). Mit Bus oder Bahn: [TBD: Vom Kunden — nächste Haltestelle ergänzen].',
+            'Wir sind im Stadtteil Holthausen: Im Vogelsang 95, 45527 Hattingen. Mit dem Auto direkt vor der Tür parken (kostenlos). Mit dem Bus: Haltestelle Zum Ludwigstal, dann 10 Minuten Fußweg.',
         },
         {
           frage: 'Wie kann ich euch am schnellsten erreichen?',
           antwort:
-            'WhatsApp ist am schnellsten: +49 1573 7580001. Telefonisch erreichst du uns auf 02324 33777 während der Öffnungszeiten.',
+            'Egal ob über WhatsApp oder einen direkten Anruf im Studio — wir sind während der Öffnungszeiten jederzeit erreichbar.',
         },
       ],
     },
