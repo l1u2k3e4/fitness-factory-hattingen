@@ -326,57 +326,68 @@ export default function Navigation({ menuOpen, onMenuOpenChange }: NavigationPro
         <nav className="flex-1 px-6 py-6 flex flex-col gap-1 overflow-y-auto" aria-label="Mobile Navigation">
           {NAV_ITEMS.map((item) => (
             <div key={item.label}>
-              {/* Accordion Toggle */}
-              <button
-                type="button"
-                onClick={() =>
-                  setMobileAccordion((prev) =>
-                    prev === item.label ? null : item.label
-                  )
-                }
-                className={cn(
-                  'w-full flex items-center justify-between font-body font-medium text-body-lg py-3 px-3 rounded-card transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
-                  mobileAccordion === item.label
-                    ? 'text-brand-primary bg-brand-primary/5'
-                    : 'text-brand-text hover:text-brand-primary hover:bg-brand-surface'
-                )}
-                aria-expanded={mobileAccordion === item.label}
-              >
-                {item.label}
-                {item.children && (
-                  <ChevronDown
+              {item.children ? (
+                <>
+                  {/* Accordion Toggle */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMobileAccordion((prev) =>
+                        prev === item.label ? null : item.label
+                      )
+                    }
                     className={cn(
-                      'w-4 h-4 transition-transform duration-200',
-                      mobileAccordion === item.label ? 'rotate-180' : ''
+                      'w-full flex items-center justify-between font-body font-medium text-body-lg py-3 px-3 rounded-card transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
+                      mobileAccordion === item.label
+                        ? 'text-brand-primary bg-brand-primary/5'
+                        : 'text-brand-text hover:text-brand-primary hover:bg-brand-surface'
                     )}
-                    aria-hidden="true"
-                  />
-                )}
-              </button>
+                    aria-expanded={mobileAccordion === item.label}
+                  >
+                    {item.label}
+                    <ChevronDown
+                      className={cn(
+                        'w-4 h-4 transition-transform duration-200',
+                        mobileAccordion === item.label ? 'rotate-180' : ''
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
 
-              {/* Accordion Children — CSS Grid-Rows Transition */}
-              {item.children && (
-                <div
-                  className={cn(
-                    'grid transition-[grid-template-rows] duration-200 ease-out',
-                    mobileAccordion === item.label ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
-                  )}
-                >
-                  <div className="overflow-hidden">
-                    <div className="pl-4 pb-2">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          to={child.href}
-                          onClick={closeMenu}
-                          className="block py-2.5 px-3 font-body text-body text-brand-muted hover:text-brand-primary transition-colors duration-150 rounded-card"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                  {/* Accordion Children — CSS Grid-Rows Transition */}
+                  <div
+                    className={cn(
+                      'grid transition-[grid-template-rows] duration-200 ease-out',
+                      mobileAccordion === item.label ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="pl-4 pb-2">
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.href}
+                            to={child.href}
+                            onClick={closeMenu}
+                            className="block py-2.5 px-3 font-body text-body text-brand-muted hover:text-brand-primary transition-colors duration-150 rounded-card"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </>
+              ) : (
+                <Link
+                  to={item.href}
+                  onClick={closeMenu}
+                  className={cn(
+                    'w-full flex items-center justify-between font-body font-medium text-body-lg py-3 px-3 rounded-card transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary',
+                    'text-brand-text hover:text-brand-primary hover:bg-brand-surface'
+                  )}
+                >
+                  {item.label}
+                </Link>
               )}
             </div>
           ))}
