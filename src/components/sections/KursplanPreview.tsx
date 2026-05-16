@@ -32,7 +32,7 @@ export default function KursplanPreview() {
               id="kursplan-preview-headline"
               className="font-display font-black text-h2 text-brand-text leading-tight tracking-tight"
             >
-              10+ Live-Kurse.<br />Jede Woche.
+              16+ Live-Kurse.<br />Jede Woche.
             </h2>
           </div>
           <Button to="/kursplan" variant="ghost">Kompletter Kursplan</Button>
