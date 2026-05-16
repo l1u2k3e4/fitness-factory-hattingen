@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import Layout from '@/components/layout/Layout'
 import PageLoader from '@/components/ui/PageLoader'
+import SitePasswordGate from '@/components/layout/SitePasswordGate'
 // HomePage: NICHT lazy — Hauptseite muss sofort laden (kein Code-Split)
 import HomePage from '@/pages/HomePage'
 
@@ -39,6 +40,7 @@ const TrainerStatistikenPage = lazy(() => import('@/pages/trainer/TrainerStatist
  */
 export default function App() {
   return (
+    <SitePasswordGate>
     <ContentProvider>
     <ThemeProvider>
     <AuthProvider>
@@ -78,5 +80,6 @@ export default function App() {
     </AuthProvider>
     </ThemeProvider>
     </ContentProvider>
+    </SitePasswordGate>
   )
 }
